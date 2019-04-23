@@ -1,59 +1,90 @@
 import React from 'react'
 import { Chart } from "react-google-charts";
 
-//SCKYFF3IUQD3WLPF
 
-const theURL = "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=MSFT&interval=1min&apikey=SCKYFF3IUQD3WLPF";
+const stockApi = "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=AAPL&interval=5min&apikey=D44NGS284DYKIIKS";
+let price;
+let data = [
+    ["x", "AAPL"]
+]
 
 class Dashboard extends React.Component {
-    constructor(props) {
-        super(props)
+
+    componentWillMount() {
+        fetch(stockApi)
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    setTimeout(() => {
+                        let lastRefreshed = result['Meta Data']['3. Last Refreshed']
+                        let time1 = lastRefreshed.split(" ")
+                        let time = time1[1].split("")
+                        let hour = time[0] + "" + time[1]
+                        let minutes = time[3] + "" + time[4]
+                        for (let i = 0; i < 10; i++) {
+                            if (minutes === "00") {
+                                hour--
+                                minutes = "55"
+                                price = parseFloat(result['Time Series (5min)'][time1[0] + " " + hour + ":" + minutes + ":00"]['4. close'], 10)
+                            }
+                            else {
+                                minutes -= 5
+                                price = parseFloat(result['Time Series (5min)'][time1[0] + " " + hour + ":" + minutes + ":00"]['4. close'], 10)
+                            }
+                            data.push([i, price])
+                        }
+                    }, 2500);
+                },
+
+                (error) => {
+                    this.setState({
+                        isLoaded: true,
+                        error
+                    });
+                }
+            )
     }
+
     render() {
         return (
             <div className="Dashboard">
                 <div className="leftbar">
                     <h3>LALALA</h3>
                 </div>
-                <div className="panel"></div>
-                <div className="stockChart">
-                <Chart
-                    width={'600px'}
-                    height={'400px'}
-                    chartType="LineChart"
-                    loader={<div>Loading Chart</div>}
-                    data={[
-                        ['x', 'dogs'],
-                        [0, 5],
-                        [1, 10],
-                        [2, 23],
-                        [3, 17],
-                        [4, 18],
-                        [5, 9],
-                        [6, 11],
-                        [7, 27],
-                    ]}
-                    options={{
-                        legend: { position: 'none' },
-                        backgroundColor: { fill: 'transparent' },
-                        hAxis: {
-                            textPosition: 'none',
-                            gridlines: {
-                                color: 'transparent'
-                            }
-                        },
-                        vAxis: {
-                            textPosition: 'none',
-                            gridlines: {
-                                color: 'transparent'
-                            }
-                        },
-                        series: {
-                            0: { curveType: 'function' },
-                        },
-                    }}
-                    rootProps={{ 'data-testid': '2' }}
-                />
+                <div className="panel">
+                    <div className="stockChart">
+                        AAPL
+                        <Chart
+                            width={'100%'}
+                            height={'100%'}
+                            chartType="LineChart"
+                            loader={<div>Loading Chart</div>}
+                            data={data}
+                            options={{
+                                tooltip: {
+                                    trigger: 'none'
+                                },
+                                legend: { position: 'none' },
+                                backgroundColor: { fill: 'transparent' },
+                                hAxis: {
+                                    textPosition: 'none',
+                                    gridlines: {
+                                        color: 'transparent'
+                                    }
+                                },
+                                vAxis: {
+                                    textPosition: 'none',
+                                    gridlines: {
+                                        color: 'transparent'
+                                    }
+                                },
+                                series: {
+                                    0: { curveType: 'function' },
+                                },
+                            }}
+                            rootProps={{ 'data-testid': '2' }}
+                        />
+                    </div>
                 </div>
             </div>
         )
