@@ -1,6 +1,9 @@
 import React from 'react'
 import { Chart } from "react-google-charts";
 
+//SCKYFF3IUQD3WLPF
+
+const theURL = "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=MSFT&interval=1min&apikey=SCKYFF3IUQD3WLPF";
 
 class Dashboard extends React.Component {
     constructor(props) {
