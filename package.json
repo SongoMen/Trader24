@@ -6,8 +6,11 @@
     "node-sass": "^4.11.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-google-charts": "^3.0.12",
+    "react-highcharts": "^16.0.2",
     "react-router-dom": "^5.0.0",
-    "react-scripts": "2.1.8"
+    "react-scripts": "2.1.8",
+    "stocks.js": "0.0.17"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -23,5 +26,8 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "google-charts": "^2.0.0"
+  }
 }
