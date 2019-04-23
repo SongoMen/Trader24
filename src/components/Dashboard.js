@@ -13,6 +13,7 @@ class Dashboard extends React.Component {
                     <h3>LALALA</h3>
                 </div>
                 <div className="panel"></div>
+                <div className="stockChart">
                 <Chart
                     width={'600px'}
                     height={'400px'}
@@ -20,7 +21,7 @@ class Dashboard extends React.Component {
                     loader={<div>Loading Chart</div>}
                     data={[
                         ['x', 'dogs'],
-                        [0, 0],
+                        [0, 5],
                         [1, 10],
                         [2, 23],
                         [3, 17],
@@ -30,12 +31,27 @@ class Dashboard extends React.Component {
                         [7, 27],
                     ]}
                     options={{
+                        legend: { position: 'none' },
+                        backgroundColor: { fill: 'transparent' },
+                        hAxis: {
+                            textPosition: 'none',
+                            gridlines: {
+                                color: 'transparent'
+                            }
+                        },
+                        vAxis: {
+                            textPosition: 'none',
+                            gridlines: {
+                                color: 'transparent'
+                            }
+                        },
                         series: {
                             0: { curveType: 'function' },
                         },
                     }}
                     rootProps={{ 'data-testid': '2' }}
                 />
+                </div>
             </div>
         )
     }
