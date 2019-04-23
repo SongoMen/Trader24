@@ -10,12 +10,11 @@ let data = [
 
 class Dashboard extends React.Component {
 
-    componentWillMount() {
+    componentDidMount() {
         fetch(stockApi)
             .then(res => res.json())
             .then(
                 (result) => {
-                    setTimeout(() => {
                         let lastRefreshed = result['Meta Data']['3. Last Refreshed']
                         let time1 = lastRefreshed.split(" ")
                         let time = time1[1].split("")
@@ -33,7 +32,6 @@ class Dashboard extends React.Component {
                             }
                             data.push([i, price])
                         }
-                    }, 2500);
                 },
 
                 (error) => {
@@ -52,7 +50,8 @@ class Dashboard extends React.Component {
                     <h3>LALALA</h3>
                 </div>
                 <div className="panel">
-                    <div className="stockChart">
+                    <h2>Most Popular</h2>
+                    <div className="stockChart" id="stockChart">
                         AAPL
                         <Chart
                             width={'100%'}
@@ -61,6 +60,7 @@ class Dashboard extends React.Component {
                             loader={<div>Loading Chart</div>}
                             data={data}
                             options={{
+                                lineWidth: 7,
                                 tooltip: {
                                     trigger: 'none'
                                 },
@@ -80,6 +80,7 @@ class Dashboard extends React.Component {
                                 },
                                 series: {
                                     0: { curveType: 'function' },
+                                    6:{pointSize:15}
                                 },
                             }}
                             rootProps={{ 'data-testid': '2' }}
