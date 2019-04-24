@@ -3,9 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "chart.js": "^2.8.0",
     "jquery": "^3.4.0",
     "node-sass": "^4.11.0",
     "react": "^16.8.6",
+    "react-chartjs-2": "^2.7.6",
     "react-dom": "^16.8.6",
     "react-google-charts": "^3.0.12",
     "react-router-dom": "^5.0.0",
