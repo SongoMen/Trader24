@@ -11,7 +11,7 @@ class Dashboard extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            loaded: false
+            loaded: ""
         }
     }
     componentWillMount() {
@@ -20,7 +20,9 @@ class Dashboard extends React.Component {
             .then(result => {
                 console.log(result);
                 if ("Note" in result) {
-                    console.log("XCS");
+                    this.setState({
+                        loaded: false
+                    })
                 } else {
                     let lastRefreshed = result["Meta Data"]["3. Last Refreshed"];
                     let time1 = lastRefreshed.split(" ");
