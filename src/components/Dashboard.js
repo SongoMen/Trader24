@@ -72,15 +72,19 @@ class Dashboard extends React.Component {
                         {this.state.loaded === false ?
                             <p>Error, while loading chart</p>
                             :
+
                             <Chart
-                                width={"110%"}
-                                height={"110%"}
+                                className="stockChart__chart"
+                                width={"114%"}
+                                height={"70%"}
                                 chartType="LineChart"
                                 loader={<div>Loading Chart</div>}
                                 data={data}
                                 options={{
                                     lineWidth: 5,
-
+                                    tooltip: {
+                                        trigger: "none"
+                                    },
                                     legend: { position: "none" },
                                     backgroundColor: { fill: "transparent" },
                                     hAxis: {
@@ -97,11 +101,15 @@ class Dashboard extends React.Component {
                                     },
                                     series: {
                                         0: { curveType: "function" },
-                                        6: { pointSize: 15 }
-                                    }
+                                    },
                                 }}
                                 rootProps={{ "data-testid": "2" }}
                             />
+                        }
+                        {this.state.loaded ?
+                            <h3>AAPL</h3>
+                            :
+                            <div></div>
                         }
                     </div>
                 </div>
