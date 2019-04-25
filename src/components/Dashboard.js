@@ -1,15 +1,15 @@
 import React from "react";
-import { Chart } from "react-google-charts";
 import { Line } from 'react-chartjs-2';
 
-const stockApi =
-    "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=AAPL&interval=5min&apikey=OLMMOMZUFXFOAOTI";
+const stockApi = "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=AAPL&interval=5min&apikey=OLMMOMZUFXFOAOTI";
 let price;
 
 
 var options = {
-    //tooltips: {enabled: false},
-    //hover: {mode: null},
+    maintainAspectRatio: false,
+    responsive: true,
+    tooltips: {enabled: false},
+    hover: {mode: null},
     legend: {
         display: false
     },
@@ -21,16 +21,25 @@ var options = {
             display: false
         }]
     },
-
+    elements: {
+        point: {
+          radius: 0
+        },
+        line:{
+            borderCapStyle: 'round',
+            borderJoinStyle:'round',
+            tension:1
+        }
+      }
 }
-
 let chartData =[]
-let data;
+
 class Dashboard extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            loaded: ""
+            loaded: "",
+            stock1:""
         }
         function labelGen(length){
             let result = 0;
@@ -40,12 +49,10 @@ class Dashboard extends React.Component {
             return result.split(",")
         }
         this.data = (canvas) => {
-            labelGen(20)
             const ctx = canvas.getContext("2d")
-            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-            gradient.addColorStop(0, '#ff8e9a');
-            gradient.addColorStop(1, '#fe8e9a');
-            console.log(data)
+            const gradient = ctx.createLinearGradient(0, 0, 600, 10);
+            gradient.addColorStop(0, '#ff5e57');
+            gradient.addColorStop(1, '#ffd32a');
             return {
                 labels:labelGen(20),
                 datasets: [
@@ -54,27 +61,31 @@ class Dashboard extends React.Component {
                         label: 'My First dataset',
                         pointBorderWidth: 0,
                         pointHoverRadius: 0,
-                        backgroundColor: gradient,
                         borderColor: gradient,
-                        pointBorderColor: gradient,
                         pointBackgroundColor: gradient,
                         fill: false,
                         borderWidth: 5,
-                        hoverBackgroundColor: 'rgba(255,99,132,0.4)',
-                        hoverBorderColor: 'rgba(255,99,132,1)',
-                        data: [207.4303,207.7,207.89,207.4544,207.42,207.31,207.28,207.16,207.44,207.64,207.75,207.813,207.9,207.95,207.865,207.71,207.72,207.6344,207.7269,207.59]
+                        data: chartData
                     }
                 ]
             }
         };
     }
     componentWillMount() {
+        const api2 = "https://api-v2.intrinio.com/securities/AAPL/prices/realtime?api_key=OjNmMmQyMjFlZmU5NDAzNWQ2ZWIyNmRhY2QxNzIzMjM2"
+        fetch(api2)
+            .then(res => res.json())
+            .then(result => {
+            this.setState({
+                stock1:result.last_price
+            })
+        })
         fetch(stockApi)
             .then(res => res.json())
             .then(result => {
                 if ("Note" in result) {
                     this.setState({
-                        loaded: false
+                        loaded: true
                     })
                 } else {
                     let lastRefreshed = result["Meta Data"]["3. Last Refreshed"];
@@ -106,7 +117,6 @@ class Dashboard extends React.Component {
                         }
                         chartData.push(parseFloat(price));
                     }
-                    data = chartData.join(",")
                     this.setState({
                         loaded: true
                     })
@@ -126,9 +136,14 @@ class Dashboard extends React.Component {
                         {this.state.loaded === false ?
                             <h3>Couldn't load chart try again in few minutes</h3>
                             :
-                            <Line data={this.data} options={options} />}
+                            <div className="stockChart__chart">
+                            <Line data={this.data} options={options} />
+                            </div>}
                         {this.state.loaded ?
-                            <h2>AAPL</h2>
+                            <div className="stockChart__info">
+                            <h3 className="stockChart__name">AAPL</h3>
+                            <h3 className="stockChart__price">${this.state.stock1}</h3>
+                            </div>
                             :
                             <div></div>
                         }
