@@ -1,14 +1,14 @@
 .leftbar
     background-color: $leftbar-color
-    width: 20%
+    width: 17%
     height: 100%
     display: flex
-    justify-content: center
-    align-items: center
+    align-items: flex-start
     flex-direction: column
+    padding: 50px 20px
 .panel
     background-color: $panel-color
-    width: 80%
+    width: 83%
     height: 100%
     padding: 10px 50px
 
@@ -127,3 +127,39 @@
 
 .stockChart__change
   font-weight: 400
+
+.leftbar__logo
+  width: 20%
+.leftbar__heading
+  display: flex
+  justify-content: center
+  align-items: center
+  flex-direction: column
+
+ul
+  list-style-type: none
+  display: flex
+  justify-content: center
+  align-items: center
+  flex-direction: column
+  padding: 0
+  font-weight: 800
+  svg
+    width: 10%
+    margin-right: 20px
+    margin-bottom: -7px
+    fill: $inactive-color
+  li
+    display: flex
+    justify-content: flex-start
+    align-items: center
+    color: $inactive-color
+    cursor: pointer
+    height: 40%
+
+.leftbar__user
+  position: absolute
+  bottom: 0
+
+.leftbar__name
+  font-weight: 800

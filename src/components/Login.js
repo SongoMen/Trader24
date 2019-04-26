@@ -1,5 +1,5 @@
 import React from 'react'
-import { login, auth } from './auth'
+import { login } from './auth'
 
 export default class Login extends React.Component {
     constructor(props){
@@ -38,7 +38,7 @@ export default class Login extends React.Component {
                             </div>
 
                             <div className="container-register-form-btn">
-                                <button type="button" className="register-form-btn" onClick={event => this.handleClickRegisterUser(event, this.props.role)}>Register</button>
+                                <button type="button" className="register-form-btn" onClick={event => this.handleClick(event)}>Login</button>
                             </div>
 
                             <div className="text-center">
