@@ -53,17 +53,40 @@ class Register extends Component {
     }
     render() {
         return (
-            <div>
-
-                <input id="login__username" type="text" name="username" className="form__input" placeholder="Username" required ref={(username) => this.username = username} />
-
-
-                <input id="login__email" type="text" name="email" className="form__input" placeholder="Email" required ref={(email) => this.email = email} />
-
-                <input id="login__password" type="password" name="password" className="form__input" placeholder="Password" required ref={(password) => this.password = password} />
-
-                <input type="submit" value="Sign In" onClick={event => this.handleClickRegisterUser(event, this.props.role)} />
+            <div className="limiter">
+            <div className="container-login">
+              <div className="wrap-login">
+                <div className="login-pic js-tilt" data-tilt=""><img src="images/img-01.png" alt=
+                "IMG" /></div>
+        
+                <form className="login-form validate-form">
+                  <span className="login-form-title">Member Login</span>
+        
+                  <div className="wrap-input validate-input" data-validate=
+                  "Valid email is required: ex@abc.xyz">
+                    <input className="input" type="text" name="email" placeholder="Email" />
+                  </div>
+        
+                  <div className="wrap-input validate-input" data-validate="Password is required">
+                    <input className="input" type="password" name="pass" placeholder="Password" />
+                  </div>
+        
+                  <div className="container-login-form-btn">
+                    <button className="login-form-btn">Login</button>
+                  </div>
+        
+                  <div className="text-center p-t-12">
+                    <span className="txt1">Forgot</span> <a className="txt2" href="#">Username /
+                    Password?</a>
+                  </div>
+        
+                  <div className="text-center p-t-136">
+                    <a className="txt2" href="#">Create your Account </a>
+                  </div>
+                </form>
+              </div>
             </div>
+          </div>
         )
     }
 }
