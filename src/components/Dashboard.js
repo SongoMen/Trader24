@@ -166,7 +166,7 @@ class Dashboard extends React.Component {
   }
 
   render() {
-    if (Math.sign(this.state.change) == -1) {
+    if (Math.sign(this.state.change) === -1) {
       color = "#ff5e57";
     } else if (Math.sign(this.state.change) === 1) {
       color = "green";
