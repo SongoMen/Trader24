@@ -6,6 +6,7 @@ import {
 
 import Home from './Home.js';
 import Dashboard from './Dashboard.js';
+import Register from './Register';
 
 class App extends Component {
   render() {
@@ -13,6 +14,7 @@ class App extends Component {
       <Router>
         <div className="container">
           <Route exact path="/" component={Home} />
+          <Route exact path="/register" component={Register} />
           <Route exact path="/dashboard" component={Dashboard} />
         </div>
       </Router>
