@@ -1,9 +1,31 @@
 *
     box-sizing: border-box
     font-family: 'Quicksand'
-    transition: all .5s
+
 html,body,#root,.container,.Dashboard
     margin: 0
     height: 100%
     width: 100%
     display: flex
+textarea
+  outline: none
+  border: none
+  &:focus
+    border-color: transparent !important
+
+input:focus
+  border-color: transparent !important
+  &::-webkit-input-placeholder, &:-moz-placeholder, &::-moz-placeholder, &:-ms-input-placeholder
+    color: transparent
+
+textarea:focus
+  &::-webkit-input-placeholder, &:-moz-placeholder, &::-moz-placeholder, &:-ms-input-placeholder
+    color: transparent
+
+input
+  &::-webkit-input-placeholder, &:-moz-placeholder, &::-moz-placeholder, &:-ms-input-placeholder
+    color: #999999
+
+textarea
+  &::-webkit-input-placeholder, &:-moz-placeholder, &::-moz-placeholder, &:-ms-input-placeholder
+    color: #999999

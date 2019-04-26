@@ -2,29 +2,6 @@ input
   outline: none
   border: none
 
-textarea
-  outline: none
-  border: none
-  &:focus
-    border-color: transparent !important
-
-input:focus
-  border-color: transparent !important
-  &::-webkit-input-placeholder, &:-moz-placeholder, &::-moz-placeholder, &:-ms-input-placeholder
-    color: transparent
-
-textarea:focus
-  &::-webkit-input-placeholder, &:-moz-placeholder, &::-moz-placeholder, &:-ms-input-placeholder
-    color: transparent
-
-input
-  &::-webkit-input-placeholder, &:-moz-placeholder, &::-moz-placeholder, &:-ms-input-placeholder
-    color: #999999
-
-textarea
-  &::-webkit-input-placeholder, &:-moz-placeholder, &::-moz-placeholder, &:-ms-input-placeholder
-    color: #999999
-
 /*---------------------------------------------
 
 button
@@ -51,13 +28,13 @@ iframe
   color: #666666
 
 /*//////////////////////////////////////////////////////////////////
- *[ login ]
+ *[ register ]
 
 .limiter
   width: 100%
   margin: 0 auto
 
-.container-login
+.container-register
   width: 100%
   min-height: 100vh
   display: -webkit-box
@@ -69,13 +46,10 @@ iframe
   justify-content: center
   align-items: center
   padding: 15px
-  background: #9053c7
-  background: -webkit-linear-gradient(-135deg, #c850c0, #4158d0)
-  background: -o-linear-gradient(-135deg, #c850c0, #4158d0)
-  background: -moz-linear-gradient(-135deg, #c850c0, #4158d0)
-  background: linear-gradient(-135deg, #c850c0, #4158d0)
+  background: white
 
-.wrap-login
+.wrap-register
+  box-shadow: 0px 0px 30px 0px rgba(0,0,0,0.12)
   width: 960px
   background: #fff
   border-radius: 10px
@@ -87,32 +61,32 @@ iframe
   display: flex
   flex-wrap: wrap
   justify-content: space-between
-  padding: 177px 130px 33px 95px
+  padding: 100px 100px
+  align-items: center
 
-/*------------------------------------------------------------------
- *[  ]
 
-.login-pic
-  width: 316px
+
+.register-pic
+  width: 256px
   img
     max-width: 100%
 
-/*------------------------------------------------------------------
- *[  ]
 
-.login-form
+.register-form
+  display: flex
+  flex-direction: column
+  align-items: center
   width: 290px
 
-.login-form-title
+.register-form-title
   font-size: 24px
   color: #333333
   line-height: 1.2
   text-align: center
+  font-weight: 800
   width: 100%
   display: block
   padding-bottom: 54px
-
-/*---------------------------------------------
 
 .wrap-input
   position: relative
@@ -129,10 +103,7 @@ iframe
   background: #e6e6e6
   height: 50px
   border-radius: 25px
-  padding: 0 30px 0 68px
-
-/*------------------------------------------------------------------
- *[ Focus ]
+  padding: 0 30px 0 30px
 
 .focus-input
   display: block
@@ -144,7 +115,7 @@ iframe
   width: 100%
   height: 100%
   box-shadow: 0px 0px 0px 0px
-  color: rgba(87, 184, 70, 0.8)
+  color: $inactive-color
 
 .input:focus + .focus-input
   -webkit-animation: anim-shadow 0.5s ease-in-out forwards
@@ -161,37 +132,7 @@ iframe
     box-shadow: 0px 0px 70px 25px
     opacity: 0
 
-
-.symbol-input
-  font-size: 15px
-  display: -webkit-box
-  display: -webkit-flex
-  display: -moz-box
-  display: -ms-flexbox
-  display: flex
-  align-items: center
-  position: absolute
-  border-radius: 25px
-  bottom: 0
-  left: 0
-  width: 100%
-  height: 100%
-  padding-left: 35px
-  pointer-events: none
-  color: #666666
-  -webkit-transition: all 0.4s
-  -o-transition: all 0.4s
-  -moz-transition: all 0.4s
-  transition: all 0.4s
-
-.input:focus + .focus-input + .symbol-input
-  color: #57b846
-  padding-left: 28px
-
-/*------------------------------------------------------------------
- *[ Button ]
-
-.container-login-form-btn
+.container-register-form-btn
   width: 100%
   display: -webkit-box
   display: -webkit-flex
@@ -202,7 +143,7 @@ iframe
   justify-content: center
   padding-top: 20px
 
-.login-form-btn
+.register-form-btn
   font-size: 15px
   line-height: 1.5
   color: #fff
@@ -210,7 +151,7 @@ iframe
   width: 100%
   height: 50px
   border-radius: 25px
-  background: #57b846
+  background: $main-color
   display: -webkit-box
   display: -webkit-flex
   display: -moz-box
@@ -226,80 +167,17 @@ iframe
   &:hover
     background: #333333
 
-/*------------------------------------------------------------------
- *[ Responsive ]
 
 @media (max-width: 992px)
-  .wrap-login
-    padding: 177px 90px 33px 85px
-  .login-pic
+
+  .register-pic
     width: 35%
-  .login-form
+  .register-form
     width: 50%
 
 @media (max-width: 768px)
-  .wrap-login
-    padding: px 80px 33px 80px
-  .login-pic
+
+  .register-pic
     display: none
-  .login-form
+  .register-form
     width: 100%
-
-@media (max-width: 576px)
-  .wrap-login
-    padding: 100px 15px 33px 15px
-
-/*------------------------------------------------------------------
- *[ Alert validate ]
-
-.validate-input
-  position: relative
-
-.alert-validate
-  &::before
-    content: attr(data-validate)
-    position: absolute
-    max-width: 70%
-    background-color: white
-    border: 1px solid #c80000
-    border-radius: 13px
-    padding: 4px 25px 4px 10px
-    top: 50%
-    -webkit-transform: translateY(-50%)
-    -moz-transform: translateY(-50%)
-    -ms-transform: translateY(-50%)
-    -o-transform: translateY(-50%)
-    transform: translateY(-50%)
-    right: 8px
-    pointer-events: none
-    color: #c80000
-    font-size: 13px
-    line-height: 1.4
-    text-align: left
-    visibility: hidden
-    opacity: 0
-    -webkit-transition: opacity 0.4s
-    -o-transition: opacity 0.4s
-    -moz-transition: opacity 0.4s
-    transition: opacity 0.4s
-  &::after
-    content: "\f06a"
-    display: block
-    position: absolute
-    color: #c80000
-    font-size: 15px
-    top: 50%
-    -webkit-transform: translateY(-50%)
-    -moz-transform: translateY(-50%)
-    -ms-transform: translateY(-50%)
-    -o-transform: translateY(-50%)
-    transform: translateY(-50%)
-    right: 13px
-  &:hover:before
-    visibility: visible
-    opacity: 1
-
-@media (max-width: 992px)
-  .alert-validate::before
-    visibility: visible
-    opacity: 1

@@ -1,5 +1,6 @@
 import React from "react";
 import { Line } from "react-chartjs-2";
+import { logout } from './auth'
 
 let stockApi =
   "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=AAPL&interval=5min&apikey=OLMMOMZUFXFOAOTI";
@@ -177,6 +178,7 @@ class Dashboard extends React.Component {
       <div className="Dashboard">
         <div className="leftbar">
           <h3>LALALA</h3>
+          <h1 onClick ={()=>logout()}>LOGOUT</h1>
         </div>
         <div className="panel">
           <h2>Most Popular</h2>
