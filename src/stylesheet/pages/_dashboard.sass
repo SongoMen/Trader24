@@ -65,22 +65,33 @@
     flex-direction: column
     padding: 50px 30px
 
-.panel__top
-  display: flex
-  flex-wrap: wrap
-  
 .panel
     background-color: $panel-color
     width: 83%
     height: 100%
-    padding: 10px 50px
+    padding: 10px 30px
     transition: all .5s
+
+.panel__top
+  display: flex
+  flex-wrap: wrap
+  height: 30%
+  width: 100%
+
+.panel__title
+  display: flex
+  align-items: center  
+  svg
+    width: 1.8%
+    margin-right: 20px
+    fill: $main-color
+    margin-bottom: -8px
 
 .stockChart
     background-color: white
     box-shadow: 0px 0px 30px 0px rgba(0,0,0,0.12)
-    width: 450px
-    height: 280px
+    width: 30%
+    height: 100%
     border-radius: 20px
     flex-direction: row
     position: relative
@@ -90,6 +101,7 @@
     text-align: center
     margin-right: 50px
     margin-bottom: 50px
+    min-width: 350px
   
 .stockChart__chart
     width: 100%
@@ -160,12 +172,12 @@ ul
     display: flex
     justify-content: flex-start
     align-items: center
-    color: $inactive-color
     cursor: pointer
     height: 30%
+    color: $inactive-color
     transition: all .5s
     &:hover
-      color: black
+      color: $text-color
       fill: $main-color!important
 
 .leftbar__user
@@ -179,4 +191,4 @@ ul
 
   li svg
     min-width: 10%
-    min-width: 15px
+    min-width: 20px
