@@ -70,7 +70,7 @@ class Dashboard extends React.Component {
       gradientFill.addColorStop(0.2, "rgba(255,211,42,.25)");
       gradientFill.addColorStop(1, "rgba(255, 255, 255, 0)");
       return {
-        labels: labelGen(10),
+        labels: labelGen(12),
         datasets: [
           {
             lineTension: 0.3,
@@ -97,7 +97,7 @@ class Dashboard extends React.Component {
       gradientFill.addColorStop(0.2, "rgba(255,211,42,.25)");
       gradientFill.addColorStop(1, "rgba(255, 255, 255, 0)");
       return {
-        labels: labelGen(10),
+        labels: labelGen(12),
         datasets: [
           {
             lineTension: 0.3,
@@ -115,9 +115,10 @@ class Dashboard extends React.Component {
       };
     };
   }
-  getStockInfo(symbol, loader, dataChart, changeStash, priceStash, num) {
+  getStockInfo(symbol, dataChart, changeStash, priceStash, num) {
     const stockApi =
-      `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=5min&apikey=OLMMOMZUFXFOAOTI`;
+    `https://api-v2.intrinio.com/securities/${symbol}/prices/intraday?api_key=OjNmMmQyMjFlZmU5NDAzNWQ2ZWIyNmRhY2QxNzIzMjM2`    
+
     const lastPrice =
       `https://api-v2.intrinio.com/securities/${symbol}/prices/realtime?api_key=OjNmMmQyMjFlZmU5NDAzNWQ2ZWIyNmRhY2QxNzIzMjM2`;
     const percentageChange =
@@ -128,6 +129,7 @@ class Dashboard extends React.Component {
       .then(result => {
         if ("Note" in result) {
           error = true
+          console.log("percentage error" + num)
         } else if (error !== true) {
           let change = parseFloat(
             result["Global Quote"]["10. change percent"]
@@ -139,7 +141,8 @@ class Dashboard extends React.Component {
       .then(res => res.json())
       .then(result => {
         if ("Note" in result) {
-          loader = false
+          error = true
+          console.log("price error" + num)
         }
         priceStash[num] = result.last_price
       });
@@ -149,36 +152,11 @@ class Dashboard extends React.Component {
       .then(result => {
         if ("Note" in result) {
           error = true
-        } else if(error !== true){
-          let lastRefreshed = result["Meta Data"]["3. Last Refreshed"];
-          let time1 = lastRefreshed.split(" ");
-          let time = time1[1].split("");
-          let hour = time[0] + "" + time[1];
-          let minutes = time[3] + "" + time[4];
-          for (let i = 0; i < 10; i++) {
-            price = ""
-            if (minutes === "00") {
-              hour--;
-              minutes = "55";
-              price = parseFloat(
-                result["Time Series (5min)"][
-                time1[0] + " " + hour + ":" + minutes + ":00"
-                ]["4. close"],
-                2
-              );
-            } else {
-              minutes -= 5;
-              if (minutes < 10) {
-                minutes = "0" + minutes;
-              }
-              price = parseFloat(
-                result["Time Series (5min)"][
-                time1[0] + " " + hour + ":" + minutes + ":00"
-                ]["4. close"],
-                2
-              );
-            }
-            dataChart.push(parseFloat(price));
+          console.log("chart error" + num)
+        } else if (error !== true) {
+          for(let i = 0;i<80;i++){
+            price = parseFloat(result.intraday_prices[i].last_price)
+            dataChart.push(price);
           }
         }
       });
@@ -190,9 +168,9 @@ class Dashboard extends React.Component {
       .then(res => res.json())
       .then(result => {
         for (let i = 0; i < 4; i++) {
-          stockList.push(result.companies[i].name)
-          stockListTickers.push(result.companies[i].ticker)
-          const lastPrice =`https://api-v2.intrinio.com/securities/${stockListTickers[i]}/prices/realtime?api_key=OjNmMmQyMjFlZmU5NDAzNWQ2ZWIyNmRhY2QxNzIzMjM2`;
+          stockList[i] = result.companies[i].name
+          stockListTickers[i] = result.companies[i].ticker
+          const lastPrice = `https://api-v2.intrinio.com/securities/${stockListTickers[i]}/prices/realtime?api_key=OjNmMmQyMjFlZmU5NDAzNWQ2ZWIyNmRhY2QxNzIzMjM2`;
           const logo = `https://api-v2.intrinio.com/companies/${stockListTickers[i]}?api_key=OjNmMmQyMjFlZmU5NDAzNWQ2ZWIyNmRhY2QxNzIzMjM2`
           fetch(lastPrice)
             .then(res => res.json())
@@ -205,7 +183,7 @@ class Dashboard extends React.Component {
 
               stockListPrices[i] = lastPrice
             });
-            fetch(logo)
+          fetch(logo)
             .then(res => res.json())
             .then(result => {
               if ("Note" in result) {
@@ -217,10 +195,10 @@ class Dashboard extends React.Component {
       });
   }
   componentWillMount() {
-    this.getStockInfo(stockSymbols[0], this.state.loader1, chartData1, stockChanges, stockPrices, 0)
-    this.getStockInfo(stockSymbols[1], this.state.loader2, chartData2, stockChanges, stockPrices, 1)
+    this.getStockInfo(stockSymbols[0], chartData1, stockChanges, stockPrices, 0)
+    this.getStockInfo(stockSymbols[1], chartData2, stockChanges, stockPrices, 1)
     setTimeout(() => {
-      if (stockChanges[0] !== undefined && stockPrices[0] !== undefined && chartData1.length === 10) {
+      if (stockChanges[0] !== undefined && stockPrices[0] !== undefined && chartData1.length === 80) {
         this.setState({
           loader1: true
         })
@@ -230,7 +208,7 @@ class Dashboard extends React.Component {
           loader1: false
         })
       }
-      if (stockChanges[1] !== undefined && stockPrices[1] !== undefined && chartData2.length === 10) {
+      if (stockChanges[1] !== undefined && stockPrices[1] !== undefined && chartData2.length === 80) {
         this.setState({
           loader2: true
         })
@@ -249,6 +227,9 @@ class Dashboard extends React.Component {
         changesColors[i] = "#ff5e57"
       } else if (Math.sign(stockChanges[i]) === 1) {
         changesColors[i] = "green"
+        stockChanges[i] = "+" + stockChanges[i]
+        if (stockChanges[i].charAt(0) === "+" && stockChanges[i].charAt(1) === "+")
+          stockChanges[i] = stockChanges[i].substr(1)
       }
       else {
         changesColors[i] = "#999eaf"
@@ -355,10 +336,10 @@ class Dashboard extends React.Component {
           </div>
           <div className="panel__bottom">
             <div className="panel__stockList">
-              <h3>Other Stocks</h3>
+              <h3>More Stocks</h3>
               <ul className="panel__list">
                 {stockList.map((value, index) => {
-                  return <li key={index}><span><img src={stockListLogos[index]}></img><h4>{value}</h4></span><h4>${stockListPrices[index]}</h4></li>
+                  return <li key={index}><span><img alt={value} src={stockListLogos[index]}></img><h4>{value}</h4></span><h4>${stockListPrices[index]}</h4></li>
                 })}
               </ul>
             </div>
