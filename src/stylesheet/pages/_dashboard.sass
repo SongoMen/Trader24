@@ -1,3 +1,61 @@
+@keyframes loader  
+  0%  
+    transform: rotate(0deg) 
+   
+  
+  25%  
+    transform: rotate(180deg) 
+   
+  
+  50%  
+    transform: rotate(180deg) 
+   
+  
+  75%  
+    transform: rotate(360deg) 
+   
+  
+  100%  
+    transform: rotate(360deg) 
+
+@keyframes loader-inner  
+  0%  
+    height: 0% 
+   
+  
+  25%  
+    height: 0% 
+   
+  
+  50%  
+    height: 100% 
+   
+  
+  75%  
+    height: 100% 
+   
+  
+  100%  
+    height: 0% 
+   
+  
+.loader  
+  display: inline-block 
+  width: 30px 
+  height: 30px 
+  position: relative 
+  border: 4px solid $main-color 
+  animation: loader 2s infinite ease 
+ 
+
+.loader-inner  
+  vertical-align: top 
+  display: inline-block 
+  width: 100% 
+  background-color: $main-color
+  animation: loader-inner 2s infinite ease-in 
+ 
+
 .leftbar
     background-color: $leftbar-color
     width: 17%
@@ -5,7 +63,12 @@
     display: flex
     align-items: flex-start
     flex-direction: column
-    padding: 50px 20px
+    padding: 50px 30px
+
+.panel__top
+  display: flex
+  flex-wrap: wrap
+  
 .panel
     background-color: $panel-color
     width: 83%
@@ -16,7 +79,7 @@
 .stockChart
     background-color: white
     box-shadow: 0px 0px 30px 0px rgba(0,0,0,0.12)
-    width: 400px
+    width: 450px
     height: 280px
     border-radius: 20px
     flex-direction: row
@@ -25,6 +88,8 @@
     align-items: center
     justify-content: center
     text-align: center
+    margin-right: 50px
+    margin-bottom: 50px
   
 .stockChart__chart
     width: 100%
@@ -62,65 +127,6 @@
 .stockChart__price
   margin: 0
 
-.loader  
-  display: inline-block 
-  width: 30px 
-  height: 30px 
-  position: relative 
-  border: 4px solid $main-color 
-  animation: loader 2s infinite ease 
- 
-
-.loader-inner  
-  vertical-align: top 
-  display: inline-block 
-  width: 100% 
-  background-color: $main-color
-  animation: loader-inner 2s infinite ease-in 
- 
-
-@keyframes loader  
-  0%  
-    transform: rotate(0deg) 
-   
-  
-  25%  
-    transform: rotate(180deg) 
-   
-  
-  50%  
-    transform: rotate(180deg) 
-   
-  
-  75%  
-    transform: rotate(360deg) 
-   
-  
-  100%  
-    transform: rotate(360deg) 
-   
- 
-
-@keyframes loader-inner  
-  0%  
-    height: 0% 
-   
-  
-  25%  
-    height: 0% 
-   
-  
-  50%  
-    height: 100% 
-   
-  
-  75%  
-    height: 100% 
-   
-  
-  100%  
-    height: 0% 
-   
 .stockChart__price-info
   display: flex
   align-items: flex-end
@@ -146,7 +152,7 @@ ul
   padding: 0
   font-weight: 800
   svg
-    width: 10%
+    width: 8%
     margin-right: 20px
     margin-bottom: -7px
   li
@@ -156,7 +162,7 @@ ul
     align-items: center
     color: $inactive-color
     cursor: pointer
-    height: 40%
+    height: 30%
     transition: all .5s
     &:hover
       color: black
@@ -168,3 +174,9 @@ ul
 
 .leftbar__name
   font-weight: 800
+
+@media (max-width: 1500px)
+
+  li svg
+    min-width: 10%
+    min-width: 15px
