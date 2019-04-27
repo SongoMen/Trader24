@@ -41,7 +41,10 @@ let stockSymbols = ["AAPL", "MSFT"]
 let stockPrices = []
 let stockChanges = []
 let changesColors = []
-
+let stockList = []
+let stockListPrices = []
+let stockListTickers = []
+let stockListLogos = []
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -113,19 +116,19 @@ class Dashboard extends React.Component {
     };
   }
   getStockInfo(symbol, loader, dataChart, changeStash, priceStash, num) {
-    let stockApi =
+    const stockApi =
       `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=5min&apikey=OLMMOMZUFXFOAOTI`;
-    let lastPrice =
+    const lastPrice =
       `https://api-v2.intrinio.com/securities/${symbol}/prices/realtime?api_key=OjNmMmQyMjFlZmU5NDAzNWQ2ZWIyNmRhY2QxNzIzMjM2`;
-    let percentageChange =
+    const percentageChange =
       `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=OLMMOMZUFXFOAOTI`;
-
+    let error
     fetch(percentageChange)
       .then(res => res.json())
       .then(result => {
         if ("Note" in result) {
-          loader = false
-        } else {
+          error = true
+        } else if (error !== true) {
           let change = parseFloat(
             result["Global Quote"]["10. change percent"]
           ).toFixed(2);
@@ -145,8 +148,8 @@ class Dashboard extends React.Component {
       .then(res => res.json())
       .then(result => {
         if ("Note" in result) {
-          loader = false
-        } else {
+          error = true
+        } else if(error !== true){
           let lastRefreshed = result["Meta Data"]["3. Last Refreshed"];
           let time1 = lastRefreshed.split(" ");
           let time = time1[1].split("");
@@ -181,6 +184,38 @@ class Dashboard extends React.Component {
       });
 
   }
+  getStocksList() {
+    const stocks = "https://api-v2.intrinio.com/companies?api_key=OjNmMmQyMjFlZmU5NDAzNWQ2ZWIyNmRhY2QxNzIzMjM2"
+    fetch(stocks)
+      .then(res => res.json())
+      .then(result => {
+        for (let i = 0; i < 4; i++) {
+          stockList.push(result.companies[i].name)
+          stockListTickers.push(result.companies[i].ticker)
+          const lastPrice =`https://api-v2.intrinio.com/securities/${stockListTickers[i]}/prices/realtime?api_key=OjNmMmQyMjFlZmU5NDAzNWQ2ZWIyNmRhY2QxNzIzMjM2`;
+          const logo = `https://api-v2.intrinio.com/companies/${stockListTickers[i]}?api_key=OjNmMmQyMjFlZmU5NDAzNWQ2ZWIyNmRhY2QxNzIzMjM2`
+          fetch(lastPrice)
+            .then(res => res.json())
+            .then(result => {
+              if ("Note" in result) {
+                console.log("error")
+              }
+              let lastPrice = parseFloat(
+                result.last_price).toFixed(2);
+
+              stockListPrices[i] = lastPrice
+            });
+            fetch(logo)
+            .then(res => res.json())
+            .then(result => {
+              if ("Note" in result) {
+                console.log("error")
+              }
+              stockListLogos[i] = "http://logo.clearbit.com/" + result.company_url
+            });
+        }
+      });
+  }
   componentWillMount() {
     this.getStockInfo(stockSymbols[0], this.state.loader1, chartData1, stockChanges, stockPrices, 0)
     this.getStockInfo(stockSymbols[1], this.state.loader2, chartData2, stockChanges, stockPrices, 1)
@@ -205,7 +240,8 @@ class Dashboard extends React.Component {
           loader2: false
         })
       }
-    }, 1500);
+    }, 1000);
+    this.getStocksList()
   }
   render() {
     for (let i = 0; i < stockSymbols.length; i++) {
@@ -247,7 +283,9 @@ class Dashboard extends React.Component {
         </div>
         <div className="panel">
           <div className="panel__title">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 80" x="0px" y="0px"><g data-name="Layer 2"><g data-name="Layer 4"><path d="M24,64A24,24,0,0,1,11.44,19.55a2,2,0,0,1,2.71,2.82C13,24.08,10,29.35,10,33a6.93,6.93,0,0,0,7,7c3.48,0,7-2.16,7-7,0-1.89-1-3.57-2.06-5.53-3-5.38-6.83-12.07,6.58-26.82a2,2,0,0,1,3.33,2.11c-4.11,10,0,13.59,5.75,18.58C42.47,25.6,48,30.42,48,40A24,24,0,0,1,24,64ZM6.2,30.84A20,20,0,1,0,44,40c0-7.76-4.39-11.59-9-15.64-4.13-3.61-8.67-7.56-8.74-14.41-5.17,7.85-3,11.62-.81,15.56C26.69,27.74,28,30.06,28,33A10.64,10.64,0,0,1,17,44,10.88,10.88,0,0,1,6,33,12.59,12.59,0,0,1,6.2,30.84Z" /></g></g></svg><h2>Most Popular</h2></div>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 80" x="0px" y="0px"><g data-name="Layer 2"><g data-name="Layer 4"><path d="M24,64A24,24,0,0,1,11.44,19.55a2,2,0,0,1,2.71,2.82C13,24.08,10,29.35,10,33a6.93,6.93,0,0,0,7,7c3.48,0,7-2.16,7-7,0-1.89-1-3.57-2.06-5.53-3-5.38-6.83-12.07,6.58-26.82a2,2,0,0,1,3.33,2.11c-4.11,10,0,13.59,5.75,18.58C42.47,25.6,48,30.42,48,40A24,24,0,0,1,24,64ZM6.2,30.84A20,20,0,1,0,44,40c0-7.76-4.39-11.59-9-15.64-4.13-3.61-8.67-7.56-8.74-14.41-5.17,7.85-3,11.62-.81,15.56C26.69,27.74,28,30.06,28,33A10.64,10.64,0,0,1,17,44,10.88,10.88,0,0,1,6,33,12.59,12.59,0,0,1,6.2,30.84Z" /></g></g></svg>
+            <h2>Most Popular</h2>
+          </div>
           <div className="panel__top">
             <div className="stockChart">
               {this.state.loader1 === "" ? (
@@ -312,6 +350,17 @@ class Dashboard extends React.Component {
               ) : (
                   <div />
                 )}
+            </div>
+            <div className="panel__portfolio"></div>
+          </div>
+          <div className="panel__bottom">
+            <div className="panel__stockList">
+              <h3>Other Stocks</h3>
+              <ul className="panel__list">
+                {stockList.map((value, index) => {
+                  return <li key={index}><span><img src={stockListLogos[index]}></img><h4>{value}</h4></span><h4>${stockListPrices[index]}</h4></li>
+                })}
+              </ul>
             </div>
           </div>
         </div>
