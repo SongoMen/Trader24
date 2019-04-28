@@ -200,7 +200,7 @@ class Dashboard extends React.Component {
                 this.setState({
                   loader3: true
                 })
-              }, 1000);
+              }, 1500);
             });
         }
       });
@@ -233,7 +233,7 @@ class Dashboard extends React.Component {
           loader2: false
         })
       }
-    }, 1000);
+    }, 1500);
 
     // STOCK LIST
     this.getStocksList()
@@ -252,7 +252,6 @@ class Dashboard extends React.Component {
     });
   }
   render() {
-
     let user = firebase.auth().currentUser.displayName;
     for (let i = 0; i < stockSymbols.length; i++) {
       if (Math.sign(stockChanges[i]) === -1) {
