@@ -294,7 +294,7 @@ class Dashboard extends React.Component {
           </div>
         </div>
         <div className="panel">
-          <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center',flexWrap: 'wrap' }}>
             <div className="panel__top">
               <div className="panel__title">
                 <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -302,78 +302,80 @@ class Dashboard extends React.Component {
                   <h2>Most Popular</h2>
                 </div>
               </div>
-              <div className="stockChart">
-                {this.state.loader1 === "" ? (
-                  <ul className="loader">
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                  </ul>
-                ) : (
-                    <div />
-                  )}
-                {this.state.loader1 === false ? (
-                  <h5>Couldn't load chart try again in few minutes</h5>
-                ) : (
-                    <div />
-                  )}
-                {this.state.loader1 === true ? (
-                  <div className="stockChart__chart">
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <div className="stockChart">
+                  {this.state.loader1 === "" ? (
+                    <ul className="loader">
+                      <li></li>
+                      <li></li>
+                      <li></li>
+                    </ul>
+                  ) : (
+                      <div />
+                    )}
+                  {this.state.loader1 === false ? (
+                    <h5>Couldn't load chart try again in few minutes</h5>
+                  ) : (
+                      <div />
+                    )}
+                  {this.state.loader1 === true ? (
+                    <div className="stockChart__chart">
 
-                    <Line data={this.data1} options={options} />
-                  </div>
-                ) : (
-                    <div />
-                  )}
-                {this.state.loader1 ? (
-                  <div className="stockChart__info">
-                    <h3 className="stockChart__name">{stockSymbols[0]}</h3>
-                    <div className="stockChart__price-info">
-                      <h4 className="stockChart__change" style={{ color: changesColors[0] }}>{stockChanges[0]}%</h4>
-                      <h3 className="stockChart__price">${stockPrices[0]}</h3>
+                      <Line data={this.data1} options={options} />
                     </div>
-                  </div>
-                ) : (
-                    <div />
-                  )}
-              </div>
-              <div className="stockChart">
-                {this.state.loader2 === "" ? (
-                  <ul className="loader">
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                  </ul>
-                ) : (
-                    <div />
-                  )}
-                {this.state.loader2 === false ? (
-                  <h5>Couldn't load chart try again in few minutes</h5>
-                ) : (
-                    <div />
-                  )}
-                {this.state.loader2 === true ? (
-                  <div className="stockChart__chart">
-                    <Line data={this.data2} options={options} />
-                  </div>
-                ) : (
-                    <div />
-                  )}
-                {this.state.loader2 ? (
-                  <div className="stockChart__info">
-                    <h3 className="stockChart__name">{stockSymbols[1]}</h3>
-                    <div className="stockChart__price-info">
-                      <h4 className="stockChart__change" style={{ color: changesColors[1] }}>{stockChanges[1]}%</h4>
-                      <h3 className="stockChart__price">${stockPrices[1]}</h3>
+                  ) : (
+                      <div />
+                    )}
+                  {this.state.loader1 ? (
+                    <div className="stockChart__info">
+                      <h3 className="stockChart__name">{stockSymbols[0]}</h3>
+                      <div className="stockChart__price-info">
+                        <h4 className="stockChart__change" style={{ color: changesColors[0] }}>{stockChanges[0]}%</h4>
+                        <h3 className="stockChart__price">${stockPrices[0]}</h3>
+                      </div>
                     </div>
-                  </div>
-                ) : (
-                    <div />
-                  )}
-              </div>          </div>
+                  ) : (
+                      <div />
+                    )}
+                </div>
+                <div className="stockChart">
+                  {this.state.loader2 === "" ? (
+                    <ul className="loader">
+                      <li></li>
+                      <li></li>
+                      <li></li>
+                    </ul>
+                  ) : (
+                      <div />
+                    )}
+                  {this.state.loader2 === false ? (
+                    <h5>Couldn't load chart try again in few minutes</h5>
+                  ) : (
+                      <div />
+                    )}
+                  {this.state.loader2 === true ? (
+                    <div className="stockChart__chart">
+                      <Line data={this.data2} options={options} />
+                    </div>
+                  ) : (
+                      <div />
+                    )}
+                  {this.state.loader2 ? (
+                    <div className="stockChart__info">
+                      <h3 className="stockChart__name">{stockSymbols[1]}</h3>
+                      <div className="stockChart__price-info">
+                        <h4 className="stockChart__change" style={{ color: changesColors[1] }}>{stockChanges[1]}%</h4>
+                        <h3 className="stockChart__price">${stockPrices[1]}</h3>
+                      </div>
+                    </div>
+                  ) : (
+                      <div />
+                    )}
+                </div>          </div>
+            </div>
             <div className="panel__portfolio-section">
               <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
-                <svg className="panel__portfolio-title" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 200 250" enableBackground="new 0 0 200 200" xmlSpace="preserve"><g><g><path fill="#000000" d="M156.811,54.528H43.159L0,97.64l96.874,96.875l3.119,3.117l3.117-3.117L200,97.64L156.811,54.528z     M99.992,187.565l-8.136-8.134L10.082,97.64l36.02-35.99h107.763l36.056,35.99l-81.793,81.792L99.992,187.565z" /><g><path fill="#000000" d="M63.434,94.079l28.423,85.353l5.017,15.083l3.119,3.117l3.117-3.117l5.018-15.083l28.409-85.353H63.434z      M99.992,181.331l-26.684-80.13h53.351L99.992,181.331z" /><polygon fill="#000000" points="74.664,101.198 5.041,101.198 5.041,94.076 62.083,94.076 41.576,59.925 47.684,56.259    " /><polygon fill="#000000" points="67.956,103.86 41.576,59.925 47.684,56.259 68.791,91.413 97.21,55.868 102.771,60.316    " /><polygon fill="#000000" points="132.02,103.86 97.21,60.316 102.771,55.868 131.185,91.413 152.288,56.259 158.396,59.925    " /><polygon fill="#000000" points="194.96,101.198 125.312,101.198 152.288,56.259 158.396,59.925 137.893,94.076 194.96,94.076         " /></g></g><g><rect x="96.439" y="2.368" fill="#000000" width="7.123" height="23.74" /><rect x="120.786" y="7.211" transform="matrix(0.9238 0.3828 -0.3828 0.9238 16.7729 -46.1416)" fill="#000000" width="7.124" height="23.742" /><rect x="141.429" y="21.002" transform="matrix(0.7071 0.7071 -0.7071 0.7071 65.7174 -92.8988)" fill="#000000" width="7.121" height="23.742" /><rect x="63.779" y="15.52" transform="matrix(0.3827 0.9239 -0.9239 0.3827 64.3313 -58.112)" fill="#000000" width="23.742" height="7.124" /><rect x="43.139" y="29.312" transform="matrix(0.707 0.7072 -0.7072 0.707 39.3628 -29.2704)" fill="#000000" width="23.74" height="7.121" /></g></g></svg>              <h2>Portfolio</h2>
+                <svg className="panel__portfolio-title" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 200 250" enableBackground="new 0 0 200 200" xmlSpace="preserve"><g><g><path d="M156.811,54.528H43.159L0,97.64l96.874,96.875l3.119,3.117l3.117-3.117L200,97.64L156.811,54.528z     M99.992,187.565l-8.136-8.134L10.082,97.64l36.02-35.99h107.763l36.056,35.99l-81.793,81.792L99.992,187.565z" /><g><path d="M63.434,94.079l28.423,85.353l5.017,15.083l3.119,3.117l3.117-3.117l5.018-15.083l28.409-85.353H63.434z      M99.992,181.331l-26.684-80.13h53.351L99.992,181.331z" /><polygon points="74.664,101.198 5.041,101.198 5.041,94.076 62.083,94.076 41.576,59.925 47.684,56.259    " /><polygon points="67.956,103.86 41.576,59.925 47.684,56.259 68.791,91.413 97.21,55.868 102.771,60.316    " /><polygon points="132.02,103.86 97.21,60.316 102.771,55.868 131.185,91.413 152.288,56.259 158.396,59.925    " /><polygon points="194.96,101.198 125.312,101.198 152.288,56.259 158.396,59.925 137.893,94.076 194.96,94.076         " /></g></g><g><rect x="96.439" y="2.368" width="7.123" height="23.74" /><rect x="120.786" y="7.211" transform="matrix(0.9238 0.3828 -0.3828 0.9238 16.7729 -46.1416)" width="7.124" height="23.742" /><rect x="141.429" y="21.002" transform="matrix(0.7071 0.7071 -0.7071 0.7071 65.7174 -92.8988)" width="7.121" height="23.742" /><rect x="63.779" y="15.52" transform="matrix(0.3827 0.9239 -0.9239 0.3827 64.3313 -58.112)" width="23.742" height="7.124" /><rect x="43.139" y="29.312" transform="matrix(0.707 0.7072 -0.7072 0.707 39.3628 -29.2704)" width="23.74" height="7.121" /></g></g></svg>              <h2>Portfolio</h2>
               </div>
               <div className="panel__portfolio">
                 {this.state.funds}
