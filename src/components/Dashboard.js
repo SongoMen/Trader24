@@ -51,7 +51,8 @@ class Dashboard extends React.Component {
     super(props);
     this.state = {
       loader1: "",
-      loader2: ""
+      loader2: "",
+      loader3: ""
     }
     function labelGen(length) {
       let result = 0;
@@ -70,7 +71,7 @@ class Dashboard extends React.Component {
       gradientFill.addColorStop(0.2, "rgba(255,211,42,.25)");
       gradientFill.addColorStop(1, "rgba(255, 255, 255, 0)");
       return {
-        labels: labelGen(12),
+        labels: labelGen(40),
         datasets: [
           {
             lineTension: 0.3,
@@ -97,7 +98,7 @@ class Dashboard extends React.Component {
       gradientFill.addColorStop(0.2, "rgba(255,211,42,.25)");
       gradientFill.addColorStop(1, "rgba(255, 255, 255, 0)");
       return {
-        labels: labelGen(12),
+        labels: labelGen(40),
         datasets: [
           {
             lineTension: 0.3,
@@ -117,7 +118,7 @@ class Dashboard extends React.Component {
   }
   getStockInfo(symbol, dataChart, changeStash, priceStash, num) {
     const stockApi =
-    `https://api-v2.intrinio.com/securities/${symbol}/prices/intraday?api_key=OjNmMmQyMjFlZmU5NDAzNWQ2ZWIyNmRhY2QxNzIzMjM2`    
+      `https://api-v2.intrinio.com/securities/${symbol}/prices/intraday?api_key=OjNmMmQyMjFlZmU5NDAzNWQ2ZWIyNmRhY2QxNzIzMjM2`
 
     const lastPrice =
       `https://api-v2.intrinio.com/securities/${symbol}/prices/realtime?api_key=OjNmMmQyMjFlZmU5NDAzNWQ2ZWIyNmRhY2QxNzIzMjM2`;
@@ -154,7 +155,7 @@ class Dashboard extends React.Component {
           error = true
           console.log("chart error" + num)
         } else if (error !== true) {
-          for(let i = 0;i<80;i++){
+          for (let i = 0; i < 40; i++) {
             price = parseFloat(result.intraday_prices[i].last_price)
             dataChart.push(price);
           }
@@ -190,6 +191,11 @@ class Dashboard extends React.Component {
                 console.log("error")
               }
               stockListLogos[i] = "http://logo.clearbit.com/" + result.company_url
+              setTimeout(() => {
+                this.setState({
+                  loader3: true
+                })
+              }, 1000);
             });
         }
       });
@@ -198,7 +204,7 @@ class Dashboard extends React.Component {
     this.getStockInfo(stockSymbols[0], chartData1, stockChanges, stockPrices, 0)
     this.getStockInfo(stockSymbols[1], chartData2, stockChanges, stockPrices, 1)
     setTimeout(() => {
-      if (stockChanges[0] !== undefined && stockPrices[0] !== undefined && chartData1.length === 80) {
+      if (stockChanges[0] !== undefined && stockPrices[0] !== undefined && chartData1.length >= 10) {
         this.setState({
           loader1: true
         })
@@ -208,7 +214,7 @@ class Dashboard extends React.Component {
           loader1: false
         })
       }
-      if (stockChanges[1] !== undefined && stockPrices[1] !== undefined && chartData2.length === 80) {
+      if (stockChanges[1] !== undefined && stockPrices[1] !== undefined && chartData2.length >= 10) {
         this.setState({
           loader2: true
         })
@@ -243,7 +249,7 @@ class Dashboard extends React.Component {
             <img className="leftbar__logo" src={require("../images/logo.png")} alt="logo"></img>
             <h2>STOC3R</h2>
           </div>
-          <ul>
+          <ul className="leftbar__menu">
             <li>
               <svg style={{ fill: "#ff5e57" }} xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 24 30" xmlSpace="preserve"><path d="M15.4,23.2H8.8c0,0-0.1,0-0.1,0c-0.4,0-0.8,0-1.2,0c0,0,0,0,0,0c-0.8,0-1.2,0-1.7-0.1c-1.8-0.4-3.3-1.9-3.7-3.7  C2,18.8,2,18.2,2,16.7v-4.4c0-1.4,0-2.4,0.1-3.2c0.1-0.9,0.2-1.5,0.5-2c0-0.1,0.1-0.2,0.1-0.3c0.3-0.5,0.8-1,1.5-1.4  C4.9,4.9,5.8,4.4,7,3.8l3.1-1.7c0.5-0.3,0.9-0.5,1.1-0.6c0.6-0.3,1-0.3,1.6,0c0.3,0.1,0.6,0.3,1.1,0.6l2.9,1.6  c1.2,0.7,2.2,1.2,2.9,1.7c0.8,0.5,1.2,1,1.5,1.6c0.3,0.6,0.5,1.2,0.6,2.1C22,9.9,22,11,22,12.4v4.3c0,1.5,0,2.1-0.1,2.7  c-0.4,1.8-1.9,3.3-3.7,3.7c-0.4,0.1-0.9,0.1-1.7,0.1c0,0-0.1,0-0.1,0c-0.1,0-0.4,0-0.8,0C15.5,23.2,15.4,23.2,15.4,23.2z M16.4,21.3  c0,0,0.1,0,0.1,0l0,0c0.7,0,1,0,1.2-0.1c1.1-0.3,2-1.1,2.2-2.2c0.1-0.3,0.1-0.9,0.1-2.2v-4.3c0-1.4,0-2.4-0.1-3.2  c-0.1-0.8-0.2-1.1-0.3-1.3c-0.1-0.2-0.3-0.5-1-0.9c-0.6-0.4-1.6-1-2.7-1.6L13,3.8c-0.5-0.3-0.7-0.4-1-0.5c0,0,0,0,0,0c0,0,0,0,0,0  c-0.2,0.1-0.5,0.3-1,0.5L8,5.5C6.8,6.2,6,6.6,5.4,7C4.8,7.4,4.6,7.7,4.5,7.9c0,0-0.1,0.1-0.1,0.2C4.3,8.3,4.1,8.6,4.1,9.3  C4,10,4,11,4,12.3v4.4c0,1.3,0,1.9,0.1,2.2c0.3,1.1,1.1,2,2.2,2.2c0.2,0.1,0.5,0.1,1.2,0.1c0.1,0,0.2,0,0.3,0v-6.7c0-0.6,0.4-1,1-1  h6.5c0.6,0,1,0.4,1,1V21.3z M9.8,15.5v5.7c2,0,3.5,0,4.5,0v-5.7H9.8z" /></svg>
               <h4 style={{ color: "#5d1919" }}>Home</h4>
@@ -270,9 +276,11 @@ class Dashboard extends React.Component {
           <div className="panel__top">
             <div className="stockChart">
               {this.state.loader1 === "" ? (
-                <div className="loader">
-                  <div className="loader-inner" />
-                </div>
+                <ul className="loader">
+                  <li></li>
+                  <li></li>
+                  <li></li>
+                </ul>
               ) : (
                   <div />
                 )}
@@ -283,6 +291,7 @@ class Dashboard extends React.Component {
                 )}
               {this.state.loader1 === true ? (
                 <div className="stockChart__chart">
+
                   <Line data={this.data1} options={options} />
                 </div>
               ) : (
@@ -302,9 +311,11 @@ class Dashboard extends React.Component {
             </div>
             <div className="stockChart">
               {this.state.loader2 === "" ? (
-                <div className="loader">
-                  <div className="loader-inner" />
-                </div>
+                <ul className="loader">
+                  <li></li>
+                  <li></li>
+                  <li></li>
+                </ul>
               ) : (
                   <div />
                 )}
@@ -337,11 +348,19 @@ class Dashboard extends React.Component {
           <div className="panel__bottom">
             <div className="panel__stockList">
               <h3>More Stocks</h3>
-              <ul className="panel__list">
-                {stockList.map((value, index) => {
-                  return <li key={index}><span><img alt={value} src={stockListLogos[index]}></img><h4>{value}</h4></span><h4>${stockListPrices[index]}</h4></li>
-                })}
-              </ul>
+              {this.state.loader3 ?
+                <ul className="panel__list">
+                  {stockList.map((value, index) => {
+                    return <li key={index}><span><img alt={value} src={stockListLogos[index]}></img><h4>{value}</h4></span><h4>${stockListPrices[index]}</h4></li>
+                  })}
+                </ul>
+                :
+                <ul className="loader">
+                  <li></li>
+                  <li></li>
+                  <li></li>
+                </ul>
+              }
             </div>
           </div>
         </div>

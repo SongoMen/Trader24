@@ -54,10 +54,12 @@ class App extends Component {
   }
   render() {
     return this.state.loading ?
-    <div className="loader-background">
-      <div className="loader">
-        <div className="loader-inner" />
-      </div>
+      <div className="loader-background">
+        <ul className="loader">
+          <li></li>
+          <li></li>
+          <li></li>
+        </ul>
       </div>
       : (
         <Router>
