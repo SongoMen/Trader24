@@ -1,7 +1,10 @@
 import React from "react";
 import { Line } from "react-chartjs-2";
 import firebase from 'firebase/app';
+import 'firebase/firestore';
 import { logout } from './auth'
+
+const db = firebase.firestore();
 
 var options = {
   maintainAspectRatio: false,
@@ -52,8 +55,10 @@ class Dashboard extends React.Component {
     this.state = {
       loader1: "",
       loader2: "",
-      loader3: ""
+      loader3: "",
+      funds: "",
     }
+    this.componentWillMount = this.componentWillMount.bind(this);
     function labelGen(length) {
       let result = 0;
       for (let i = 1; i < length; i++) {
@@ -201,8 +206,12 @@ class Dashboard extends React.Component {
       });
   }
   componentWillMount() {
+
+    // GET CHARTS
     this.getStockInfo(stockSymbols[0], chartData1, stockChanges, stockPrices, 0)
     this.getStockInfo(stockSymbols[1], chartData2, stockChanges, stockPrices, 1)
+
+    // CHECK CHARTS
     setTimeout(() => {
       if (stockChanges[0] !== undefined && stockPrices[0] !== undefined && chartData1.length >= 10) {
         this.setState({
@@ -225,9 +234,26 @@ class Dashboard extends React.Component {
         })
       }
     }, 1000);
+
+    // STOCK LIST
     this.getStocksList()
+
+    //READ PORTFOLIO
+    let user = firebase.auth().currentUser.displayName;
+
+    var docRef = db.collection("users").doc(user);
+
+    docRef.get().then(doc => {
+      this.setState({
+        funds: doc.data()["currentfunds"]
+      })
+    }).catch(function (error) {
+      console.log("Error getting document:", error);
+    });
   }
   render() {
+
+    let user = firebase.auth().currentUser.displayName;
     for (let i = 0; i < stockSymbols.length; i++) {
       if (Math.sign(stockChanges[i]) === -1) {
         changesColors[i] = "#ff5e57"
@@ -241,7 +267,6 @@ class Dashboard extends React.Component {
         changesColors[i] = "#999eaf"
       }
     }
-    let user = firebase.auth().currentUser.displayName;
     return (
       <div className="Dashboard">
         <div className="leftbar">
@@ -269,81 +294,91 @@ class Dashboard extends React.Component {
           </div>
         </div>
         <div className="panel">
-          <div className="panel__title">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 80" x="0px" y="0px"><g data-name="Layer 2"><g data-name="Layer 4"><path d="M24,64A24,24,0,0,1,11.44,19.55a2,2,0,0,1,2.71,2.82C13,24.08,10,29.35,10,33a6.93,6.93,0,0,0,7,7c3.48,0,7-2.16,7-7,0-1.89-1-3.57-2.06-5.53-3-5.38-6.83-12.07,6.58-26.82a2,2,0,0,1,3.33,2.11c-4.11,10,0,13.59,5.75,18.58C42.47,25.6,48,30.42,48,40A24,24,0,0,1,24,64ZM6.2,30.84A20,20,0,1,0,44,40c0-7.76-4.39-11.59-9-15.64-4.13-3.61-8.67-7.56-8.74-14.41-5.17,7.85-3,11.62-.81,15.56C26.69,27.74,28,30.06,28,33A10.64,10.64,0,0,1,17,44,10.88,10.88,0,0,1,6,33,12.59,12.59,0,0,1,6.2,30.84Z" /></g></g></svg>
-            <h2>Most Popular</h2>
-          </div>
-          <div className="panel__top">
-            <div className="stockChart">
-              {this.state.loader1 === "" ? (
-                <ul className="loader">
-                  <li></li>
-                  <li></li>
-                  <li></li>
-                </ul>
-              ) : (
-                  <div />
-                )}
-              {this.state.loader1 === false ? (
-                <h5>Couldn't load chart try again in few minutes</h5>
-              ) : (
-                  <div />
-                )}
-              {this.state.loader1 === true ? (
-                <div className="stockChart__chart">
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <div className="panel__top">
+              <div className="panel__title">
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <svg className="panel__popular" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 80" x="0px" y="0px"><g data-name="Layer 2"><g data-name="Layer 4"><path d="M24,64A24,24,0,0,1,11.44,19.55a2,2,0,0,1,2.71,2.82C13,24.08,10,29.35,10,33a6.93,6.93,0,0,0,7,7c3.48,0,7-2.16,7-7,0-1.89-1-3.57-2.06-5.53-3-5.38-6.83-12.07,6.58-26.82a2,2,0,0,1,3.33,2.11c-4.11,10,0,13.59,5.75,18.58C42.47,25.6,48,30.42,48,40A24,24,0,0,1,24,64ZM6.2,30.84A20,20,0,1,0,44,40c0-7.76-4.39-11.59-9-15.64-4.13-3.61-8.67-7.56-8.74-14.41-5.17,7.85-3,11.62-.81,15.56C26.69,27.74,28,30.06,28,33A10.64,10.64,0,0,1,17,44,10.88,10.88,0,0,1,6,33,12.59,12.59,0,0,1,6.2,30.84Z" /></g></g></svg>
+                  <h2>Most Popular</h2>
+                </div>
+              </div>
+              <div className="stockChart">
+                {this.state.loader1 === "" ? (
+                  <ul className="loader">
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                  </ul>
+                ) : (
+                    <div />
+                  )}
+                {this.state.loader1 === false ? (
+                  <h5>Couldn't load chart try again in few minutes</h5>
+                ) : (
+                    <div />
+                  )}
+                {this.state.loader1 === true ? (
+                  <div className="stockChart__chart">
 
-                  <Line data={this.data1} options={options} />
-                </div>
-              ) : (
-                  <div />
-                )}
-              {this.state.loader1 ? (
-                <div className="stockChart__info">
-                  <h3 className="stockChart__name">{stockSymbols[0]}</h3>
-                  <div className="stockChart__price-info">
-                    <h4 className="stockChart__change" style={{ color: changesColors[0] }}>{stockChanges[0]}%</h4>
-                    <h3 className="stockChart__price">${stockPrices[0]}</h3>
+                    <Line data={this.data1} options={options} />
                   </div>
-                </div>
-              ) : (
-                  <div />
-                )}
-            </div>
-            <div className="stockChart">
-              {this.state.loader2 === "" ? (
-                <ul className="loader">
-                  <li></li>
-                  <li></li>
-                  <li></li>
-                </ul>
-              ) : (
-                  <div />
-                )}
-              {this.state.loader2 === false ? (
-                <h5>Couldn't load chart try again in few minutes</h5>
-              ) : (
-                  <div />
-                )}
-              {this.state.loader2 === true ? (
-                <div className="stockChart__chart">
-                  <Line data={this.data2} options={options} />
-                </div>
-              ) : (
-                  <div />
-                )}
-              {this.state.loader2 ? (
-                <div className="stockChart__info">
-                  <h3 className="stockChart__name">{stockSymbols[1]}</h3>
-                  <div className="stockChart__price-info">
-                    <h4 className="stockChart__change" style={{ color: changesColors[1] }}>{stockChanges[1]}%</h4>
-                    <h3 className="stockChart__price">${stockPrices[1]}</h3>
+                ) : (
+                    <div />
+                  )}
+                {this.state.loader1 ? (
+                  <div className="stockChart__info">
+                    <h3 className="stockChart__name">{stockSymbols[0]}</h3>
+                    <div className="stockChart__price-info">
+                      <h4 className="stockChart__change" style={{ color: changesColors[0] }}>{stockChanges[0]}%</h4>
+                      <h3 className="stockChart__price">${stockPrices[0]}</h3>
+                    </div>
                   </div>
-                </div>
-              ) : (
-                  <div />
-                )}
+                ) : (
+                    <div />
+                  )}
+              </div>
+              <div className="stockChart">
+                {this.state.loader2 === "" ? (
+                  <ul className="loader">
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                  </ul>
+                ) : (
+                    <div />
+                  )}
+                {this.state.loader2 === false ? (
+                  <h5>Couldn't load chart try again in few minutes</h5>
+                ) : (
+                    <div />
+                  )}
+                {this.state.loader2 === true ? (
+                  <div className="stockChart__chart">
+                    <Line data={this.data2} options={options} />
+                  </div>
+                ) : (
+                    <div />
+                  )}
+                {this.state.loader2 ? (
+                  <div className="stockChart__info">
+                    <h3 className="stockChart__name">{stockSymbols[1]}</h3>
+                    <div className="stockChart__price-info">
+                      <h4 className="stockChart__change" style={{ color: changesColors[1] }}>{stockChanges[1]}%</h4>
+                      <h3 className="stockChart__price">${stockPrices[1]}</h3>
+                    </div>
+                  </div>
+                ) : (
+                    <div />
+                  )}
+              </div>          </div>
+            <div className="panel__portfolio-section">
+              <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
+                <svg className="panel__portfolio-title" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 200 250" enableBackground="new 0 0 200 200" xmlSpace="preserve"><g><g><path fill="#000000" d="M156.811,54.528H43.159L0,97.64l96.874,96.875l3.119,3.117l3.117-3.117L200,97.64L156.811,54.528z     M99.992,187.565l-8.136-8.134L10.082,97.64l36.02-35.99h107.763l36.056,35.99l-81.793,81.792L99.992,187.565z" /><g><path fill="#000000" d="M63.434,94.079l28.423,85.353l5.017,15.083l3.119,3.117l3.117-3.117l5.018-15.083l28.409-85.353H63.434z      M99.992,181.331l-26.684-80.13h53.351L99.992,181.331z" /><polygon fill="#000000" points="74.664,101.198 5.041,101.198 5.041,94.076 62.083,94.076 41.576,59.925 47.684,56.259    " /><polygon fill="#000000" points="67.956,103.86 41.576,59.925 47.684,56.259 68.791,91.413 97.21,55.868 102.771,60.316    " /><polygon fill="#000000" points="132.02,103.86 97.21,60.316 102.771,55.868 131.185,91.413 152.288,56.259 158.396,59.925    " /><polygon fill="#000000" points="194.96,101.198 125.312,101.198 152.288,56.259 158.396,59.925 137.893,94.076 194.96,94.076         " /></g></g><g><rect x="96.439" y="2.368" fill="#000000" width="7.123" height="23.74" /><rect x="120.786" y="7.211" transform="matrix(0.9238 0.3828 -0.3828 0.9238 16.7729 -46.1416)" fill="#000000" width="7.124" height="23.742" /><rect x="141.429" y="21.002" transform="matrix(0.7071 0.7071 -0.7071 0.7071 65.7174 -92.8988)" fill="#000000" width="7.121" height="23.742" /><rect x="63.779" y="15.52" transform="matrix(0.3827 0.9239 -0.9239 0.3827 64.3313 -58.112)" fill="#000000" width="23.742" height="7.124" /><rect x="43.139" y="29.312" transform="matrix(0.707 0.7072 -0.7072 0.707 39.3628 -29.2704)" fill="#000000" width="23.74" height="7.121" /></g></g></svg>              <h2>Portfolio</h2>
+              </div>
+              <div className="panel__portfolio">
+                {this.state.funds}
+              </div>
             </div>
-            <div className="panel__portfolio"></div>
           </div>
           <div className="panel__bottom">
             <div className="panel__stockList">

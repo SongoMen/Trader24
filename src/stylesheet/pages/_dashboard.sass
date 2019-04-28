@@ -76,22 +76,26 @@
 .panel__top
   display: flex
   flex-wrap: wrap
-  width: 100%
+  width: 65%
 
 .panel__title
   display: flex
   align-items: center  
-  svg
+  justify-content: space-between
+  width: 100%
+  padding-right: 200px
+  .panel__popular
     width: 1.8%
     min-width: 20px
     margin-right: 20px
     fill: $main-color
     margin-bottom: -8px
 
+
 .stockChart
     background-color: white
     box-shadow: 0px 0px 30px 0px rgba(0,0,0,0.12)
-    width: 28%
+    width: 40%
     border-radius: 20px
     flex-direction: row
     position: relative
@@ -101,16 +105,26 @@
     text-align: center
     margin-right: 50px
     margin-bottom: 50px
-    min-width: 330px
+    min-width: 300px
     height: 270px
   
+.panel__portfolio-section
+  width: 35%
+
 .panel__portfolio
   border-radius: 20px
-  width: 35%
+  width: 100%
   min-width: 400px
   background-color: white
   box-shadow: 0px 0px 30px 0px rgba(0,0,0,0.12)
   height: 270px
+  margin-bottom: 50px
+  .panel__portfolio-title
+    width: 7%
+    margin-bottom: -8px
+    fill: $main-color
+    margin-right: 20px
+    min-width: 20px
 
 .stockChart__chart
     width: 100%

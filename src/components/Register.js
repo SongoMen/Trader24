@@ -29,6 +29,9 @@ class Register extends Component {
                 email: this.email.value,
                 username: this.username.value,
                 password: this.password.value,
+                funds: "100000",
+                currentfunds: "100000",
+                accountValue: "100000"
             })
                 .then(() => {
                     console.log("Xxx")
