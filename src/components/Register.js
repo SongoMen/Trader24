@@ -28,7 +28,6 @@ class Register extends Component {
             db.collection("users").doc(this.username.value).set({
                 email: this.email.value,
                 username: this.username.value,
-                password: this.password.value,
                 funds: "100000",
                 currentfunds: "100000",
                 accountValue: "100000"

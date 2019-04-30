@@ -57,6 +57,7 @@ class Dashboard extends React.Component {
       loader2: "",
       loader3: "",
       funds: "",
+      accountValue:""
     }
     this.componentWillMount = this.componentWillMount.bind(this);
     function labelGen(length) {
@@ -75,6 +76,10 @@ class Dashboard extends React.Component {
       gradientFill.addColorStop(0, "rgba(255,94,87,0.3)");
       gradientFill.addColorStop(0.2, "rgba(255,211,42,.25)");
       gradientFill.addColorStop(1, "rgba(255, 255, 255, 0)");
+      ctx.shadowColor = 'rgba(255, 94, 87, 0.4)';
+      ctx.shadowBlur = 5;
+      ctx.shadowOffsetX = 0;
+      ctx.shadowOffsetY = 4;
       return {
         labels: labelGen(40),
         datasets: [
@@ -100,8 +105,12 @@ class Dashboard extends React.Component {
       gradient.addColorStop(1, "#ffd32a");
       let gradientFill = ctx.createLinearGradient(0, 0, 0, 100);
       gradientFill.addColorStop(0, "rgba(255,94,87,0.3)");
-      gradientFill.addColorStop(0.2, "rgba(255,211,42,.25)");
+      gradientFill.addColorStop(0.2, "rgba(255,211,42,.15)");
       gradientFill.addColorStop(1, "rgba(255, 255, 255, 0)");
+      ctx.shadowColor = 'rgba(255, 94, 87, 0.4)';
+      ctx.shadowBlur = 15;
+      ctx.shadowOffsetX = 0;
+      ctx.shadowOffsetY = 4;
       return {
         labels: labelGen(40),
         datasets: [
@@ -173,8 +182,13 @@ class Dashboard extends React.Component {
     fetch(stocks)
       .then(res => res.json())
       .then(result => {
-        for (let i = 0; i < 4; i++) {
-          stockList[i] = result.companies[i].name
+        for (let i = 0; i < 12; i++) {
+          if (stockList[i] = result.companies[i].name.length > 18) {
+            stockList[i] = result.companies[i].ticker
+          }
+          else {
+            stockList[i] = result.companies[i].name
+          }
           stockListTickers[i] = result.companies[i].ticker
           const lastPrice = `https://api-v2.intrinio.com/securities/${stockListTickers[i]}/prices/realtime?api_key=OjNmMmQyMjFlZmU5NDAzNWQ2ZWIyNmRhY2QxNzIzMjM2`;
           const logo = `https://api-v2.intrinio.com/companies/${stockListTickers[i]}?api_key=OjNmMmQyMjFlZmU5NDAzNWQ2ZWIyNmRhY2QxNzIzMjM2`
@@ -239,17 +253,33 @@ class Dashboard extends React.Component {
     this.getStocksList()
 
     //READ PORTFOLIO
-    let user = firebase.auth().currentUser.displayName;
+    function numberWithCommas(x) {
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
 
-    var docRef = db.collection("users").doc(user);
+    let user = firebase.auth().currentUser.displayName;
+    let docRef = db.collection("users").doc(user);
 
     docRef.get().then(doc => {
       this.setState({
-        funds: doc.data()["currentfunds"]
+        funds: numberWithCommas(doc.data()["currentfunds"])
+      })
+      this.setState({
+        accountValue: numberWithCommas(doc.data()["funds"])
       })
     }).catch(function (error) {
       console.log("Error getting document:", error);
     });
+
+    // CHECK OWNED SHARES
+    let docStocks = db.collection("users").doc(user).collection("stocks");
+
+    docStocks.get().then(doc => {
+      console.log(doc.data())
+    }).catch(function (error) {
+      console.log("Error: ", error);
+    });
+
   }
   render() {
     let user = firebase.auth().currentUser.displayName;
@@ -257,7 +287,7 @@ class Dashboard extends React.Component {
       if (Math.sign(stockChanges[i]) === -1) {
         changesColors[i] = "#ff5e57"
       } else if (Math.sign(stockChanges[i]) === 1) {
-        changesColors[i] = "green"
+        changesColors[i] = "#5ce569"
         stockChanges[i] = "+" + stockChanges[i]
         if (stockChanges[i].charAt(0) === "+" && stockChanges[i].charAt(1) === "+")
           stockChanges[i] = stockChanges[i].substr(1)
@@ -288,12 +318,12 @@ class Dashboard extends React.Component {
             </li>
           </ul>
           <div className="leftbar__user">
-            Hi, <span className="leftbar__name">{user} !</span>
-            <h4 onClick={() => logout()}>LOGOUT</h4>
+            <div className="leftbar__bottom">Hi, <span className="leftbar__name"> &nbsp;{user} !</span><svg onClick={() => logout()} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 30" x="0px" y="0px"><title>LOG OUT</title><g data-name="LOG OUT"><path d="M13,21a1,1,0,0,1-1,1H3a1,1,0,0,1-1-1V3A1,1,0,0,1,3,2h9a1,1,0,0,1,0,2H4V20h8A1,1,0,0,1,13,21Zm8.92-9.38a1,1,0,0,0-.22-.32h0l-4-4a1,1,0,0,0-1.41,1.41L18.59,11H7a1,1,0,0,0,0,2H18.59l-2.29,2.29a1,1,0,1,0,1.41,1.41l4-4h0a1,1,0,0,0,.22-1.09Z" /></g></svg></div>
+            <h3>${this.state.funds}</h3>
           </div>
         </div>
         <div className="panel">
-          <div style={{ display: 'flex', alignItems: 'center',flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
             <div className="panel__top">
               <div className="panel__title">
                 <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -377,7 +407,7 @@ class Dashboard extends React.Component {
                 <svg className="panel__portfolio-title" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 200 250" enableBackground="new 0 0 200 200" xmlSpace="preserve"><g><g><path d="M156.811,54.528H43.159L0,97.64l96.874,96.875l3.119,3.117l3.117-3.117L200,97.64L156.811,54.528z     M99.992,187.565l-8.136-8.134L10.082,97.64l36.02-35.99h107.763l36.056,35.99l-81.793,81.792L99.992,187.565z" /><g><path d="M63.434,94.079l28.423,85.353l5.017,15.083l3.119,3.117l3.117-3.117l5.018-15.083l28.409-85.353H63.434z      M99.992,181.331l-26.684-80.13h53.351L99.992,181.331z" /><polygon points="74.664,101.198 5.041,101.198 5.041,94.076 62.083,94.076 41.576,59.925 47.684,56.259    " /><polygon points="67.956,103.86 41.576,59.925 47.684,56.259 68.791,91.413 97.21,55.868 102.771,60.316    " /><polygon points="132.02,103.86 97.21,60.316 102.771,55.868 131.185,91.413 152.288,56.259 158.396,59.925    " /><polygon points="194.96,101.198 125.312,101.198 152.288,56.259 158.396,59.925 137.893,94.076 194.96,94.076         " /></g></g><g><rect x="96.439" y="2.368" width="7.123" height="23.74" /><rect x="120.786" y="7.211" transform="matrix(0.9238 0.3828 -0.3828 0.9238 16.7729 -46.1416)" width="7.124" height="23.742" /><rect x="141.429" y="21.002" transform="matrix(0.7071 0.7071 -0.7071 0.7071 65.7174 -92.8988)" width="7.121" height="23.742" /><rect x="63.779" y="15.52" transform="matrix(0.3827 0.9239 -0.9239 0.3827 64.3313 -58.112)" width="23.742" height="7.124" /><rect x="43.139" y="29.312" transform="matrix(0.707 0.7072 -0.7072 0.707 39.3628 -29.2704)" width="23.74" height="7.121" /></g></g></svg>              <h2>Portfolio</h2>
               </div>
               <div className="panel__portfolio">
-                {this.state.funds}
+                <div className="panel__value"><h5>ACCOUNT VALUE</h5><h5>{this.state.accountValue}</h5></div>
               </div>
             </div>
           </div>
@@ -387,7 +417,8 @@ class Dashboard extends React.Component {
               {this.state.loader3 ?
                 <ul className="panel__list">
                   {stockList.map((value, index) => {
-                    return <li key={index}><span><img alt={value} src={stockListLogos[index]}></img><h4>{value}</h4></span><h4>${stockListPrices[index]}</h4></li>
+                    if (index < 4)
+                      return <li key={index}><span><img alt={value} src={stockListLogos[index]}></img><h4>{value}</h4></span><h4>${stockListPrices[index]}</h4></li>
                   })}
                 </ul>
                 :
@@ -397,6 +428,41 @@ class Dashboard extends React.Component {
                   <li></li>
                 </ul>
               }
+            </div>
+            <div className="panel__stockList">
+              <h3>&nbsp;</h3>
+              {this.state.loader3 ?
+                <ul className="panel__list">
+                  {stockList.map((value, index) => {
+                    if (index >= 4 && index < 8)
+                      return <li key={index}><span><img alt={value} src={stockListLogos[index]}></img><h4>{value}</h4></span><h4>${stockListPrices[index]}</h4></li>
+                  })}
+                </ul>
+                :
+                <ul className="loader">
+                  <li></li>
+                  <li></li>
+                  <li></li>
+                </ul>
+              }
+            </div>
+            <div className="panel__stockList">
+              <h3>&nbsp;</h3>
+              {this.state.loader3 ?
+                <ul className="panel__list">
+                  {stockList.map((value, index) => {
+                    if (index >= 8)
+                      return <li key={index}><span><img alt="" src={stockListLogos[index]}></img><h4>{value}</h4></span><h4>${stockListPrices[index]}</h4></li>
+                  })}
+                </ul>
+                :
+                <ul className="loader">
+                  <li></li>
+                  <li></li>
+                  <li></li>
+                </ul>
+              }
+
             </div>
           </div>
         </div>

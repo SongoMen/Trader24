@@ -38,7 +38,7 @@
     -webkit-animation: loadbars 0.6s ease-in-out infinite -0.2s
   &:nth-child(3)
     -webkit-animation: loadbars 0.6s ease-in-out infinite -0.4s
-
+  
 .leftbar
     position: relative
     background-color: $leftbar-color
@@ -47,11 +47,16 @@
     display: flex
     align-items: flex-start
     flex-direction: column
-    padding: 50px 30px
+    padding: 30px 20px
 
 .leftbar__user
   position: absolute
-  bottom: 0
+  bottom: 20px
+  white-space: nowrap
+  h3
+    margin: 0
+    color: black
+
 
 .leftbar__name
   font-weight: 800
@@ -59,13 +64,23 @@
 .leftbar__logo
   width: 20%
   min-width: 40px
+
 .leftbar__heading
   display: flex
   justify-content: center
   align-items: center
   flex-direction: column
 
-
+.leftbar__bottom
+  display: flex
+  align-items: center
+  margin-bottom: 5px
+  svg
+    width: 10%
+    margin-bottom: -6px
+    cursor: pointer
+    margin-left: 20px
+  
 .panel
     background-color: $panel-color
     width: 88%
@@ -119,12 +134,29 @@
     box-shadow: 0px 0px 30px 0px rgba(0,0,0,0.07)
     height: 270px
     margin-bottom: 50px
+    position: relative
+    padding: 10px 20px
   .panel__portfolio-title
     width: 5.5%
     margin-bottom: -6px
     fill: $main-color
     margin-right: 20px
     min-width: 20px
+  .panel__value
+    display: flex
+    justify-content: space-between
+    align-items: center
+    position: absolute
+    bottom: 10px
+    width: 100%
+    padding-right: 40px
+    &:before
+      position: absolute
+      content: ''
+      width: 91%
+      height: 2px
+      bottom: 50px
+      border-bottom: 1px solid black
 
 .stockChart__chart
     width: 100%
@@ -198,22 +230,19 @@
       fill: $main-color!important
 
 .panel__bottom
-  margin-top: 30px
+  display: flex
   
 .panel__stockList
   width: 30%
+  margin-right: 20px
+  min-width: 300px
 
 .panel__list
   width: 100%
-  columns: 2;
-  -webkit-columns: 2;
-  -moz-columns: 2;
-  list-style-position: inside
   li
     display: flex
     justify-content: space-between
     width: 100%
-    min-width: 300px
     margin: 10px
     padding: 5px 15px
     background-color: white
