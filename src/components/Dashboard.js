@@ -57,7 +57,7 @@ class Dashboard extends React.Component {
       loader2: "",
       loader3: "",
       funds: "",
-      accountValue:""
+      accountValue: ""
     }
     this.componentWillMount = this.componentWillMount.bind(this);
     function labelGen(length) {
@@ -74,7 +74,7 @@ class Dashboard extends React.Component {
       gradient.addColorStop(1, "#ffd32a");
       let gradientFill = ctx.createLinearGradient(0, 0, 0, 100);
       gradientFill.addColorStop(0, "rgba(255,94,87,0.3)");
-      gradientFill.addColorStop(0.2, "rgba(255,211,42,.25)");
+      gradientFill.addColorStop(0.2, "rgba(255,211,42,.15)");
       gradientFill.addColorStop(1, "rgba(255, 255, 255, 0)");
       ctx.shadowColor = 'rgba(255, 94, 87, 0.4)';
       ctx.shadowBlur = 5;
@@ -272,14 +272,8 @@ class Dashboard extends React.Component {
     });
 
     // CHECK OWNED SHARES
-    let docStocks = db.collection("users").doc(user).collection("stocks");
-
-    docStocks.get().then(doc => {
-      console.log(doc.data())
-    }).catch(function (error) {
-      console.log("Error: ", error);
-    });
-
+    //let snapshot = firebase.firestore().collection('users').get()
+    //console.log(snapshot.docs.map(doc => doc.data()))
   }
   render() {
     let user = firebase.auth().currentUser.displayName;

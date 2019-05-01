@@ -6,6 +6,7 @@ import Home from './Home.js';
 import Dashboard from './Dashboard.js';
 import Register from './Register';
 import Login from './Login'
+import Stocks from './Stocks'
 
 function PrivateRoute({ component: Component, authed, ...rest }) {
   return (
@@ -69,6 +70,7 @@ class App extends Component {
               <PublicRoute authed={this.state.authed} path="/register" component={Register} />
               <PublicRoute authed={this.state.authed} path="/login" component={Login} />
               <PrivateRoute authed={this.state.authed} path="/dashboard" component={Dashboard} />
+              <PrivateRoute authed={this.state.authed} path="/stocks" component={Stocks} />
             </Switch>
           </div>
         </Router>
