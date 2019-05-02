@@ -220,6 +220,7 @@ class Dashboard extends React.Component {
       });
   }
   componentWillMount() {
+    document.title = "Trader24 - Dashboard"
 
     // GET CHARTS
     this.getStockInfo(stockSymbols[0], chartData1, stockChanges, stockPrices, 0)
@@ -298,7 +299,7 @@ class Dashboard extends React.Component {
         <div className="leftbar">
           <div className="leftbar__heading">
             <img className="leftbar__logo" src={require("../images/logo.png")} alt="logo"></img>
-            <h2>STOC3R</h2>
+            <h2>TRADER24</h2>
           </div>
           <ul className="leftbar__menu">
             <li>
