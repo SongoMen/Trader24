@@ -38,18 +38,18 @@ export default class Login extends React.Component {
                             </div>
 
                             <div className="container-register-form-btn">
-                                <button type="button" className="register-form-btn" onClick={event => this.handleClick(event)}>Login</button>
+                                <button type="submit" className="register-form-btn" onClick={event => this.handleClick(event)}>Login</button>
                             </div>
 
                             <div className="text-center">
-                                <span className="txt1">Forgot</span> <a className="txt2" href="">Password ?</a>
+                                <span className="txt1">Forgot</span> <a className="txt2" href="Register">Password ?</a>
                             </div>
 
                             <div className="text-center">
                                 <span className="txt2">Doesn't have an account ?<a className="txt2" href="Register"> Register here</a></span>
                             </div>
                             {this.state.msg !== "" ?
-                                <h3 style={{ color: "green" }}>{this.state.msg}</h3>
+                                <h3>{this.state.msg}</h3>
                                 :
                                 <div />}
                         </form>
