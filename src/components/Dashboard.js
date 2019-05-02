@@ -55,6 +55,8 @@ let stockListLogos = []
 let portfolioStocks = []
 let portfolioShares = []
 let portfolioValue = []
+let portfolioDifference = []
+let portfolioColor = []
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -229,6 +231,9 @@ class Dashboard extends React.Component {
   routeChange(path) {
     this.props.history.push(path);
   }
+  relDiff(a, b) {
+    return  100 * Math.abs( ( a - b ) / ( (a+b)/2 ) );
+   }
   getAccountInfo(){
     function numberWithCommas(x) {
       return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -246,15 +251,27 @@ class Dashboard extends React.Component {
     }).catch(function (error) {
       console.log("Error getting document:", error);
     });
+    let i = 0
     firebase.firestore().collection('users').doc(user).collection("stocks").get().then(snapshot => {
       snapshot.forEach(doc => {
         console.log(doc.id, '=>', doc.data());
         portfolioStocks.push(doc.id)
         portfolioShares.push(numberWithCommas(doc.data().shares))
         portfolioValue.push(numberWithCommas(doc.data().value))
+        portfolioDifference.push(this.relDiff(doc.data().value, doc.data().moneyPaid).toFixed(2))
+        if(doc.data().value > doc.data().moneyPaid){
+          portfolioDifference[i] = "+" + portfolioDifference[i]
+          portfolioColor.push("#5ce569")
+        }
+        else{
+          portfolioDifference[i] = "-" + portfolioDifference[i]
+          portfolioColor.push("#ff5e57")
+        }
+        i++;
       });
     });
   }
+
   componentWillMount() {
     document.title = "Trader24 - Dashboard"
     // GET CHARTS
@@ -422,7 +439,7 @@ class Dashboard extends React.Component {
               <div className="panel__portfolio">
                 <ul className="panel__portfolio-list">
                   {portfolioStocks.map((value, index) => {
-                    return <li key={index}><h5>{value}</h5><h5>{portfolioShares[index]}</h5><h5>${portfolioValue[index]}</h5></li>
+                    return <li key={index}><h5>{value}</h5><h5>{portfolioShares[index]}</h5><h5 style = {{color:portfolioColor[index]}}>{portfolioDifference[index]}%</h5><h5>${portfolioValue[index]}</h5></li>
                   })}
                 </ul>
                 <div className="panel__value"><h5>ACCOUNT VALUE</h5><h5>{this.state.accountValue}</h5></div>
