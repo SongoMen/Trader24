@@ -23,7 +23,7 @@ export default class Stocks extends React.Component {
             .then(res => res.json())
             .then(result => {
                 for (let i = 0; i < 12; i++) {
-                    if (stockList[i] = result.companies[i].name.length > 18) {
+                    if (result.companies[i].name.length >= 18) {
                         stockList[i] = result.companies[i].ticker
                     }
                     else {
