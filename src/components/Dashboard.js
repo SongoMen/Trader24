@@ -271,7 +271,6 @@ class Dashboard extends React.Component {
       });
     });
   }
-
   componentWillMount() {
     document.title = "Trader24 - Dashboard"
     // GET CHARTS

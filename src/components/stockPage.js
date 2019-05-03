@@ -1,36 +1,139 @@
 import React from 'react'
 import { logout } from './auth'
 import firebase from 'firebase/app';
+import { Line } from "react-chartjs-2";
 
 const db = firebase.firestore();
 
+var options = {
+    maintainAspectRatio: false,
+    responsive: true,
+    tooltips: { enabled: false },
+    hover: { mode: null },
+    legend: {
+        display: false
+    },
+    scales: {
+        xAxes: [
+            {
+                display: false
+            }
+        ],
+        yAxes: [
+            {
+                display: false
+            }
+        ]
+    },
+    elements: {
+        point: {
+            radius: 0
+        },
+        line: {
+            borderCapStyle: "round",
+            borderJoinStyle: "round",
+            tension: 1
+        }
+    }
+};
+
+let chartData1 = []
+let chartLength = ""
 
 export default class stockPage extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
-          funds: "",
-          accountValue: ""
+            loaded: "",
+            funds: "",
+            accountValue: ""
         }
+        this.data1 = canvas => {
+            function labelGen(length) {
+                let result = 0;
+                for (let i = 1; i < length; i++) {
+                    result = result + "," + i;
+                }
+                return result.split(",");
+            }
+            const ctx = canvas.getContext("2d");
+            const gradient = ctx.createLinearGradient(0, 0, 600, 10);
+            gradient.addColorStop(0, "#7c83ff");
+            gradient.addColorStop(1, "#7cf4ff");
+            let gradientFill = ctx.createLinearGradient(0, 0, 0, 100);
+            gradientFill.addColorStop(0, "rgba(124, 131, 255,.3)");
+            gradientFill.addColorStop(0.2, "rgba(124, 244, 255,.15)");
+            gradientFill.addColorStop(1, "rgba(255, 255, 255, 0)");
+            ctx.shadowColor = 'rgba(124, 244, 255,.3)';
+            ctx.shadowBlur = 5;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 4;
+            return {
+                labels: labelGen(chartLength),
+                datasets: [
+                    {
+                        lineTension: 0.3,
+                        label: "",
+                        pointBorderWidth: 0,
+                        pointHoverRadius: 0,
+                        borderColor: gradient,
+                        backgroundColor: gradientFill,
+                        pointBackgroundColor: gradient,
+                        fill: true,
+                        borderWidth: 5,
+                        data: chartData1
+                    }
+                ]
+            };
+        };
     }
     numberWithCommas(x) {
         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-      }
-    componentWillMount(){
+    }
+    routeChange(path) {
+        this.props.history.push(path);
+    }
+    getChart(days) {
         var d = new Date();
-        console.log(        d.setDate(d.getDate()-5))
+        let today = d.toLocaleString().split(" ")
+        let dd = new Date()
+        dd.setDate(dd.getDate() - days);
+
+        dd = dd.toLocaleString()
+        let ago = dd.split(" ")
+        const apiData =
+            `https://api.intrinio.com/historical_data?ticker=AAPL&item=close_price&start_date=${ago[0].split(",").join("").split(".").join("-")}&end_date=${today[0].split(",").join("").split(".").join("-")}?api_key=OjNmMmQyMjFlZmU5NDAzNWQ2ZWIyNmRhY2QxNzIzMjM2`
+        fetch(apiData, {
+            method: 'get',
+            headers: {
+                "Content-Type": "text/plain",
+                'Authorization': 'Basic ' + btoa(":"),
+            },
+        })
+            .then(res => res.json())
+            .then(result => {
+                chartLength = result.data.length
+                for (let i = 0; i < result.data.length; i++) {
+                    chartData1[i] = result.data[i].value
+                }
+                this.setState({
+                    loaded: true
+                })
+            })
+    }
+    componentDidMount() {
         let user = firebase.auth().currentUser.displayName;
         let docRef = db.collection("users").doc(user);
-    
-        docRef.get().then(doc => {
-          this.setState({
-            funds: this.numberWithCommas(doc.data()["currentfunds"])
-          })
-        }).catch(function (error) {
-          console.log("Error getting document:", error);
-        });
-    }
 
+        docRef.get().then(doc => {
+            this.setState({
+                funds: this.numberWithCommas(doc.data()["currentfunds"])
+            })
+        }).catch(function (error) {
+            console.log("Error getting document:", error);
+        });
+        this.getChart(30)
+    }
     render() {
         let user = firebase.auth().currentUser.displayName;
         return (
@@ -60,6 +163,13 @@ export default class stockPage extends React.Component {
                     </div>
                 </div>
                 {this.props.symbol}
+                {this.state.loaded ?
+                    <div className="stock__chart">
+                        <Line data={this.data1} options={options} onLoad />
+                    </div>
+                    :
+                    <div />
+                }
             </div>
         )
     }
