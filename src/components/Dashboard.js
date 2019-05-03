@@ -451,7 +451,7 @@ class Dashboard extends React.Component {
               {this.state.loader3 ?
                 <ul className="panel__list">
                   {stockList.map((value, index) => {
-                    if (index < 4) return <li key={index}><span><img alt="" src={stockListLogos[index]}></img><h4>{value}</h4></span><h4>${stockListPrices[index]}</h4></li>
+                    if (index < 4) return <li onClick = {()=>this.routeChange(stockListTickers[index])} key={index}><span><img alt="" src={stockListLogos[index]}></img><h4>{value}</h4></span><h4>${stockListPrices[index]}</h4></li>
                     else return ""
                   })}
                 </ul>
@@ -468,7 +468,7 @@ class Dashboard extends React.Component {
               {this.state.loader3 ?
                 <ul className="panel__list">
                   {stockList.map((value, index) => {
-                    if (index >= 4 && index < 8) return <li key={index}><span><img alt="" src={stockListLogos[index]}></img><h4>{value}</h4></span><h4>${stockListPrices[index]}</h4></li>
+                    if (index >= 4 && index < 8) return <li onClick = {()=>this.routeChange(stockListTickers[index])} key={index}><span><img alt="" src={stockListLogos[index]}></img><h4>{value}</h4></span><h4>${stockListPrices[index]}</h4></li>
                     else return ""
                   })}
                 </ul>
@@ -485,7 +485,7 @@ class Dashboard extends React.Component {
               {this.state.loader3 ?
                 <ul className="panel__list">
                   {stockList.map((value, index) => { 
-                    if (index >= 8) return <li key={index}><span><img alt="" src={stockListLogos[index]}></img><h4>{value}</h4></span><h4>${stockListPrices[index]}</h4></li>
+                    if (index >= 8) return <li onClick = {()=>this.routeChange(stockListTickers[index])} key={index}><span><img alt="" src={stockListLogos[index]}></img><h4>{value}</h4></span><h4>${stockListPrices[index]}</h4></li>
                     else return ""
                   })}
                 </ul>
