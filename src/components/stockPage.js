@@ -8,22 +8,8 @@ const db = firebase.firestore();
 var options = {
     maintainAspectRatio: false,
     responsive: true,
-    tooltips: { enabled: false },
-    hover: { mode: null },
     legend: {
         display: false
-    },
-    scales: {
-        xAxes: [
-            {
-                display: false
-            }
-        ],
-        yAxes: [
-            {
-                display: false
-            }
-        ]
     },
     elements: {
         point: {
@@ -50,9 +36,13 @@ export default class stockPage extends React.Component {
         }
         this.data1 = canvas => {
             function labelGen(length) {
-                let result = 0;
-                for (let i = 1; i < length; i++) {
-                    result = result + "," + i;
+                let result = "";
+                for(let i = length;i>=1;i--){
+                    let dd = new Date()
+                    dd.setDate(dd.getDate() - i);
+                    dd = dd.toLocaleString()
+                    let ago = dd.split(" ")
+                    result = result + ago[0];
                 }
                 return result.split(",");
             }
@@ -96,11 +86,12 @@ export default class stockPage extends React.Component {
     getChart(days) {
         var d = new Date();
         let today = d.toLocaleString().split(" ")
+
         let dd = new Date()
         dd.setDate(dd.getDate() - days);
-
         dd = dd.toLocaleString()
         let ago = dd.split(" ")
+
         const apiData =
             `https://api.intrinio.com/historical_data?ticker=AAPL&item=close_price&start_date=${ago[0].split(",").join("").split(".").join("-")}&end_date=${today[0].split(",").join("").split(".").join("-")}?api_key=OjNmMmQyMjFlZmU5NDAzNWQ2ZWIyNmRhY2QxNzIzMjM2`
         fetch(apiData, {
@@ -113,8 +104,9 @@ export default class stockPage extends React.Component {
             .then(res => res.json())
             .then(result => {
                 chartLength = result.data.length
-                for (let i = 0; i < result.data.length; i++) {
-                    chartData1[i] = result.data[i].value
+                for (let i = chartLength; i >= 1; i--) {
+                    chartData1.push(result.data[i-1].value)
+                    console.log(chartData1)
                 }
                 this.setState({
                     loaded: true
@@ -144,7 +136,7 @@ export default class stockPage extends React.Component {
                         <h2>TRADER24</h2>
                     </div>
                     <ul className="leftbar__menu">
-                        <li>
+                        <li onClick={() => this.routeChange("Dashboard")}>
                             <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 24 30" xmlSpace="preserve"><path d="M15.4,23.2H8.8c0,0-0.1,0-0.1,0c-0.4,0-0.8,0-1.2,0c0,0,0,0,0,0c-0.8,0-1.2,0-1.7-0.1c-1.8-0.4-3.3-1.9-3.7-3.7  C2,18.8,2,18.2,2,16.7v-4.4c0-1.4,0-2.4,0.1-3.2c0.1-0.9,0.2-1.5,0.5-2c0-0.1,0.1-0.2,0.1-0.3c0.3-0.5,0.8-1,1.5-1.4  C4.9,4.9,5.8,4.4,7,3.8l3.1-1.7c0.5-0.3,0.9-0.5,1.1-0.6c0.6-0.3,1-0.3,1.6,0c0.3,0.1,0.6,0.3,1.1,0.6l2.9,1.6  c1.2,0.7,2.2,1.2,2.9,1.7c0.8,0.5,1.2,1,1.5,1.6c0.3,0.6,0.5,1.2,0.6,2.1C22,9.9,22,11,22,12.4v4.3c0,1.5,0,2.1-0.1,2.7  c-0.4,1.8-1.9,3.3-3.7,3.7c-0.4,0.1-0.9,0.1-1.7,0.1c0,0-0.1,0-0.1,0c-0.1,0-0.4,0-0.8,0C15.5,23.2,15.4,23.2,15.4,23.2z M16.4,21.3  c0,0,0.1,0,0.1,0l0,0c0.7,0,1,0,1.2-0.1c1.1-0.3,2-1.1,2.2-2.2c0.1-0.3,0.1-0.9,0.1-2.2v-4.3c0-1.4,0-2.4-0.1-3.2  c-0.1-0.8-0.2-1.1-0.3-1.3c-0.1-0.2-0.3-0.5-1-0.9c-0.6-0.4-1.6-1-2.7-1.6L13,3.8c-0.5-0.3-0.7-0.4-1-0.5c0,0,0,0,0,0c0,0,0,0,0,0  c-0.2,0.1-0.5,0.3-1,0.5L8,5.5C6.8,6.2,6,6.6,5.4,7C4.8,7.4,4.6,7.7,4.5,7.9c0,0-0.1,0.1-0.1,0.2C4.3,8.3,4.1,8.6,4.1,9.3  C4,10,4,11,4,12.3v4.4c0,1.3,0,1.9,0.1,2.2c0.3,1.1,1.1,2,2.2,2.2c0.2,0.1,0.5,0.1,1.2,0.1c0.1,0,0.2,0,0.3,0v-6.7c0-0.6,0.4-1,1-1  h6.5c0.6,0,1,0.4,1,1V21.3z M9.8,15.5v5.7c2,0,3.5,0,4.5,0v-5.7H9.8z" /></svg>
                             <h4 >Home</h4>
                         </li>

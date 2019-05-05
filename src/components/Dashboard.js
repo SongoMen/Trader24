@@ -178,7 +178,7 @@ class Dashboard extends React.Component {
           error = true
           console.log("chart error" + num)
         } else if (error !== true) {
-          for (let i = 0; i < 40; i++) {
+          for (let i = 40; i >=0; i--) {
             price = parseFloat(result.intraday_prices[i].last_price)
             dataChart.push(price);
           }
@@ -233,7 +233,7 @@ class Dashboard extends React.Component {
   }
   relDiff(a, b) {
     return  100 * Math.abs( ( a - b ) / ( (a+b)/2 ) );
-   }
+  }
   getAccountInfo(){
     function numberWithCommas(x) {
       return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -309,7 +309,6 @@ class Dashboard extends React.Component {
       //console.clear()
     //}, 2500);
   }
-
   render() {
     let user = firebase.auth().currentUser.displayName;
     for (let i = 0; i < stockSymbols.length; i++) {
