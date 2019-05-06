@@ -442,10 +442,10 @@ class Dashboard extends React.Component {
               <div className="panel__portfolio">
                 <ul className="panel__portfolio-list">
                   {portfolioStocks.map((value, index) => {
-                    return <li key={index}><h5>{value}</h5><h5>{portfolioShares[index]}</h5><h5 style = {{color:portfolioColor[index]}}>{portfolioDifference[index]}%</h5><h5>${portfolioValue[index]}</h5></li>
+                    return <li key={index}><h5>{value}</h5><h5>{portfolioShares[index]}</h5><h5 style = {{color:portfolioColor[index]}}>{portfolioDifference[index]}%</h5><h5>${this.numberWithCommas(portfolioValue[index])}</h5></li>
                   })}
                 </ul>
-                <div className="panel__value"><h5>ACCOUNT VALUE</h5><h5>${this.numberWithCommas(this.state.accountValue)}</h5></div>
+                <div className="panel__value"><h5>ACCOUNT VALUE</h5><h5>${this.state.accountValue}</h5></div>
               </div>
             </div>
           </div>
