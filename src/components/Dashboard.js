@@ -90,7 +90,7 @@ class Dashboard extends React.Component {
       ctx.shadowOffsetX = 0;
       ctx.shadowOffsetY = 4;
       return {
-        labels: labelGen(40),
+        labels: labelGen(chartData1.length),
         datasets: [
           {
             lineTension: 0.3,
@@ -121,7 +121,7 @@ class Dashboard extends React.Component {
       ctx.shadowOffsetX = 0;
       ctx.shadowOffsetY = 4;
       return {
-        labels: labelGen(40),
+        labels: labelGen(chartData2.length),
         datasets: [
           {
             lineTension: 0.3,
@@ -178,7 +178,7 @@ class Dashboard extends React.Component {
           error = true
           console.log("chart error" + num)
         } else if (error !== true) {
-          for (let i = 40; i >=0; i--) {
+          for (let i = 80; i >=0; i-=5) {
             price = parseFloat(result.intraday_prices[i].last_price)
             dataChart.push(price);
           }
@@ -234,30 +234,23 @@ class Dashboard extends React.Component {
   relDiff(a, b) {
     return  100 * Math.abs( ( a - b ) / ( (a+b)/2 ) );
   }
+  numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
   getAccountInfo(){
-    function numberWithCommas(x) {
-      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    function add(accumulator, a) {
+      return accumulator + a;
     }
+    
     let user = firebase.auth().currentUser.displayName;
     let docRef = db.collection("users").doc(user);
-
-    docRef.get().then(doc => {
-      this.setState({
-        funds: numberWithCommas(doc.data()["currentfunds"])
-      })
-      this.setState({
-        accountValue: numberWithCommas(doc.data()["funds"])
-      })
-    }).catch(function (error) {
-      console.log("Error getting document:", error);
-    });
     let i = 0
     firebase.firestore().collection('users').doc(user).collection("stocks").get().then(snapshot => {
       snapshot.forEach(doc => {
         console.log(doc.id, '=>', doc.data());
         portfolioStocks.push(doc.id)
-        portfolioShares.push(numberWithCommas(doc.data().shares))
-        portfolioValue.push(numberWithCommas(doc.data().value))
+        portfolioShares.push(this.numberWithCommas(doc.data().shares))
+        portfolioValue.push(doc.data().value)
         portfolioDifference.push(this.relDiff(doc.data().value, doc.data().moneyPaid).toFixed(2))
         if(doc.data().value > doc.data().moneyPaid){
           portfolioDifference[i] = "+" + portfolioDifference[i]
@@ -269,6 +262,17 @@ class Dashboard extends React.Component {
         }
         i++;
       });
+    });
+    
+    docRef.get().then(doc => {
+      this.setState({
+        funds: this.numberWithCommas(doc.data()["currentfunds"])
+      })
+      this.setState({
+        accountValue: this.numberWithCommas(parseFloat(doc.data()["currentfunds"]) + parseFloat(portfolioValue.reduce(add,0)))
+      })
+    }).catch(function (error) {
+      console.log("Error getting document:", error);
     });
   }
   componentWillMount() {
@@ -305,6 +309,7 @@ class Dashboard extends React.Component {
 
     //READ PORTFOLIO
     this.getAccountInfo()
+
     //setTimeout(() => {
       //console.clear()
     //}, 2500);
@@ -440,7 +445,7 @@ class Dashboard extends React.Component {
                     return <li key={index}><h5>{value}</h5><h5>{portfolioShares[index]}</h5><h5 style = {{color:portfolioColor[index]}}>{portfolioDifference[index]}%</h5><h5>${portfolioValue[index]}</h5></li>
                   })}
                 </ul>
-                <div className="panel__value"><h5>ACCOUNT VALUE</h5><h5>{this.state.accountValue}</h5></div>
+                <div className="panel__value"><h5>ACCOUNT VALUE</h5><h5>${this.numberWithCommas(this.state.accountValue)}</h5></div>
               </div>
             </div>
           </div>
