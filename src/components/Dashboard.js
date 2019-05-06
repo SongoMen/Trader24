@@ -178,7 +178,7 @@ class Dashboard extends React.Component {
           error = true
           console.log("chart error" + num)
         } else if (error !== true) {
-          for (let i = 80; i >=0; i-=5) {
+          for (let i = 90; i >=0; i-=5) {
             price = parseFloat(result.intraday_prices[i].last_price)
             dataChart.push(price);
           }
@@ -356,7 +356,7 @@ class Dashboard extends React.Component {
           </div>
         </div>
         <div className="panel">
-          <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
+          <div className="panel__container" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
             <div className="panel__top">
               <div className="panel__title">
                 <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -364,7 +364,7 @@ class Dashboard extends React.Component {
                   <h2>Most Popular</h2>
                 </div>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center' }}>
+              <div className="panel__topCharts" style={{ display: 'flex', alignItems: 'center' }}>
                 <div className="stockChart">
                   {this.state.loader1 === "" ? (
                     <ul className="loader">
