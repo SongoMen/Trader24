@@ -6,13 +6,13 @@
     "chart.js": "^2.8.0",
     "firebase": "^5.10.1",
     "jquery": "^3.4.0",
-    "node-sass": "^4.11.0",
+    "node-sass": "^4.12.0",
     "react": "^16.8.6",
     "react-chartjs-2": "^2.7.6",
     "react-dom": "^16.8.6",
     "react-google-charts": "^3.0.12",
     "react-router-dom": "^5.0.0",
-    "react-scripts": "2.1.8",
+    "react-scripts": "^3.0.0",
     "react-stockcharts": "^0.7.8"
   },
   "scripts": {

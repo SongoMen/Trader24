@@ -254,8 +254,8 @@
     display: flex
     justify-content: space-between
     width: 100%
-    margin: 10px
-    padding: 5px 15px
+    margin: 8px
+    padding: 2px 12px
     background-color: white
     border-radius: 20px
     color: $text-color
@@ -272,7 +272,42 @@
 
         
 @media (max-width: 1500px)
-
   li svg
     min-width: 10%
     min-width: 20px
+
+@media (max-width: 1380px)
+  .Dashboard
+    flex-direction: column
+  .leftbar
+    width: 100%
+    padding: 5px 10px
+    min-height: 10%
+    flex-direction: row
+    justify-content: space-between
+    ul
+      width: 30%
+      margin: 0
+    .leftbar__heading
+      flex-direction: row
+      width: 30%
+      img
+        width: 5%
+        margin-right: 20px
+    .leftbar__user
+      width: 20%
+      position: static
+  .panel
+    width: 100%
+    padding: 0 20px
+  .panel__bottom
+    margin-top: -60px
+    h3
+      margin-bottom: 10px
+  .leftbar__menu
+    flex-direction: row
+
+@media (max-height: 880px)
+  .panel__list
+    li
+      padding: 0px 10px

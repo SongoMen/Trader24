@@ -168,7 +168,7 @@ class Dashboard extends React.Component {
           error = true
           console.log("price error" + num)
         }
-        priceStash[num] = result.last_price
+        priceStash[num] = result.last_price.toFixed(2)
       });
 
     fetch(stockApi)
