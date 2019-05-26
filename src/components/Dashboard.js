@@ -37,12 +37,11 @@ var options = {
     }
   }
 };
-let price;
 
 let chartData1 = [];
 let chartData2 = [];
 
-let stockSymbols = ["AAPL", "MSFT"]
+let stockSymbols = ["MSFT","AAPL"]
 let stockPrices = []
 let stockChanges = []
 let changesColors = []
@@ -142,7 +141,6 @@ class Dashboard extends React.Component {
   getStockInfo(symbol, dataChart, changeStash, priceStash, num) {
     const stockApi =
       `https://api-v2.intrinio.com/securities/${symbol}/prices/intraday?api_key=OjNmMmQyMjFlZmU5NDAzNWQ2ZWIyNmRhY2QxNzIzMjM2`
-
     const lastPrice =
       `https://api-v2.intrinio.com/securities/${symbol}/prices/realtime?api_key=OjNmMmQyMjFlZmU5NDAzNWQ2ZWIyNmRhY2QxNzIzMjM2`;
     const percentageChange =
@@ -178,9 +176,8 @@ class Dashboard extends React.Component {
           error = true
           console.log("chart error" + num)
         } else if (error !== true) {
-          for (let i = 90; i >=0; i-=5) {
-            price = parseFloat(result.intraday_prices[i].last_price)
-            dataChart.push(price);
+          for (let i =90; i >=0; i--) {
+            dataChart.push(parseFloat(result.intraday_prices[i].last_price));
           }
         }
       });
@@ -361,7 +358,7 @@ class Dashboard extends React.Component {
               <div className="panel__title">
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <svg className="panel__popular" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 80" x="0px" y="0px"><g data-name="Layer 2"><g data-name="Layer 4"><path d="M24,64A24,24,0,0,1,11.44,19.55a2,2,0,0,1,2.71,2.82C13,24.08,10,29.35,10,33a6.93,6.93,0,0,0,7,7c3.48,0,7-2.16,7-7,0-1.89-1-3.57-2.06-5.53-3-5.38-6.83-12.07,6.58-26.82a2,2,0,0,1,3.33,2.11c-4.11,10,0,13.59,5.75,18.58C42.47,25.6,48,30.42,48,40A24,24,0,0,1,24,64ZM6.2,30.84A20,20,0,1,0,44,40c0-7.76-4.39-11.59-9-15.64-4.13-3.61-8.67-7.56-8.74-14.41-5.17,7.85-3,11.62-.81,15.56C26.69,27.74,28,30.06,28,33A10.64,10.64,0,0,1,17,44,10.88,10.88,0,0,1,6,33,12.59,12.59,0,0,1,6.2,30.84Z" /></g></g></svg>
-                  <h2>Most Popular</h2>
+                  <h2>Most Active</h2>
                 </div>
               </div>
               <div className="panel__topCharts" style={{ display: 'flex', alignItems: 'center' }}>
@@ -455,7 +452,7 @@ class Dashboard extends React.Component {
               {this.state.loader3 ?
                 <ul className="panel__list">
                   {stockList.map((value, index) => {
-                    if (index < 4) return <li onClick = {()=>this.routeChange(stockListTickers[index])} key={index}><span><img alt="" src={stockListLogos[index]}></img><h4>{value}</h4></span><h4>${stockListPrices[index]}</h4></li>
+                    if (index < 4) return <li onClick = {()=>this.routeChange(stockListTickers[index])} key={index}><span><img alt="" src={stockListLogos[index]}></img><h5>{value}</h5></span><h5>${stockListPrices[index]}</h5></li>
                     else return ""
                   })}
                 </ul>
@@ -472,7 +469,7 @@ class Dashboard extends React.Component {
               {this.state.loader3 ?
                 <ul className="panel__list">
                   {stockList.map((value, index) => {
-                    if (index >= 4 && index < 8) return <li onClick = {()=>this.routeChange(stockListTickers[index])} key={index}><span><img alt="" src={stockListLogos[index]}></img><h4>{value}</h4></span><h4>${stockListPrices[index]}</h4></li>
+                    if (index >= 4 && index < 8) return <li onClick = {()=>this.routeChange(stockListTickers[index])} key={index}><span><img alt="" src={stockListLogos[index]}></img><h5>{value}</h5></span><h5>${stockListPrices[index]}</h5></li>
                     else return ""
                   })}
                 </ul>
@@ -489,7 +486,7 @@ class Dashboard extends React.Component {
               {this.state.loader3 ?
                 <ul className="panel__list">
                   {stockList.map((value, index) => { 
-                    if (index >= 8) return <li onClick = {()=>this.routeChange(stockListTickers[index])} key={index}><span><img alt="" src={stockListLogos[index]}></img><h4>{value}</h4></span><h4>${stockListPrices[index]}</h4></li>
+                    if (index >= 8) return <li onClick = {()=>this.routeChange(stockListTickers[index])} key={index}><span><img alt="" src={stockListLogos[index]}></img><h5>{value}</h5></span><h5>${stockListPrices[index]}</h5></li>
                     else return ""
                   })}
                 </ul>
