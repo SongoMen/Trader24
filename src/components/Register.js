@@ -16,7 +16,6 @@ class Register extends Component {
     }
     handleClickRegisterUser(e) {
         var re = /^(([^<>()\\.,;:\s@"]+(\.[^<>()\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
         if (this.password.value.length > 6 && re.test(String(this.email.value).toLowerCase())) {
             localStorage.setItem('password', this.password.value);
             localStorage.setItem('user', this.username.value);
@@ -75,7 +74,7 @@ class Register extends Component {
                             </div>
 
                             <div className="container-register-form-btn">
-                                <button type="submit" className="register-form-btn" onClick={event => this.handleClickRegisterUser(event, this.props.role)}>Register</button>
+                                <button type="button" className="register-form-btn" onClick={event => this.handleClickRegisterUser(event, this.props.role)}>Register</button>
                             </div>
 
                             <div className="text-center">

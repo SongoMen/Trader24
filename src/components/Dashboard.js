@@ -41,7 +41,7 @@ var options = {
 let chartData1 = [];
 let chartData2 = [];
 
-let stockSymbols = ["MSFT","AAPL"]
+let stockSymbols = ["MSFT", "AAPL"]
 let stockPrices = []
 let stockChanges = []
 let changesColors = []
@@ -176,7 +176,7 @@ class Dashboard extends React.Component {
           error = true
           console.log("chart error" + num)
         } else if (error !== true) {
-          for (let i =90; i >=0; i--) {
+          for (let i = 90; i >= 0; i--) {
             dataChart.push(parseFloat(result.intraday_prices[i].last_price));
           }
         }
@@ -229,16 +229,16 @@ class Dashboard extends React.Component {
     this.props.history.push(path);
   }
   relDiff(a, b) {
-    return  100 * Math.abs( ( a - b ) / ( (a+b)/2 ) );
+    return 100 * Math.abs((a - b) / ((a + b) / 2));
   }
   numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
-  getAccountInfo(){
+  getAccountInfo() {
     function add(accumulator, a) {
       return accumulator + a;
     }
-    
+
     let user = firebase.auth().currentUser.displayName;
     let docRef = db.collection("users").doc(user);
     let i = 0
@@ -249,24 +249,24 @@ class Dashboard extends React.Component {
         portfolioShares.push(this.numberWithCommas(doc.data().shares))
         portfolioValue.push(doc.data().value)
         portfolioDifference.push(this.relDiff(doc.data().value, doc.data().moneyPaid).toFixed(2))
-        if(doc.data().value > doc.data().moneyPaid){
+        if (doc.data().value > doc.data().moneyPaid) {
           portfolioDifference[i] = "+" + portfolioDifference[i]
           portfolioColor.push("#5ce569")
         }
-        else{
+        else {
           portfolioDifference[i] = "-" + portfolioDifference[i]
           portfolioColor.push("#ff5e57")
         }
         i++;
       });
     });
-    
+
     docRef.get().then(doc => {
       this.setState({
         funds: this.numberWithCommas(doc.data()["currentfunds"])
       })
       this.setState({
-        accountValue: this.numberWithCommas(parseFloat(doc.data()["currentfunds"]) + parseFloat(portfolioValue.reduce(add,0)))
+        accountValue: this.numberWithCommas(parseFloat(doc.data()["currentfunds"]) + parseFloat(portfolioValue.reduce(add, 0)))
       })
     }).catch(function (error) {
       console.log("Error getting document:", error);
@@ -299,16 +299,15 @@ class Dashboard extends React.Component {
           loader2: false
         })
       }
-    }, 1800);
+      // STOCK LIST
+      this.getStocksList()
 
-    // STOCK LIST
-    this.getStocksList()
+      //READ PORTFOLIO
+      this.getAccountInfo()
 
-    //READ PORTFOLIO
-    this.getAccountInfo()
-
+    }, 1000);
     //setTimeout(() => {
-      //console.clear()
+    //console.clear()
     //}, 2500);
   }
   render() {
@@ -439,7 +438,7 @@ class Dashboard extends React.Component {
               <div className="panel__portfolio">
                 <ul className="panel__portfolio-list">
                   {portfolioStocks.map((value, index) => {
-                    return <li key={index}><h5>{value}</h5><h5>{portfolioShares[index]}</h5><h5 style = {{color:portfolioColor[index]}}>{portfolioDifference[index]}%</h5><h5>${this.numberWithCommas(portfolioValue[index])}</h5></li>
+                    return <li key={index}><h5>{value}</h5><h5>{portfolioShares[index]}</h5><h5 style={{ color: portfolioColor[index] }}>{portfolioDifference[index]}%</h5><h5>${this.numberWithCommas(portfolioValue[index])}</h5></li>
                   })}
                 </ul>
                 <div className="panel__value"><h5>ACCOUNT VALUE</h5><h5>${this.state.accountValue}</h5></div>
@@ -452,7 +451,7 @@ class Dashboard extends React.Component {
               {this.state.loader3 ?
                 <ul className="panel__list">
                   {stockList.map((value, index) => {
-                    if (index < 4) return <li onClick = {()=>this.routeChange(stockListTickers[index])} key={index}><span><img alt="" src={stockListLogos[index]}></img><h5>{value}</h5></span><h5>${stockListPrices[index]}</h5></li>
+                    if (index < 4) return <li onClick={() => this.routeChange(stockListTickers[index])} key={index}><span><img alt="" src={stockListLogos[index]}></img><h5>{value}</h5></span><h5>${stockListPrices[index]}</h5></li>
                     else return ""
                   })}
                 </ul>
@@ -469,7 +468,7 @@ class Dashboard extends React.Component {
               {this.state.loader3 ?
                 <ul className="panel__list">
                   {stockList.map((value, index) => {
-                    if (index >= 4 && index < 8) return <li onClick = {()=>this.routeChange(stockListTickers[index])} key={index}><span><img alt="" src={stockListLogos[index]}></img><h5>{value}</h5></span><h5>${stockListPrices[index]}</h5></li>
+                    if (index >= 4 && index < 8) return <li onClick={() => this.routeChange(stockListTickers[index])} key={index}><span><img alt="" src={stockListLogos[index]}></img><h5>{value}</h5></span><h5>${stockListPrices[index]}</h5></li>
                     else return ""
                   })}
                 </ul>
@@ -485,8 +484,8 @@ class Dashboard extends React.Component {
               <h3>&nbsp;</h3>
               {this.state.loader3 ?
                 <ul className="panel__list">
-                  {stockList.map((value, index) => { 
-                    if (index >= 8) return <li onClick = {()=>this.routeChange(stockListTickers[index])} key={index}><span><img alt="" src={stockListLogos[index]}></img><h5>{value}</h5></span><h5>${stockListPrices[index]}</h5></li>
+                  {stockList.map((value, index) => {
+                    if (index >= 8) return <li onClick={() => this.routeChange(stockListTickers[index])} key={index}><span><img alt="" src={stockListLogos[index]}></img><h5>{value}</h5></span><h5>${stockListPrices[index]}</h5></li>
                     else return ""
                   })}
                 </ul>
