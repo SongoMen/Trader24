@@ -142,7 +142,7 @@ class Dashboard extends React.Component {
     const stockApi =
       `https://api-v2.intrinio.com/securities/${symbol}/prices/intraday?api_key=OjNmMmQyMjFlZmU5NDAzNWQ2ZWIyNmRhY2QxNzIzMjM2`
     const lastPrice =
-      `https://api-v2.intrinio.com/securities/${symbol}/prices/realtime?api_key=OjNmMmQyMjFlZmU5NDAzNWQ2ZWIyNmRhY2QxNzIzMjM2`;
+      `https://api-v2.intrinio.com/securities/${symbol}/prices/?api_key=OjNmMmQyMjFlZmU5NDAzNWQ2ZWIyNmRhY2QxNzIzMjM2`;
     const percentageChange =
       `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=OLMMOMZUFXFOAOTI`;
     let error
@@ -162,17 +162,19 @@ class Dashboard extends React.Component {
     fetch(lastPrice)
       .then(res => res.json())
       .then(result => {
-        if ("Note" in result) {
+        if ("error" in result) {
           error = true
           console.log("price error" + num)
         }
-        priceStash[num] = result.last_price.toFixed(2)
+        else{
+          priceStash[num] = result.last_price.toFixed(2)
+        }
       });
 
     fetch(stockApi)
       .then(res => res.json())
       .then(result => {
-        if ("Note" in result) {
+        if ("error" in result) {
           error = true
           console.log("chart error" + num)
         } else if (error !== true) {
