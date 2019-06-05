@@ -100,7 +100,7 @@ class Dashboard extends React.Component {
             backgroundColor: gradientFill,
             pointBackgroundColor: gradient,
             fill: true,
-            borderWidth: 5,
+            borderWidth: 2,
             data: chartData1
           }
         ]
@@ -131,7 +131,7 @@ class Dashboard extends React.Component {
             backgroundColor: gradientFill,
             pointBackgroundColor: gradient,
             fill: true,
-            borderWidth: 5,
+            borderWidth: 2,
             data: chartData2
           }
         ]
@@ -142,41 +142,28 @@ class Dashboard extends React.Component {
     const stockApi =
       `https://api-v2.intrinio.com/securities/${symbol}/prices/intraday?api_key=OjNmMmQyMjFlZmU5NDAzNWQ2ZWIyNmRhY2QxNzIzMjM2`
     const lastPrice =
-      `https://api-v2.intrinio.com/securities/${symbol}/prices?api_key=OjNmMmQyMjFlZmU5NDAzNWQ2ZWIyNmRhY2QxNzIzMjM2`;
+      `https://financialmodelingprep.com/api/v3/company/profile/${symbol}`;
     const percentageChange =
-      `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=OLMMOMZUFXFOAOTI`;
+      `https://financialmodelingprep.com/api/v3/company/profile/${symbol}`;
     let error
     fetch(percentageChange)
       .then(res => res.json())
       .then(result => {
-        if ("Note" in result) {
-          error = true
-          console.log("percentage error" + num)
-        } else if (!error) {
-          let change = parseFloat(
-            result["Global Quote"]["10. change percent"]
-          ).toFixed(2);
-          changeStash[num] = change
-        }
+        let matches = result.profile.changesPercentage.match(/\((.*?)\)/);
+        let change = parseFloat(matches[1]).toFixed(2);
+        changeStash[num] = change
+
       });
     fetch(lastPrice)
       .then(res => res.json())
-      .then((response) => {
-        if (response.status !== 200) error = true
-      })
-
       .then(result => {
         if (!error) {
-          priceStash[num] = result.last_price.toFixed(2)
+          priceStash[num] = result.profile.price.toFixed(2)
         }
       });
 
     fetch(stockApi)
       .then(res => res.json())
-
-      .then((response) => {
-        if (response.status !== 200) error = true
-      })
       .then(result => {
         if (!error) {
           for (let i = 90; i >= 0; i--) {
@@ -187,38 +174,28 @@ class Dashboard extends React.Component {
 
   }
   getStocksList() {
-    const stocks = "https://api-v2.intrinio.com/companies?api_key=OjNmMmQyMjFlZmU5NDAzNWQ2ZWIyNmRhY2QxNzIzMjM2"
+    const stocks = "https://financialmodelingprep.com/api/v3/company/stock/list"
     fetch(stocks)
       .then(res => res.json())
       .then(result => {
+        console.log(result.symbolsList)
         for (let i = 0; i < 12; i++) {
-          if (result.companies[i].name.length >= 18) {
-            stockList[i] = result.companies[i].ticker
+          if (result.symbolsList[i].name.length >= 18) {
+            stockList[i] = result.symbolsList[i].symbol
           }
           else {
-            stockList[i] = result.companies[i].name
+            stockList[i] = result.symbolsList[i].name
           }
-          stockListTickers[i] = result.companies[i].ticker
-          const lastPrice = `https://api-v2.intrinio.com/securities/${stockListTickers[i]}/prices/realtime?api_key=OjNmMmQyMjFlZmU5NDAzNWQ2ZWIyNmRhY2QxNzIzMjM2`;
-          const logo = `https://api-v2.intrinio.com/companies/${stockListTickers[i]}?api_key=OjNmMmQyMjFlZmU5NDAzNWQ2ZWIyNmRhY2QxNzIzMjM2`
-          fetch(lastPrice)
-            .then(res => res.json())
-            .then(result => {
-              if ("Note" in result) {
-                console.log("error")
-              }
-              let lastPrice = parseFloat(
-                result.last_price).toFixed(2);
-
-              stockListPrices[i] = lastPrice
-            });
+          stockListPrices[i] = result.symbolsList[i].price
+          stockListTickers[i] = result.symbolsList[i].symbol
+          console.log(result.symbolsList[i].symbol)
+          const logo = `https://financialmodelingprep.com/api/v3/company/profile/${result.symbolsList[i].symbol}`
           fetch(logo)
             .then(res => res.json())
             .then(result => {
-              if ("Note" in result) {
-                console.log("error")
-              }
-              stockListLogos[i] = "http://logo.clearbit.com/" + result.company_url
+              console.log(result[0])
+
+              stockListLogos[i] = result.profile.image
               setTimeout(() => {
                 this.setState({
                   loader3: true
@@ -307,8 +284,14 @@ class Dashboard extends React.Component {
 
       //READ PORTFOLIO
       this.getAccountInfo()
-
-    }, 1000);
+    }, 700);
+    fetch("https://financialmodelingprep.com/api/v3/is-the-market-open")
+    .then(res=>res.json())
+    .then(result=>{
+      if(result.isTheStockMarketOpen)document.getElementById("panel__status").style.color = "#5efad7"
+      else document.getElementById("panel__status").style.color = "#eb5887"
+        document.getElementById("panel__status").innerHTML = result.isTheStockMarketOpen ? "Market status: Open" : "Market status: Closed"
+    })
     //setTimeout(() => {
     //console.clear()
     //}, 2500);
@@ -340,7 +323,7 @@ class Dashboard extends React.Component {
               <h3>${this.state.funds}</h3>
               Hi, <span className="leftbar__name"> &nbsp;{user} !</span><svg onClick={() => logout()} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 30" x="0px" y="0px"><title>LOG OUT</title><g data-name="LOG OUT"><path d="M13,21a1,1,0,0,1-1,1H3a1,1,0,0,1-1-1V3A1,1,0,0,1,3,2h9a1,1,0,0,1,0,2H4V20h8A1,1,0,0,1,13,21Zm8.92-9.38a1,1,0,0,0-.22-.32h0l-4-4a1,1,0,0,0-1.41,1.41L18.59,11H7a1,1,0,0,0,0,2H18.59l-2.29,2.29a1,1,0,1,0,1.41,1.41l4-4h0a1,1,0,0,0,.22-1.09Z" /></g></svg></div>
           </div>
-          <div style={{ display: 'flex',height: '100%' }}>
+          <div style={{ display: 'flex', height: '100%' }}>
             <div className="leftbar">
               <ul className="leftbar__menu">
                 <li>
@@ -353,6 +336,7 @@ class Dashboard extends React.Component {
                   <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0.5 24.5 24 30" xmlSpace="preserve"><g><path d="M10.5,24.5c-5.523,0-10,4.478-10,10s4.478,10,10,10v-10h10C20.5,28.978,16.022,24.5,10.5,24.5z M8.5,34.5v7.747   c-3.447-0.891-6-4.026-6-7.747c0-4.411,3.589-8,8-8c3.721,0,6.856,2.554,7.747,6H10.5C9.396,32.5,8.5,33.396,8.5,34.5z" /><path d="M12.5,36.5v10c5.522,0,10-4.478,10-10H12.5z" /></g></svg>
                 </li>
               </ul>
+              <h5 className="panel__status" id="panel__status">$nbsp;</h5>
             </div>
             <div className="panel">
               <div className="panel__container" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
