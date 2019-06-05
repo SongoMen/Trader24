@@ -280,7 +280,7 @@ class Dashboard extends React.Component {
 
       //READ PORTFOLIO
       this.getAccountInfo()
-    }, 1000);
+    }, 1500);
     fetch("https://financialmodelingprep.com/api/v3/is-the-market-open")
     .then(res=>res.json())
     .then(result=>{
