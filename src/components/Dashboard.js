@@ -178,7 +178,6 @@ class Dashboard extends React.Component {
     fetch(stocks)
       .then(res => res.json())
       .then(result => {
-        console.log(result.symbolsList)
         for (let i = 0; i < 12; i++) {
           if (result.symbolsList[i].name.length >= 18) {
             stockList[i] = result.symbolsList[i].symbol
@@ -188,13 +187,10 @@ class Dashboard extends React.Component {
           }
           stockListPrices[i] = result.symbolsList[i].price
           stockListTickers[i] = result.symbolsList[i].symbol
-          console.log(result.symbolsList[i].symbol)
           const logo = `https://financialmodelingprep.com/api/v3/company/profile/${result.symbolsList[i].symbol}`
           fetch(logo)
             .then(res => res.json())
             .then(result => {
-              console.log(result[0])
-
               stockListLogos[i] = result.profile.image
               setTimeout(() => {
                 this.setState({
@@ -284,7 +280,7 @@ class Dashboard extends React.Component {
 
       //READ PORTFOLIO
       this.getAccountInfo()
-    }, 700);
+    }, 1000);
     fetch("https://financialmodelingprep.com/api/v3/is-the-market-open")
     .then(res=>res.json())
     .then(result=>{
