@@ -166,7 +166,8 @@ class Dashboard extends React.Component {
       .then(res => res.json())
       .then(result => {
         if (!error) {
-          for (let i = 150; i >= 0; i--) {
+          for (let i = result.length -1; i >= 0; i--) {
+            console.log(result[i].average)
             dataChart.push(parseFloat(result[i].average));
           }
         }
@@ -259,7 +260,7 @@ class Dashboard extends React.Component {
     this.getStockInfo(stockSymbols[1], chartData2, stockChanges, stockPrices, 1)
     // CHECK CHARTS
     setTimeout(() => {
-      if (stockChanges[0] !== undefined && stockPrices[0] !== undefined && chartData1.length >= 10) {
+      if (stockChanges[0] !== undefined && stockPrices[0] !== undefined && chartData1.length >= 2) {
         this.setState({
           loader1: true
         })
@@ -269,7 +270,7 @@ class Dashboard extends React.Component {
           loader1: false
         })
       }
-      if (stockChanges[1] !== undefined && stockPrices[1] !== undefined && chartData2.length >= 10) {
+      if (stockChanges[1] !== undefined && stockPrices[1] !== undefined && chartData2.length >= 2) {
         this.setState({
           loader2: true
         })
