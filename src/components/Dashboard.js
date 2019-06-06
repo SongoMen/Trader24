@@ -142,15 +142,14 @@ class Dashboard extends React.Component {
     const stockApi =
       `https://cloud.iexapis.com/stable/stock/${symbol}/intraday-prices?token=pk_c4db94f67a0b42a1884238b690ab06db`
     const lastPrice =
-      `https://financialmodelingprep.com/api/v3/company/profile/${symbol}`;
+      `https://financialmodelingprep.com/api/v3/stock/real-time-price/${symbol}`;
     const percentageChange =
-      `https://financialmodelingprep.com/api/v3/company/profile/${symbol}`;
+      `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_c4db94f67a0b42a1884238b690ab06db`;
     let error
     fetch(percentageChange)
       .then(res => res.json())
       .then(result => {
-        let matches = result.profile.changesPercentage.match(/\((.*?)\)/);
-        let change = parseFloat(matches[1]).toFixed(2);
+        let change = parseFloat(result.changePercent).toFixed(2);
         changeStash[num] = change
 
       });
@@ -158,7 +157,7 @@ class Dashboard extends React.Component {
       .then(res => res.json())
       .then(result => {
         if (!error) {
-          priceStash[num] = result.profile.price.toFixed(2)
+          priceStash[num] = result.price.toFixed(2)
         }
       });
 
@@ -166,7 +165,7 @@ class Dashboard extends React.Component {
       .then(res => res.json())
       .then(result => {
         if (!error) {
-          for (let i = result.length -1; i >= 0; i--) {
+          for (let i = 0; i < result.length-1; i++) {
             console.log(result[i].average)
             dataChart.push(parseFloat(result[i].average));
           }
