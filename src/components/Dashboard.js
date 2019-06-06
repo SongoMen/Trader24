@@ -41,7 +41,7 @@ var options = {
 let chartData1 = [];
 let chartData2 = [];
 
-let stockSymbols = ["MSFT", "AAPL"]
+let stockSymbols = ["AMD", "AAPL"]
 let stockPrices = []
 let stockChanges = []
 let changesColors = []
@@ -140,7 +140,7 @@ class Dashboard extends React.Component {
   }
   getStockInfo(symbol, dataChart, changeStash, priceStash, num) {
     const stockApi =
-      `https://api-v2.intrinio.com/securities/${symbol}/prices/intraday?api_key=OjNmMmQyMjFlZmU5NDAzNWQ2ZWIyNmRhY2QxNzIzMjM2`
+      `https://cloud.iexapis.com/stable/stock/${symbol}/intraday-prices?token=pk_c4db94f67a0b42a1884238b690ab06db`
     const lastPrice =
       `https://financialmodelingprep.com/api/v3/company/profile/${symbol}`;
     const percentageChange =
@@ -166,8 +166,8 @@ class Dashboard extends React.Component {
       .then(res => res.json())
       .then(result => {
         if (!error) {
-          for (let i = 90; i >= 0; i--) {
-            dataChart.push(parseFloat(result.intraday_prices[i].last_price));
+          for (let i = 150; i >= 0; i--) {
+            dataChart.push(parseFloat(result[i].average));
           }
         }
       });
@@ -215,7 +215,7 @@ class Dashboard extends React.Component {
       return accumulator + a;
     }
     portfolioStocks = []
-    portfolioDifference=[]
+    portfolioDifference = []
 
     let user = firebase.auth().currentUser.displayName;
     let docRef = db.collection("users").doc(user);
@@ -251,6 +251,8 @@ class Dashboard extends React.Component {
     });
   }
   componentWillMount() {
+    chartData1 = []
+    chartData2 = []
     document.title = "Trader24 - Dashboard"
     // GET CHARTS
     this.getStockInfo(stockSymbols[0], chartData1, stockChanges, stockPrices, 0)
@@ -284,12 +286,12 @@ class Dashboard extends React.Component {
       this.getAccountInfo()
     }, 1500);
     fetch("https://financialmodelingprep.com/api/v3/is-the-market-open")
-    .then(res=>res.json())
-    .then(result=>{
-      if(result.isTheStockMarketOpen)document.getElementById("panel__status").style.color = "#5efad7"
-      else document.getElementById("panel__status").style.color = "#eb5887"
+      .then(res => res.json())
+      .then(result => {
+        if (result.isTheStockMarketOpen) document.getElementById("panel__status").style.color = "#5efad7"
+        else document.getElementById("panel__status").style.color = "#eb5887"
         document.getElementById("panel__status").innerHTML = result.isTheStockMarketOpen ? "Market status: Open" : "Market status: Closed"
-    })
+      })
     //setTimeout(() => {
     //console.clear()
     //}, 2500);
