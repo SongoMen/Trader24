@@ -241,10 +241,10 @@ class Dashboard extends React.Component {
 
     docRef.get().then(doc => {
       this.setState({
-        funds: this.numberWithCommas(doc.data()["currentfunds"])
+        funds: "$" + this.numberWithCommas(doc.data()["currentfunds"])
       })
       this.setState({
-        accountValue: this.numberWithCommas(parseFloat(doc.data()["currentfunds"]) + parseFloat(portfolioValue.reduce(add, 0)))
+        accountValue:"$" + this.numberWithCommas(parseFloat(doc.data()["currentfunds"]) + parseFloat(portfolioValue.reduce(add, 0)))
       })
     }).catch(function (error) {
       console.log("Error getting document:", error);
@@ -320,7 +320,7 @@ class Dashboard extends React.Component {
               <h2>Dashboard</h2>
             </div>
             <div className="topbar__user">
-              <h3>${this.state.funds}</h3>
+              <h3>{this.state.funds}</h3>
               Hi, <span className="leftbar__name"> &nbsp;{user} !</span><svg onClick={() => logout()} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 30" x="0px" y="0px"><title>LOG OUT</title><g data-name="LOG OUT"><path d="M13,21a1,1,0,0,1-1,1H3a1,1,0,0,1-1-1V3A1,1,0,0,1,3,2h9a1,1,0,0,1,0,2H4V20h8A1,1,0,0,1,13,21Zm8.92-9.38a1,1,0,0,0-.22-.32h0l-4-4a1,1,0,0,0-1.41,1.41L18.59,11H7a1,1,0,0,0,0,2H18.59l-2.29,2.29a1,1,0,1,0,1.41,1.41l4-4h0a1,1,0,0,0,.22-1.09Z" /></g></svg></div>
           </div>
           <div style={{ display: 'flex', height: '100%' }}>
@@ -428,7 +428,7 @@ class Dashboard extends React.Component {
                         return <li key={index}><h5>{value}</h5><h5>{portfolioShares[index]}</h5><h5 style={{ color: portfolioColor[index] }}>{portfolioDifference[index]}%</h5><h5>${this.numberWithCommas(portfolioValue[index])}</h5></li>
                       })}
                     </ul>
-                    <div className="panel__value"><h5>ACCOUNT VALUE</h5><h5>${this.state.accountValue}</h5></div>
+                    <div className="panel__value"><h5>ACCOUNT VALUE</h5><h5>{this.state.accountValue}</h5></div>
                   </div>
                 </div>
               </div>
