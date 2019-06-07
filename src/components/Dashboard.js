@@ -459,7 +459,7 @@ class Dashboard extends React.Component {
                       {stockList.map((value, index) => {
                         if (index < 3) return <li onClick={() => this.routeChange(stockListTickers[index])} key={index}><span className="panel__fullname">
                           <h4>{stockListTickers[index]}</h4><h6 className="panel__name">{value}</h6></span><div className="panel__list-change"><h4> {stockListPrices[index]}</h4><h5 style=
-                            {{ color: stockListChangeColors[index], margin: '10px 0 0 0', textShadow: '0px 0px 7px ' + stockListChangeColors[index] }}>{stockListChange[index]}</h5></div></li>
+                            {{ color: stockListChangeColors[index], margin: '5px 0 0 0', textShadow: '0px 0px 7px ' + stockListChangeColors[index] }}>{stockListChange[index]}</h5></div></li>
                         else return ""
                       })}
                     </ul>
@@ -477,7 +477,7 @@ class Dashboard extends React.Component {
                       {stockList.map((value, index) => {
                         if (index >= 3 && index < 6) return <li onClick={() => this.routeChange(stockListTickers[index])} key={index}><span className="panel__fullname">
                         <h4>{stockListTickers[index]}</h4><h6 className="panel__name">{value}</h6></span><div className="panel__list-change"><h4> {stockListPrices[index]}</h4><h5 style=
-                          {{ color: stockListChangeColors[index], margin: '10px 0 0 0', textShadow: '0px 0px 7px ' + stockListChangeColors[index] }}>{stockListChange[index]}</h5></div></li>
+                          {{ color: stockListChangeColors[index], margin: '5px 0 0 0', textShadow: '0px 0px 7px ' + stockListChangeColors[index] }}>{stockListChange[index]}</h5></div></li>
                       else return ""
                     })}
                     </ul>
@@ -495,7 +495,7 @@ class Dashboard extends React.Component {
                       {stockList.map((value, index) => {
                         if (index >= 6) return <li onClick={() => this.routeChange(stockListTickers[index])} key={index}><span className="panel__fullname">
                         <h4>{stockListTickers[index]}</h4><h6 className="panel__name">{value}</h6></span><div className="panel__list-change"><h4> {stockListPrices[index]}</h4><h5 style=
-                          {{ color: stockListChangeColors[index], margin: '10px 0 0 0', textShadow: '0px 0px 7px ' + stockListChangeColors[index] }}>{stockListChange[index]}</h5></div></li>
+                          {{ color: stockListChangeColors[index], margin: '5px 0 0 0', textShadow: '0px 0px 7px ' + stockListChangeColors[index] }}>{stockListChange[index]}</h5></div></li>
                       else return ""
                     })}
                     </ul>
