@@ -41,7 +41,7 @@ var options = {
 let chartData1 = [];
 let chartData2 = [];
 
-let stockSymbols = ["AMD", "AAPL"]
+let stockSymbols = []
 let stockPrices = []
 let stockChanges = []
 let changesColors = []
@@ -144,7 +144,7 @@ class Dashboard extends React.Component {
     const stockApi =
       `https://cloud.iexapis.com/stable/stock/${symbol}/intraday-prices?token=pk_c4db94f67a0b42a1884238b690ab06db`
     const lastPrice =
-      `https://financialmodelingprep.com/api/v3/stock/real-time-price/${symbol}`;
+      `https://cloud.iexapis.com/stable/stock/${symbol}/price?token=pk_c4db94f67a0b42a1884238b690ab06db`;
     const percentageChange =
       `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_c4db94f67a0b42a1884238b690ab06db`;
     let error
@@ -158,7 +158,7 @@ class Dashboard extends React.Component {
       .then(res => res.json())
       .then(result => {
         if (!error) {
-          priceStash[num] = result.price.toFixed(2)
+          priceStash[num] = result.toFixed(2)
         }
       });
 
@@ -167,44 +167,43 @@ class Dashboard extends React.Component {
       .then(result => {
         if (!error) {
           for (let i = 0; i < result.length - 1; i++) {
-            dataChart.push(parseFloat(result[i].average));
+            if (result[i].average !== null) dataChart.push(parseFloat(result[i].average));
           }
         }
       });
 
   }
   getStocksList() {
-    const stocks = "https://financialmodelingprep.com/api/v3/company/stock/list"
+    const stocks = "https://cloud.iexapis.com/stable/stock/market/list/mostactive?token=pk_c4db94f67a0b42a1884238b690ab06db"
     fetch(stocks)
       .then(res => res.json())
       .then(result => {
-        for (let i = 0; i < 12; i++) {
-          if (result.symbolsList[i].name.length >= 18) {
-            stockList[i] = result.symbolsList[i].symbol
+        for (let i = 0; i < 9; i++) {
+          if (result[i].companyName.length >= 18) {
+            stockList[i] = result[i].symbol
           }
           else {
-            stockList[i] = result.symbolsList[i].name
+            stockList[i] = result[i].companyName
           }
           const percentageChange =
-            `https://cloud.iexapis.com/stable/stock/${result.symbolsList[i].symbol}/quote?displayPercent=true&token=pk_c4db94f67a0b42a1884238b690ab06db`;
-          stockListPrices[i] = result.symbolsList[i].price
-          stockListTickers[i] = result.symbolsList[i].symbol
-          const logo = `https://financialmodelingprep.com/api/v3/company/profile/${result.symbolsList[i].symbol}`
+            `https://cloud.iexapis.com/stable/stock/${result[i].symbol}/quote?displayPercent=true&token=pk_c4db94f67a0b42a1884238b690ab06db`;
+          stockListPrices[i] = result[i].latestPrice
+          stockListTickers[i] = result[i].symbol
+          const logo = `https://cloud.iexapis.com/stable/stock/${result[i].symbol}/logo?token=pk_c4db94f67a0b42a1884238b690ab06db`
           fetch(logo)
             .then(res => res.json())
             .then(result => {
-              stockListLogos[i] = result.profile.image
+              stockListLogos[i] = result.url
               setTimeout(() => {
                 this.setState({
                   loader3: true
                 })
-              }, 1500);
+              }, 500);
             })
           fetch(percentageChange)
             .then(res => res.json())
             .then(result => {
               stockListChange[i] = parseFloat(result.changePercent).toFixed(2);
-              console.log(stockListChange[i])
               if (Math.sign(stockListChange[i]) === -1) {
                 stockListChangeColors[i] = "#f45485"
               } else if (Math.sign(stockListChange[i]) === 1) {
@@ -271,12 +270,22 @@ class Dashboard extends React.Component {
     });
   }
   componentWillMount() {
+    const gainers = "https://cloud.iexapis.com/stable/stock/market/list/gainers?token=pk_c4db94f67a0b42a1884238b690ab06db"
+    fetch(gainers)
+      .then(res => res.json())
+      .then(result => {
+        for (let i = 0; i < 2; i++) {
+          stockSymbols.push(result[i].symbol)
+        }
+        this.getStockInfo(stockSymbols[0], chartData1, stockChanges, stockPrices, 0)
+        this.getStockInfo(stockSymbols[1], chartData2, stockChanges, stockPrices, 1)
+      });
+
     chartData1 = []
     chartData2 = []
     document.title = "Trader24 - Dashboard"
     // GET CHARTS
-    this.getStockInfo(stockSymbols[0], chartData1, stockChanges, stockPrices, 0)
-    this.getStockInfo(stockSymbols[1], chartData2, stockChanges, stockPrices, 1)
+
     // CHECK CHARTS
     setTimeout(() => {
       if (stockChanges[0] !== undefined && stockPrices[0] !== undefined && chartData1.length >= 2) {
@@ -363,8 +372,8 @@ class Dashboard extends React.Component {
                 <div className="panel__top">
                   <div className="panel__title">
                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                      <svg className="panel__popular" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 80" x="0px" y="0px"><g data-name="Layer 2"><g data-name="Layer 4"><path d="M24,64A24,24,0,0,1,11.44,19.55a2,2,0,0,1,2.71,2.82C13,24.08,10,29.35,10,33a6.93,6.93,0,0,0,7,7c3.48,0,7-2.16,7-7,0-1.89-1-3.57-2.06-5.53-3-5.38-6.83-12.07,6.58-26.82a2,2,0,0,1,3.33,2.11c-4.11,10,0,13.59,5.75,18.58C42.47,25.6,48,30.42,48,40A24,24,0,0,1,24,64ZM6.2,30.84A20,20,0,1,0,44,40c0-7.76-4.39-11.59-9-15.64-4.13-3.61-8.67-7.56-8.74-14.41-5.17,7.85-3,11.62-.81,15.56C26.69,27.74,28,30.06,28,33A10.64,10.64,0,0,1,17,44,10.88,10.88,0,0,1,6,33,12.59,12.59,0,0,1,6.2,30.84Z" /></g></g></svg>
-                      <h2>Most Popular</h2>
+                    <svg className="panel__popular" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" xmlSpace="preserve" version="1.1" viewBox="0 0 411 261.25" x="0px" y="0px" fillRule="evenodd" clipRule="evenodd"><defs></defs><g><path d="M314 0c-29,0 -29,44 0,44l23 0 -113 112 -92 -92c-9,-8 -22,-8 -31,0l-94 95c-21,20 10,51 30,31l79 -79 92 92c9,8 23,8 31,0l128 -129 0 23c0,29 44,29 44,0l0 -75c0,-12 -10,-22 -22,-22l-75 0z"/></g></svg>
+                      <h2>Gainers</h2>
                     </div>
                   </div>
                   <div className="panel__topCharts" style={{ display: 'flex', alignItems: 'center' }}>
@@ -451,15 +460,18 @@ class Dashboard extends React.Component {
                   </div>
                 </div>
               </div>
+              <div className="panel__bottom-title">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 80" x="0px" y="0px"><g data-name="Layer 2"><g data-name="Layer 4"><path d="M24,64A24,24,0,0,1,11.44,19.55a2,2,0,0,1,2.71,2.82C13,24.08,10,29.35,10,33a6.93,6.93,0,0,0,7,7c3.48,0,7-2.16,7-7,0-1.89-1-3.57-2.06-5.53-3-5.38-6.83-12.07,6.58-26.82a2,2,0,0,1,3.33,2.11c-4.11,10,0,13.59,5.75,18.58C42.47,25.6,48,30.42,48,40A24,24,0,0,1,24,64ZM6.2,30.84A20,20,0,1,0,44,40c0-7.76-4.39-11.59-9-15.64-4.13-3.61-8.67-7.56-8.74-14.41-5.17,7.85-3,11.62-.81,15.56C26.69,27.74,28,30.06,28,33A10.64,10.64,0,0,1,17,44,10.88,10.88,0,0,1,6,33,12.59,12.59,0,0,1,6.2,30.84Z" /></g></g></svg>
+                  <h3>Most Active</h3>
+                  </div>
               <div className="panel__bottom">
                 <div className="panel__stockList">
-                  <h3>More Stocks</h3>
                   {this.state.loader3 ?
                     <ul className="panel__list">
                       {stockList.map((value, index) => {
-                        if (index < 4) return <li onClick={() => this.routeChange(stockListTickers[index])} key={index}><span><img alt="" src={stockListLogos[index]}></img>
-                          <h5>{value}</h5></span><h5 class="panel__list-change"><h5 style=
-                            {{ color: stockListChangeColors[index], margin: '0 10px', textShadow: '0px 0px 7px ' + stockListChangeColors[index] }}>{stockListChange[index]}</h5> {stockListPrices[index]}</h5></li>
+                        if (index < 3) return <li onClick={() => this.routeChange(stockListTickers[index])} key={index}><span><img alt="" src={stockListLogos[index]}></img>
+                          <h5>{value}</h5></span><div className="panel__list-change"><h5 style=
+                            {{ color: stockListChangeColors[index], margin: '0 10px', textShadow: '0px 0px 7px ' + stockListChangeColors[index] }}>{stockListChange[index]}</h5><h4> {stockListPrices[index]}</h4></div></li>
                         else return ""
                       })}
                     </ul>
@@ -472,12 +484,11 @@ class Dashboard extends React.Component {
                   }
                 </div>
                 <div className="panel__stockList">
-                  <h3>&nbsp;</h3>
                   {this.state.loader3 ?
                     <ul className="panel__list">
                       {stockList.map((value, index) => {
-                        if (index >= 4 && index < 8) return <li onClick={() => this.routeChange(stockListTickers[index])} key={index}><span><img alt="" src={stockListLogos[index]}></img><h5> {value}</h5></span><h5 style={{ display: 'flex', margin: 0 }}><h5 style=
-                          {{ color: stockListChangeColors[index], margin: '0 10px', textShadow: '0px 0px 7px ' + stockListChangeColors[index] }}>{stockListChange[index]}</h5> {stockListPrices[index]}</h5></li>
+                        if (index >= 3 && index < 6) return <li onClick={() => this.routeChange(stockListTickers[index])} key={index}><span><img alt="" src={stockListLogos[index]}></img><h5> {value}</h5></span><div className="panel__list-change"><h5 style=
+                          {{ color: stockListChangeColors[index], margin: '0 10px', textShadow: '0px 0px 7px ' + stockListChangeColors[index] }}>{stockListChange[index]}</h5><h4> {stockListPrices[index]}</h4></div></li>
                         else return ""
                       })}
                     </ul>
@@ -490,12 +501,12 @@ class Dashboard extends React.Component {
                   }
                 </div>
                 <div className="panel__stockList">
-                  <h3>&nbsp;</h3>
                   {this.state.loader3 ?
                     <ul className="panel__list">
                       {stockList.map((value, index) => {
-                        if (index >= 8) return <li onClick={() => this.routeChange(stockListTickers[index])} key={index}><span><img alt="" src={stockListLogos[index]}></img><h5> {value}</h5></span><h5 style={{ display: 'flex', margin: 0 }}><h5 style=
-                          {{ color: stockListChangeColors[index], margin: '0 10px', textShadow: '0px 0px 7px ' + stockListChangeColors[index] }}>{stockListChange[index]}</h5> {stockListPrices[index]}</h5></li>
+                        if (index >= 6) return <li onClick={() => this.routeChange(stockListTickers[index])} key={index}><span><img alt="" src={stockListLogos[index]}></img>
+                          <h5> {value}</h5></span><div className="panel__list-change"><h5 style=
+                            {{ color: stockListChangeColors[index], margin: '0 10px', textShadow: '0px 0px 7px ' + stockListChangeColors[index] }}>{stockListChange[index]}</h5><h4> {stockListPrices[index]}</h4></div></li>
                         else return ""
                       })}
                     </ul>
