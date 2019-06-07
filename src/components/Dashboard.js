@@ -50,6 +50,8 @@ let stockList = []
 let stockListPrices = []
 let stockListTickers = []
 let stockListLogos = []
+let stockListChange = []
+let stockListChangeColors = []
 
 let portfolioStocks = []
 let portfolioShares = []
@@ -151,7 +153,6 @@ class Dashboard extends React.Component {
       .then(result => {
         let change = parseFloat(result.changePercent).toFixed(2);
         changeStash[num] = change
-
       });
     fetch(lastPrice)
       .then(res => res.json())
@@ -165,8 +166,7 @@ class Dashboard extends React.Component {
       .then(res => res.json())
       .then(result => {
         if (!error) {
-          for (let i = 0; i < result.length-1; i++) {
-            console.log(result[i].average)
+          for (let i = 0; i < result.length - 1; i++) {
             dataChart.push(parseFloat(result[i].average));
           }
         }
@@ -185,6 +185,8 @@ class Dashboard extends React.Component {
           else {
             stockList[i] = result.symbolsList[i].name
           }
+          const percentageChange =
+            `https://cloud.iexapis.com/stable/stock/${result.symbolsList[i].symbol}/quote?displayPercent=true&token=pk_c4db94f67a0b42a1884238b690ab06db`;
           stockListPrices[i] = result.symbolsList[i].price
           stockListTickers[i] = result.symbolsList[i].symbol
           const logo = `https://financialmodelingprep.com/api/v3/company/profile/${result.symbolsList[i].symbol}`
@@ -198,6 +200,24 @@ class Dashboard extends React.Component {
                 })
               }, 1500);
             })
+          fetch(percentageChange)
+            .then(res => res.json())
+            .then(result => {
+              stockListChange[i] = parseFloat(result.changePercent).toFixed(2);
+              console.log(stockListChange[i])
+              if (Math.sign(stockListChange[i]) === -1) {
+                stockListChangeColors[i] = "#f45485"
+              } else if (Math.sign(stockListChange[i]) === 1) {
+                stockListChangeColors[i] = "#66f9da"
+                stockListChange[i] = "+" + stockListChange[i]
+                if (stockListChange[i].charAt(0) === "+" && stockListChange[i].charAt(1) === "+")
+                  stockListChange[i] = stockListChange[i].substr(1)
+              }
+              else {
+                stockListChangeColors[i] = "#999eaf"
+              }
+              stockListChange[i] = stockListChange[i] + "%"
+            });
         }
       });
   }
@@ -244,7 +264,7 @@ class Dashboard extends React.Component {
         funds: "$" + this.numberWithCommas(doc.data()["currentfunds"])
       })
       this.setState({
-        accountValue:"$" + this.numberWithCommas(parseFloat(doc.data()["currentfunds"]) + parseFloat(portfolioValue.reduce(add, 0)))
+        accountValue: "$" + this.numberWithCommas(parseFloat(doc.data()["currentfunds"]) + parseFloat(portfolioValue.reduce(add, 0)))
       })
     }).catch(function (error) {
       console.log("Error getting document:", error);
@@ -284,7 +304,7 @@ class Dashboard extends React.Component {
 
       //READ PORTFOLIO
       this.getAccountInfo()
-    }, 1500);
+    }, 1700);
     fetch("https://financialmodelingprep.com/api/v3/is-the-market-open")
       .then(res => res.json())
       .then(result => {
@@ -344,7 +364,7 @@ class Dashboard extends React.Component {
                   <div className="panel__title">
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                       <svg className="panel__popular" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 80" x="0px" y="0px"><g data-name="Layer 2"><g data-name="Layer 4"><path d="M24,64A24,24,0,0,1,11.44,19.55a2,2,0,0,1,2.71,2.82C13,24.08,10,29.35,10,33a6.93,6.93,0,0,0,7,7c3.48,0,7-2.16,7-7,0-1.89-1-3.57-2.06-5.53-3-5.38-6.83-12.07,6.58-26.82a2,2,0,0,1,3.33,2.11c-4.11,10,0,13.59,5.75,18.58C42.47,25.6,48,30.42,48,40A24,24,0,0,1,24,64ZM6.2,30.84A20,20,0,1,0,44,40c0-7.76-4.39-11.59-9-15.64-4.13-3.61-8.67-7.56-8.74-14.41-5.17,7.85-3,11.62-.81,15.56C26.69,27.74,28,30.06,28,33A10.64,10.64,0,0,1,17,44,10.88,10.88,0,0,1,6,33,12.59,12.59,0,0,1,6.2,30.84Z" /></g></g></svg>
-                      <h2>Most Active</h2>
+                      <h2>Most Popular</h2>
                     </div>
                   </div>
                   <div className="panel__topCharts" style={{ display: 'flex', alignItems: 'center' }}>
@@ -364,8 +384,7 @@ class Dashboard extends React.Component {
                           <div />
                         )}
                       {this.state.loader1 === true ? (
-                        <div className="stockChart__chart">
-
+                        <div className="stockChart__chart" onClick={() => this.routeChange(stockSymbols[0])}>
                           <Line data={this.data1} options={options} />
                         </div>
                       ) : (
@@ -399,7 +418,7 @@ class Dashboard extends React.Component {
                           <div />
                         )}
                       {this.state.loader2 === true ? (
-                        <div className="stockChart__chart">
+                        <div onClick={() => this.routeChange(stockSymbols[1])} className="stockChart__chart">
                           <Line data={this.data2} options={options} />
                         </div>
                       ) : (
@@ -438,7 +457,9 @@ class Dashboard extends React.Component {
                   {this.state.loader3 ?
                     <ul className="panel__list">
                       {stockList.map((value, index) => {
-                        if (index < 4) return <li onClick={() => this.routeChange(stockListTickers[index])} key={index}><span><img alt="" src={stockListLogos[index]}></img><h5>{value}</h5></span><h5>${stockListPrices[index]}</h5></li>
+                        if (index < 4) return <li onClick={() => this.routeChange(stockListTickers[index])} key={index}><span><img alt="" src={stockListLogos[index]}></img>
+                          <h5>{value}</h5></span><h5 class="panel__list-change"><h5 style=
+                            {{ color: stockListChangeColors[index], margin: '0 10px', textShadow: '0px 0px 7px ' + stockListChangeColors[index] }}>{stockListChange[index]}</h5> {stockListPrices[index]}</h5></li>
                         else return ""
                       })}
                     </ul>
@@ -455,7 +476,8 @@ class Dashboard extends React.Component {
                   {this.state.loader3 ?
                     <ul className="panel__list">
                       {stockList.map((value, index) => {
-                        if (index >= 4 && index < 8) return <li onClick={() => this.routeChange(stockListTickers[index])} key={index}><span><img alt="" src={stockListLogos[index]}></img><h5>{value}</h5></span><h5>${stockListPrices[index]}</h5></li>
+                        if (index >= 4 && index < 8) return <li onClick={() => this.routeChange(stockListTickers[index])} key={index}><span><img alt="" src={stockListLogos[index]}></img><h5> {value}</h5></span><h5 style={{ display: 'flex', margin: 0 }}><h5 style=
+                          {{ color: stockListChangeColors[index], margin: '0 10px', textShadow: '0px 0px 7px ' + stockListChangeColors[index] }}>{stockListChange[index]}</h5> {stockListPrices[index]}</h5></li>
                         else return ""
                       })}
                     </ul>
@@ -472,7 +494,8 @@ class Dashboard extends React.Component {
                   {this.state.loader3 ?
                     <ul className="panel__list">
                       {stockList.map((value, index) => {
-                        if (index >= 8) return <li onClick={() => this.routeChange(stockListTickers[index])} key={index}><span><img alt="" src={stockListLogos[index]}></img><h5>{value}</h5></span><h5>${stockListPrices[index]}</h5></li>
+                        if (index >= 8) return <li onClick={() => this.routeChange(stockListTickers[index])} key={index}><span><img alt="" src={stockListLogos[index]}></img><h5> {value}</h5></span><h5 style={{ display: 'flex', margin: 0 }}><h5 style=
+                          {{ color: stockListChangeColors[index], margin: '0 10px', textShadow: '0px 0px 7px ' + stockListChangeColors[index] }}>{stockListChange[index]}</h5> {stockListPrices[index]}</h5></li>
                         else return ""
                       })}
                     </ul>
