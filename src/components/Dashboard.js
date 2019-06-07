@@ -49,7 +49,6 @@ let changesColors = []
 let stockList = []
 let stockListPrices = []
 let stockListTickers = []
-let stockListLogos = []
 let stockListChange = []
 let stockListChangeColors = []
 
@@ -179,27 +178,13 @@ class Dashboard extends React.Component {
       .then(res => res.json())
       .then(result => {
         for (let i = 0; i < 9; i++) {
-          if (result[i].companyName.length >= 18) {
-            stockList[i] = result[i].symbol
-          }
-          else {
+
             stockList[i] = result[i].companyName
-          }
+
           const percentageChange =
             `https://cloud.iexapis.com/stable/stock/${result[i].symbol}/quote?displayPercent=true&token=pk_c4db94f67a0b42a1884238b690ab06db`;
           stockListPrices[i] = result[i].latestPrice
           stockListTickers[i] = result[i].symbol
-          const logo = `https://cloud.iexapis.com/stable/stock/${result[i].symbol}/logo?token=pk_c4db94f67a0b42a1884238b690ab06db`
-          fetch(logo)
-            .then(res => res.json())
-            .then(result => {
-              stockListLogos[i] = result.url
-              setTimeout(() => {
-                this.setState({
-                  loader3: true
-                })
-              }, 500);
-            })
           fetch(percentageChange)
             .then(res => res.json())
             .then(result => {
@@ -216,6 +201,9 @@ class Dashboard extends React.Component {
                 stockListChangeColors[i] = "#999eaf"
               }
               stockListChange[i] = stockListChange[i] + "%"
+              this.setState({
+                loader3: true
+              })
             });
         }
       });
@@ -469,9 +457,9 @@ class Dashboard extends React.Component {
                   {this.state.loader3 ?
                     <ul className="panel__list">
                       {stockList.map((value, index) => {
-                        if (index < 3) return <li onClick={() => this.routeChange(stockListTickers[index])} key={index}><span><img alt="" src={stockListLogos[index]}></img>
-                          <h5>{value}</h5></span><div className="panel__list-change"><h5 style=
-                            {{ color: stockListChangeColors[index], margin: '0 10px', textShadow: '0px 0px 7px ' + stockListChangeColors[index] }}>{stockListChange[index]}</h5><h4> {stockListPrices[index]}</h4></div></li>
+                        if (index < 3) return <li onClick={() => this.routeChange(stockListTickers[index])} key={index}><span className="panel__fullname">
+                          <h4>{stockListTickers[index]}</h4><h6 className="panel__name">{value}</h6></span><div className="panel__list-change"><h4> {stockListPrices[index]}</h4><h5 style=
+                            {{ color: stockListChangeColors[index], margin: '10px 0 0 0', textShadow: '0px 0px 7px ' + stockListChangeColors[index] }}>{stockListChange[index]}</h5></div></li>
                         else return ""
                       })}
                     </ul>
@@ -487,10 +475,11 @@ class Dashboard extends React.Component {
                   {this.state.loader3 ?
                     <ul className="panel__list">
                       {stockList.map((value, index) => {
-                        if (index >= 3 && index < 6) return <li onClick={() => this.routeChange(stockListTickers[index])} key={index}><span><img alt="" src={stockListLogos[index]}></img><h5> {value}</h5></span><div className="panel__list-change"><h5 style=
-                          {{ color: stockListChangeColors[index], margin: '0 10px', textShadow: '0px 0px 7px ' + stockListChangeColors[index] }}>{stockListChange[index]}</h5><h4> {stockListPrices[index]}</h4></div></li>
-                        else return ""
-                      })}
+                        if (index >= 3 && index < 6) return <li onClick={() => this.routeChange(stockListTickers[index])} key={index}><span className="panel__fullname">
+                        <h4>{stockListTickers[index]}</h4><h6 className="panel__name">{value}</h6></span><div className="panel__list-change"><h4> {stockListPrices[index]}</h4><h5 style=
+                          {{ color: stockListChangeColors[index], margin: '10px 0 0 0', textShadow: '0px 0px 7px ' + stockListChangeColors[index] }}>{stockListChange[index]}</h5></div></li>
+                      else return ""
+                    })}
                     </ul>
                     :
                     <ul className="loader">
@@ -504,11 +493,11 @@ class Dashboard extends React.Component {
                   {this.state.loader3 ?
                     <ul className="panel__list">
                       {stockList.map((value, index) => {
-                        if (index >= 6) return <li onClick={() => this.routeChange(stockListTickers[index])} key={index}><span><img alt="" src={stockListLogos[index]}></img>
-                          <h5> {value}</h5></span><div className="panel__list-change"><h5 style=
-                            {{ color: stockListChangeColors[index], margin: '0 10px', textShadow: '0px 0px 7px ' + stockListChangeColors[index] }}>{stockListChange[index]}</h5><h4> {stockListPrices[index]}</h4></div></li>
-                        else return ""
-                      })}
+                        if (index >= 6) return <li onClick={() => this.routeChange(stockListTickers[index])} key={index}><span className="panel__fullname">
+                        <h4>{stockListTickers[index]}</h4><h6 className="panel__name">{value}</h6></span><div className="panel__list-change"><h4> {stockListPrices[index]}</h4><h5 style=
+                          {{ color: stockListChangeColors[index], margin: '10px 0 0 0', textShadow: '0px 0px 7px ' + stockListChangeColors[index] }}>{stockListChange[index]}</h5></div></li>
+                      else return ""
+                    })}
                     </ul>
                     :
                     <ul className="loader">
