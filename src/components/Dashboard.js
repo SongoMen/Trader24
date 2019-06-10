@@ -183,7 +183,7 @@ class Dashboard extends React.Component {
 
           const percentageChange =
             `https://cloud.iexapis.com/stable/stock/${result[i].symbol}/quote?displayPercent=true&token=pk_c4db94f67a0b42a1884238b690ab06db`;
-          stockListPrices[i] = result[i].latestPrice
+          stockListPrices[i] = "$" + result[i].latestPrice
           stockListTickers[i] = result[i].symbol
           fetch(percentageChange)
             .then(res => res.json())
