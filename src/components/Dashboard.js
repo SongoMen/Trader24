@@ -65,10 +65,11 @@ class Dashboard extends React.Component {
       loader1: "",
       loader2: "",
       loader3: "",
+      portfolioLoader: "",
       funds: "",
       accountValue: ""
     }
-    this.componentWillMount = this.componentWillMount.bind(this);
+    this.componentDidMount = this.componentDidMount.bind(this);
     function labelGen(length) {
       let result = 0;
       for (let i = 1; i < length; i++) {
@@ -178,27 +179,25 @@ class Dashboard extends React.Component {
       .then(res => res.json())
       .then(result => {
         for (let i = 0; i < 9; i++) {
-
-            stockList[i] = result[i].companyName
-
+          stockList[i] = result[i].companyName
           const percentageChange =
             `https://cloud.iexapis.com/stable/stock/${result[i].symbol}/quote?displayPercent=true&token=pk_c4db94f67a0b42a1884238b690ab06db`;
-          stockListPrices[i] = "$" + result[i].latestPrice
+          stockListPrices[i] = "$" + result[i].latestPrice.toFixed(2)
           stockListTickers[i] = result[i].symbol
           fetch(percentageChange)
             .then(res => res.json())
             .then(result => {
               stockListChange[i] = parseFloat(result.changePercent).toFixed(2);
               if (Math.sign(stockListChange[i]) === -1) {
-                stockListChangeColors[i] = "#f45485"
+                stockListChangeColors[i] = "rgb(244,84,133"
               } else if (Math.sign(stockListChange[i]) === 1) {
-                stockListChangeColors[i] = "#66f9da"
+                stockListChangeColors[i] = "rgb(102,249,218"
                 stockListChange[i] = "+" + stockListChange[i]
                 if (stockListChange[i].charAt(0) === "+" && stockListChange[i].charAt(1) === "+")
                   stockListChange[i] = stockListChange[i].substr(1)
               }
               else {
-                stockListChangeColors[i] = "#999eaf"
+                stockListChangeColors[i] = "rgb(153,158,175"
               }
               stockListChange[i] = stockListChange[i] + "%"
               this.setState({
@@ -227,24 +226,33 @@ class Dashboard extends React.Component {
     let user = firebase.auth().currentUser.displayName;
     let docRef = db.collection("users").doc(user);
     let i = 0
-    firebase.firestore().collection('users').doc(user).collection("stocks").get().then(snapshot => {
-      snapshot.forEach(doc => {
-        console.log(doc.id, '=>', doc.data());
-        portfolioStocks.push(doc.id)
-        portfolioShares.push(this.numberWithCommas(doc.data().shares))
-        portfolioValue.push(doc.data().value)
-        portfolioDifference.push(this.relDiff(doc.data().value, doc.data().moneyPaid).toFixed(2))
-        if (doc.data().value > doc.data().moneyPaid) {
-          portfolioDifference[i] = "+" + portfolioDifference[i]
-          portfolioColor.push("#5ce569")
-        }
-        else {
-          portfolioDifference[i] = "-" + portfolioDifference[i]
-          portfolioColor.push("#ff5e57")
-        }
-        i++;
-      });
-    });
+    firebase.firestore().collection('users').doc(user).collection("stocks").get()
+      .then(snapshot => {
+        snapshot.forEach(doc => {
+          console.log(doc.id, '=>', doc.data());
+          portfolioStocks.push(doc.id)
+          portfolioShares.push(this.numberWithCommas(doc.data().shares))
+          portfolioValue.push(doc.data().value)
+          portfolioDifference.push(this.relDiff(doc.data().value, doc.data().moneyPaid).toFixed(2))
+          if (doc.data().value > doc.data().moneyPaid) {
+            portfolioDifference[i] = "+" + portfolioDifference[i]
+            portfolioColor.push("#5ce569")
+          }
+          else {
+            portfolioDifference[i] = "-" + portfolioDifference[i]
+            portfolioColor.push("#ff5e57")
+          }
+          i++;
+        });
+
+      })
+      .then(() => {
+        this.setState({
+          portfolioLoader: true
+        })
+        if (this.state.portfolioLoader) document.getElementById("portfolio").style.display = "block"
+      })
+
 
     docRef.get().then(doc => {
       this.setState({
@@ -257,7 +265,7 @@ class Dashboard extends React.Component {
       console.log("Error getting document:", error);
     });
   }
-  componentWillMount() {
+  componentDidMount() {
     const gainers = "https://cloud.iexapis.com/stable/stock/market/list/gainers?token=pk_c4db94f67a0b42a1884238b690ab06db"
     fetch(gainers)
       .then(res => res.json())
@@ -360,7 +368,7 @@ class Dashboard extends React.Component {
                 <div className="panel__top">
                   <div className="panel__title">
                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <svg className="panel__popular" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" xmlSpace="preserve" version="1.1" viewBox="0 0 411 261.25" x="0px" y="0px" fillRule="evenodd" clipRule="evenodd"><defs></defs><g><path d="M314 0c-29,0 -29,44 0,44l23 0 -113 112 -92 -92c-9,-8 -22,-8 -31,0l-94 95c-21,20 10,51 30,31l79 -79 92 92c9,8 23,8 31,0l128 -129 0 23c0,29 44,29 44,0l0 -75c0,-12 -10,-22 -22,-22l-75 0z"/></g></svg>
+                      <svg className="panel__popular" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" xmlSpace="preserve" version="1.1" viewBox="0 0 411 261.25" x="0px" y="0px" fillRule="evenodd" clipRule="evenodd"><defs></defs><g><path d="M314 0c-29,0 -29,44 0,44l23 0 -113 112 -92 -92c-9,-8 -22,-8 -31,0l-94 95c-21,20 10,51 30,31l79 -79 92 92c9,8 23,8 31,0l128 -129 0 23c0,29 44,29 44,0l0 -75c0,-12 -10,-22 -22,-22l-75 0z" /></g></svg>
                       <h2>Gainers</h2>
                     </div>
                   </div>
@@ -438,20 +446,38 @@ class Dashboard extends React.Component {
                   <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
                     <svg className="panel__portfolio-title" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 200 250" enableBackground="new 0 0 200 200" xmlSpace="preserve"><g><g><path d="M156.811,54.528H43.159L0,97.64l96.874,96.875l3.119,3.117l3.117-3.117L200,97.64L156.811,54.528z     M99.992,187.565l-8.136-8.134L10.082,97.64l36.02-35.99h107.763l36.056,35.99l-81.793,81.792L99.992,187.565z" /><g><path d="M63.434,94.079l28.423,85.353l5.017,15.083l3.119,3.117l3.117-3.117l5.018-15.083l28.409-85.353H63.434z      M99.992,181.331l-26.684-80.13h53.351L99.992,181.331z" /><polygon points="74.664,101.198 5.041,101.198 5.041,94.076 62.083,94.076 41.576,59.925 47.684,56.259    " /><polygon points="67.956,103.86 41.576,59.925 47.684,56.259 68.791,91.413 97.21,55.868 102.771,60.316    " /><polygon points="132.02,103.86 97.21,60.316 102.771,55.868 131.185,91.413 152.288,56.259 158.396,59.925    " /><polygon points="194.96,101.198 125.312,101.198 152.288,56.259 158.396,59.925 137.893,94.076 194.96,94.076         " /></g></g><g><rect x="96.439" y="2.368" width="7.123" height="23.74" /><rect x="120.786" y="7.211" transform="matrix(0.9238 0.3828 -0.3828 0.9238 16.7729 -46.1416)" width="7.124" height="23.742" /><rect x="141.429" y="21.002" transform="matrix(0.7071 0.7071 -0.7071 0.7071 65.7174 -92.8988)" width="7.121" height="23.742" /><rect x="63.779" y="15.52" transform="matrix(0.3827 0.9239 -0.9239 0.3827 64.3313 -58.112)" width="23.742" height="7.124" /><rect x="43.139" y="29.312" transform="matrix(0.707 0.7072 -0.7072 0.707 39.3628 -29.2704)" width="23.74" height="7.121" /></g></g></svg>              <h2>Portfolio</h2>
                   </div>
-                  <div className="panel__portfolio">
-                    <ul className="panel__portfolio-list">
-                      {portfolioStocks.map((value, index) => {
-                        return <li key={index}><h5>{value}</h5><h5>{portfolioShares[index]}</h5><h5 style={{ color: portfolioColor[index] }}>{portfolioDifference[index]}%</h5><h5>${this.numberWithCommas(portfolioValue[index])}</h5></li>
-                      })}
-                    </ul>
-                    <div className="panel__value"><h5>ACCOUNT VALUE</h5><h5>{this.state.accountValue}</h5></div>
+                  <div className="panel__portfolio" id="portfolio">
+                    {this.state.portfolioLoader === "" ? (
+                      <ul className="loader">
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                      </ul>
+                    ) : (
+                        <div />
+                      )}
+                    {this.state.portfolioLoader === false ? (
+                      <h5>Couldn't load chart try again in few minutes</h5>
+                    ) : (
+                        <div />
+                      )}
+                    {this.state.portfolioLoader ?
+                      <div>
+                        <ul className="panel__portfolio-list">
+                          {portfolioStocks.map((value, index) => {
+                            return <li key={index}><h5>{value}</h5><h5>{portfolioShares[index]}</h5><h5 style={{ color: portfolioColor[index] }}>{portfolioDifference[index]}%</h5><h5>${this.numberWithCommas(portfolioValue[index])}</h5></li>
+                          })}
+                        </ul>
+                        <div className="panel__value"><h5>ACCOUNT VALUE</h5><h5>{this.state.accountValue}</h5></div></div>
+                      : <div />
+                    }
                   </div>
                 </div>
               </div>
               <div className="panel__bottom-title">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 80" x="0px" y="0px"><g data-name="Layer 2"><g data-name="Layer 4"><path d="M24,64A24,24,0,0,1,11.44,19.55a2,2,0,0,1,2.71,2.82C13,24.08,10,29.35,10,33a6.93,6.93,0,0,0,7,7c3.48,0,7-2.16,7-7,0-1.89-1-3.57-2.06-5.53-3-5.38-6.83-12.07,6.58-26.82a2,2,0,0,1,3.33,2.11c-4.11,10,0,13.59,5.75,18.58C42.47,25.6,48,30.42,48,40A24,24,0,0,1,24,64ZM6.2,30.84A20,20,0,1,0,44,40c0-7.76-4.39-11.59-9-15.64-4.13-3.61-8.67-7.56-8.74-14.41-5.17,7.85-3,11.62-.81,15.56C26.69,27.74,28,30.06,28,33A10.64,10.64,0,0,1,17,44,10.88,10.88,0,0,1,6,33,12.59,12.59,0,0,1,6.2,30.84Z" /></g></g></svg>
-                  <h3>Most Active</h3>
-                  </div>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 80" x="0px" y="0px"><g data-name="Layer 2"><g data-name="Layer 4"><path d="M24,64A24,24,0,0,1,11.44,19.55a2,2,0,0,1,2.71,2.82C13,24.08,10,29.35,10,33a6.93,6.93,0,0,0,7,7c3.48,0,7-2.16,7-7,0-1.89-1-3.57-2.06-5.53-3-5.38-6.83-12.07,6.58-26.82a2,2,0,0,1,3.33,2.11c-4.11,10,0,13.59,5.75,18.58C42.47,25.6,48,30.42,48,40A24,24,0,0,1,24,64ZM6.2,30.84A20,20,0,1,0,44,40c0-7.76-4.39-11.59-9-15.64-4.13-3.61-8.67-7.56-8.74-14.41-5.17,7.85-3,11.62-.81,15.56C26.69,27.74,28,30.06,28,33A10.64,10.64,0,0,1,17,44,10.88,10.88,0,0,1,6,33,12.59,12.59,0,0,1,6.2,30.84Z" /></g></g></svg>
+                <h3>Most Active</h3>
+              </div>
               <div className="panel__bottom">
                 <div className="panel__stockList">
                   {this.state.loader3 ?
@@ -459,7 +485,7 @@ class Dashboard extends React.Component {
                       {stockList.map((value, index) => {
                         if (index < 3) return <li onClick={() => this.routeChange(stockListTickers[index])} key={index}><span className="panel__fullname">
                           <h4>{stockListTickers[index]}</h4><h6 className="panel__name">{value}</h6></span><div className="panel__list-change"><h4> {stockListPrices[index]}</h4><h5 style=
-                            {{ color: stockListChangeColors[index], margin: '5px 0 0 0', textShadow: '0px 0px 7px ' + stockListChangeColors[index] }}>{stockListChange[index]}</h5></div></li>
+                            {{ color: stockListChangeColors[index] + ")", margin: '5px 0 0 0', textShadow: '0px 0px 7px ' + stockListChangeColors[index] + ",0.5)" }}>{stockListChange[index]}</h5></div></li>
                         else return ""
                       })}
                     </ul>
@@ -476,10 +502,10 @@ class Dashboard extends React.Component {
                     <ul className="panel__list">
                       {stockList.map((value, index) => {
                         if (index >= 3 && index < 6) return <li onClick={() => this.routeChange(stockListTickers[index])} key={index}><span className="panel__fullname">
-                        <h4>{stockListTickers[index]}</h4><h6 className="panel__name">{value}</h6></span><div className="panel__list-change"><h4> {stockListPrices[index]}</h4><h5 style=
-                          {{ color: stockListChangeColors[index], margin: '5px 0 0 0', textShadow: '0px 0px 7px ' + stockListChangeColors[index] }}>{stockListChange[index]}</h5></div></li>
-                      else return ""
-                    })}
+                          <h4>{stockListTickers[index]}</h4><h6 className="panel__name">{value}</h6></span><div className="panel__list-change"><h4> {stockListPrices[index]}</h4><h5 style=
+                            {{ color: stockListChangeColors[index] + ")", margin: '5px 0 0 0', textShadow: '0px 0px 7px ' + stockListChangeColors[index] + ",0.5)" }}>{stockListChange[index]}</h5></div></li>
+                        else return ""
+                      })}
                     </ul>
                     :
                     <ul className="loader">
@@ -494,10 +520,10 @@ class Dashboard extends React.Component {
                     <ul className="panel__list">
                       {stockList.map((value, index) => {
                         if (index >= 6) return <li onClick={() => this.routeChange(stockListTickers[index])} key={index}><span className="panel__fullname">
-                        <h4>{stockListTickers[index]}</h4><h6 className="panel__name">{value}</h6></span><div className="panel__list-change"><h4> {stockListPrices[index]}</h4><h5 style=
-                          {{ color: stockListChangeColors[index], margin: '5px 0 0 0', textShadow: '0px 0px 7px ' + stockListChangeColors[index] }}>{stockListChange[index]}</h5></div></li>
-                      else return ""
-                    })}
+                          <h4>{stockListTickers[index]}</h4><h6 className="panel__name">{value}</h6></span><div className="panel__list-change"><h4> {stockListPrices[index]}</h4><h5 style=
+                            {{ color: stockListChangeColors[index] + ")", margin: '5px 0 0 0', textShadow: '0px 0px 7px ' + stockListChangeColors[index] + ",0.5)" }}>{stockListChange[index]}</h5></div></li>
+                        else return ""
+                      })}
                     </ul>
                     :
                     <ul className="loader">
@@ -506,7 +532,6 @@ class Dashboard extends React.Component {
                       <li></li>
                     </ul>
                   }
-
                 </div>
               </div>
             </div>
