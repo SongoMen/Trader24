@@ -203,7 +203,7 @@ class Dashboard extends React.Component {
             });
         }
       })
-      .then(()=>{
+      .then(() => {
         this.setState({
           loader3: true
         })
@@ -266,6 +266,36 @@ class Dashboard extends React.Component {
     }).catch(function (error) {
       console.log("Error getting document:", error);
     });
+  }
+  searchStocks() {
+    /*let li
+    fetch("https://cloud.iexapis.com/stable/ref-data/symbols?token=pk_c4db94f67a0b42a1884238b690ab06db")
+      .then(res => res.json())
+      .then(result => {
+        li = result
+        console.log(li)
+      })
+      .then(() => {
+        let b = 0
+        let txtValue = li
+        console.log(li)
+        console.log(li.length)
+        console.log(txtValue)
+        let filter = document.getElementById("searchBar").value
+        for (let i = 0; i < li.length; i++) {
+          console.log(txtValue[i])
+          if (txtValue[i].symbol.indexOf(filter) > -1) {
+            console.log(txtValue)
+          }
+          else if(b===5) break
+          else {
+            console.log("X")
+          }
+          b++
+        }
+      })
+      */
+     console.log("X")
   }
   componentDidMount() {
     const gainers = "https://cloud.iexapis.com/stable/stock/market/list/gainers?token=pk_c4db94f67a0b42a1884238b690ab06db"
@@ -346,9 +376,20 @@ class Dashboard extends React.Component {
               <img className="topbar__logo" src={require("../images/logo.png")} alt="logo"></img>
               <h2>Dashboard</h2>
             </div>
-            <div className="topbar__user">
-              <h3>{this.state.funds}</h3>
-              Hi, <span className="leftbar__name"> &nbsp;{user} !</span><svg onClick={() => logout()} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 30" x="0px" y="0px"><title>LOG OUT</title><g data-name="LOG OUT"><path d="M13,21a1,1,0,0,1-1,1H3a1,1,0,0,1-1-1V3A1,1,0,0,1,3,2h9a1,1,0,0,1,0,2H4V20h8A1,1,0,0,1,13,21Zm8.92-9.38a1,1,0,0,0-.22-.32h0l-4-4a1,1,0,0,0-1.41,1.41L18.59,11H7a1,1,0,0,0,0,2H18.59l-2.29,2.29a1,1,0,1,0,1.41,1.41l4-4h0a1,1,0,0,0,.22-1.09Z" /></g></svg></div>
+            <div className="topbar__container">
+              <div className="topbar__searchbar">
+                <div>
+                  <svg enableBackground="new 0 0 250.313 250.313" version="1.1" viewBox="0 0 250.313 250.313" xmlSpace="preserve" xmlns="http://www.w3.org/2000/svg">
+                    <path d="m244.19 214.6l-54.379-54.378c-0.289-0.289-0.628-0.491-0.93-0.76 10.7-16.231 16.945-35.66 16.945-56.554 0-56.837-46.075-102.91-102.91-102.91s-102.91 46.075-102.91 102.91c0 56.835 46.074 102.91 102.91 102.91 20.895 0 40.323-6.245 56.554-16.945 0.269 0.301 0.47 0.64 0.759 0.929l54.38 54.38c8.169 8.168 21.413 8.168 29.583 0 8.168-8.169 8.168-21.413 0-29.582zm-141.28-44.458c-37.134 0-67.236-30.102-67.236-67.235 0-37.134 30.103-67.236 67.236-67.236 37.132 0 67.235 30.103 67.235 67.236s-30.103 67.235-67.235 67.235z" clipRule="evenodd" fillRule="evenodd" />
+                  </svg>
+                  <input type="text" id="searchBar" onKeyUp={this.searchStocks} placeholder="Search stock by symbol"></input>
+                </div>
+                <ul className="topbar__results"></ul>
+              </div>
+              <div className="topbar__user">
+                <h3>{this.state.funds}</h3>
+                Hi, <span className="leftbar__name"> &nbsp;{user} !</span><svg onClick={() => logout()} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 30" x="0px" y="0px"><title>LOG OUT</title><g data-name="LOG OUT"><path d="M13,21a1,1,0,0,1-1,1H3a1,1,0,0,1-1-1V3A1,1,0,0,1,3,2h9a1,1,0,0,1,0,2H4V20h8A1,1,0,0,1,13,21Zm8.92-9.38a1,1,0,0,0-.22-.32h0l-4-4a1,1,0,0,0-1.41,1.41L18.59,11H7a1,1,0,0,0,0,2H18.59l-2.29,2.29a1,1,0,1,0,1.41,1.41l4-4h0a1,1,0,0,0,.22-1.09Z" /></g></svg></div>
+            </div>
           </div>
           <div style={{ display: 'flex', height: '100%' }}>
             <div className="leftbar">

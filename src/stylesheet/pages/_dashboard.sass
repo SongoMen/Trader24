@@ -47,11 +47,31 @@
   align-items: center
   justify-content: space-between
   padding: 0 20px
+  .topbar__container
+    display: flex
+    align-items: center
+  .topbar__searchbar
+    display: flex
+    background-color: $searchbar-color
+    border-radius: 50px
+    margin-right: 80px
+    display: flex
+    align-items: center
+    padding: 0 20px
+    svg
+      height: 15px
+      fill: $searchbarText-color
+    input
+      height: 30px
+      background-color: $searchbar-color
+      color: $searchbarText-color
+      padding: 10px
+      min-width: 250px
 
 .leftbar
     position: relative
     background-color: $bar-color
-    width: 5%
+    width: 4%
     display: flex
     align-items: center
     justify-content: center
@@ -245,7 +265,7 @@
   padding: 0
   font-weight: 800
   svg
-    width: 60%
+    width: 80%
     min-width: 18px
     margin-bottom: -7px
   li
