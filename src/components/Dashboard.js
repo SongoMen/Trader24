@@ -70,6 +70,7 @@ class Dashboard extends React.Component {
       accountValue: ""
     }
     this.componentDidMount = this.componentDidMount.bind(this);
+    this.getAccountInfo = this.getAccountInfo.bind(this)
     function labelGen(length) {
       let result = 0;
       for (let i = 1; i < length; i++) {
@@ -218,54 +219,85 @@ class Dashboard extends React.Component {
   numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
+
   getAccountInfo() {
-    function add(accumulator, a) {
-      return accumulator + a;
+    function add(a, b) {
+      return a + b;
     }
+
     portfolioStocks = []
     portfolioDifference = []
-
-    let user = firebase.auth().currentUser.displayName;
+    let user = firebase.auth().currentUser.uid;
     let docRef = db.collection("users").doc(user);
-    let i = 0
     firebase.firestore().collection('users').doc(user).collection("stocks").get()
       .then(snapshot => {
         snapshot.forEach(doc => {
           console.log(doc.id, '=>', doc.data());
           portfolioStocks.push(doc.id)
           portfolioShares.push(this.numberWithCommas(doc.data().shares))
-          portfolioValue.push(doc.data().value)
-          portfolioDifference.push(this.relDiff(doc.data().value, doc.data().moneyPaid).toFixed(2))
-          if (doc.data().value > doc.data().moneyPaid) {
-            portfolioDifference[i] = "+" + portfolioDifference[i]
-            portfolioColor.push("#5ce569")
-          }
-          else {
-            portfolioDifference[i] = "-" + portfolioDifference[i]
-            portfolioColor.push("#ff5e57")
-          }
-          i++;
         });
-
       })
-      .then(() => {
+      .catch(error => {
+        console.log("Error getting document:", error);
         this.setState({
-          portfolioLoader: true
+          portfolioLoader: false
         })
-        if (this.state.portfolioLoader) document.getElementById("portfolio").style.display = "block"
-      })
+      });
+    firebase.firestore().collection('users').doc(user).collection("stocks").get()
+      .then(snapshot => {
+        snapshot.forEach(doc => {
+          (async () => {
+            for (let i = 0; i < portfolioStocks.length; i++) {
+              const lastPrice =
+                `https://cloud.iexapis.com/stable/stock/${portfolioStocks[i]}/price?token=pk_c4db94f67a0b42a1884238b690ab06db`;
+              await new Promise(resolve =>
+                fetch(lastPrice)
+                  .then(res => res.json())
+                  .then(result => {
+                    portfolioValue.push(doc.data().shares * result)
+                  })
+                  .then(()=>{
+                    portfolioDifference[i] = (this.relDiff(portfolioValue[i], parseFloat(doc.data().moneyPaid)).toFixed(2))
+                    if (portfolioValue[i] > doc.data().moneyPaid) {
+                      portfolioDifference[i] = "+" + portfolioDifference[i]
+                      portfolioColor.push("#66F9DA")
+                    }
+                    else if(portfolioValue[i]===doc.data().moneyPaid) portfolioColor.push("#999EAF")
+                    else {
+                      portfolioDifference[i] = "-" + portfolioDifference[i]
+                      portfolioColor.push("#F45385")
+                    }
+                  })
+                  .then(()=>{
+                    docRef.get().then(doc => {
+                      this.setState({
+                        funds: "$" + this.numberWithCommas(doc.data()["currentfunds"])
+                      })
+                      this.setState({
+                        accountValue: "$" + this.numberWithCommas(parseFloat(doc.data()["currentfunds"]) + parseFloat(portfolioValue.reduce(add, 0)))
+                      })
+                      resolve()
 
+                    }).catch(error => {
+                      console.log("Error getting document:", error);
+                      this.setState({
+                        portfolioLoader: false
+                      })
+                    });
+                  })
+              );
+              if (portfolioStocks.length === portfolioValue.length && portfolioDifference.length === portfolioStocks.length && portfolioShares.length === portfolioStocks.length) {
+                this.setState({
+                  portfolioLoader: true
+                })
+                document.getElementById("portfolio").style.display = "block"
+                console.log(portfolioDifference)
+              }
+            }
+          })();
 
-    docRef.get().then(doc => {
-      this.setState({
-        funds: "$" + this.numberWithCommas(doc.data()["currentfunds"])
+        })
       })
-      this.setState({
-        accountValue: "$" + this.numberWithCommas(parseFloat(doc.data()["currentfunds"]) + parseFloat(portfolioValue.reduce(add, 0)))
-      })
-    }).catch(function (error) {
-      console.log("Error getting document:", error);
-    });
   }
   searchStocks() {
     /*let li
@@ -295,7 +327,7 @@ class Dashboard extends React.Component {
         }
       })
       */
-     console.log("X")
+    console.log("X")
   }
   componentDidMount() {
     const gainers = "https://cloud.iexapis.com/stable/stock/market/list/gainers?token=pk_c4db94f67a0b42a1884238b690ab06db"
@@ -340,6 +372,10 @@ class Dashboard extends React.Component {
       this.getStocksList()
 
       //READ PORTFOLIO
+      setTimeout(() => {
+        console.log(portfolioValue)
+      }, 2000)
+
       this.getAccountInfo()
     }, 1700);
     fetch("https://financialmodelingprep.com/api/v3/is-the-market-open")
@@ -378,7 +414,7 @@ class Dashboard extends React.Component {
             </div>
             <div className="topbar__container">
               <div className="topbar__searchbar">
-                <div>
+                <div style={{display: 'flex',alignItems: 'center'}}>
                   <svg enableBackground="new 0 0 250.313 250.313" version="1.1" viewBox="0 0 250.313 250.313" xmlSpace="preserve" xmlns="http://www.w3.org/2000/svg">
                     <path d="m244.19 214.6l-54.379-54.378c-0.289-0.289-0.628-0.491-0.93-0.76 10.7-16.231 16.945-35.66 16.945-56.554 0-56.837-46.075-102.91-102.91-102.91s-102.91 46.075-102.91 102.91c0 56.835 46.074 102.91 102.91 102.91 20.895 0 40.323-6.245 56.554-16.945 0.269 0.301 0.47 0.64 0.759 0.929l54.38 54.38c8.169 8.168 21.413 8.168 29.583 0 8.168-8.169 8.168-21.413 0-29.582zm-141.28-44.458c-37.134 0-67.236-30.102-67.236-67.235 0-37.134 30.103-67.236 67.236-67.236 37.132 0 67.235 30.103 67.235 67.236s-30.103 67.235-67.235 67.235z" clipRule="evenodd" fillRule="evenodd" />
                   </svg>

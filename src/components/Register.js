@@ -1,10 +1,6 @@
 import React, { Component } from "react";
 import { auth } from './auth'
-import firebase from 'firebase/app';
 import 'firebase/firestore';
-
-const db = firebase.firestore();
-
 
 class Register extends Component {
     constructor(props) {
@@ -17,26 +13,8 @@ class Register extends Component {
     handleClickRegisterUser(e) {
         var re = /^(([^<>()\\.,;:\s@"]+(\.[^<>()\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         if (this.password.value.length > 6 && re.test(String(this.email.value).toLowerCase())) {
-            localStorage.setItem('password', this.password.value);
-            localStorage.setItem('user', this.username.value);
+            localStorage.setItem('user', this.username.value)
             auth(this.email.value, this.password.value, this.username.value)
-                .catch(e => this.setState({
-                    msg: "Error occured."
-                }))
-
-            db.collection("users").doc(this.username.value).set({
-                email: this.email.value,
-                username: this.username.value,
-                funds: "100000",
-                currentfunds: "100000",
-                accountValue: "100000"
-            })
-                .then(() => {
-                    console.log("Xxx")
-                })
-                .catch(function (error) {
-                    console.error("Error writing document: ", error);
-                });
             this.setState({
                 msg: "Register Successful"
             })
