@@ -286,14 +286,15 @@ class Dashboard extends React.Component {
                     });
                   })
               );
+            }
+            setTimeout(() => {
               if (portfolioStocks.length === portfolioValue.length && portfolioDifference.length === portfolioStocks.length && portfolioShares.length === portfolioStocks.length) {
                 this.setState({
                   portfolioLoader: true
                 })
                 document.getElementById("portfolio").style.display = "block"
-                console.log(portfolioDifference)
               }
-            }
+            }, 200);
           })();
 
         })
@@ -368,16 +369,12 @@ class Dashboard extends React.Component {
           loader2: false
         })
       }
+    }, 1700);
       // STOCK LIST
       this.getStocksList()
 
       //READ PORTFOLIO
-      setTimeout(() => {
-        console.log(portfolioValue)
-      }, 2000)
-
       this.getAccountInfo()
-    }, 1700);
     fetch("https://financialmodelingprep.com/api/v3/is-the-market-open")
       .then(res => res.json())
       .then(result => {
@@ -427,7 +424,7 @@ class Dashboard extends React.Component {
                 Hi, <span className="leftbar__name"> &nbsp;{user} !</span><svg onClick={() => logout()} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 30" x="0px" y="0px"><title>LOG OUT</title><g data-name="LOG OUT"><path d="M13,21a1,1,0,0,1-1,1H3a1,1,0,0,1-1-1V3A1,1,0,0,1,3,2h9a1,1,0,0,1,0,2H4V20h8A1,1,0,0,1,13,21Zm8.92-9.38a1,1,0,0,0-.22-.32h0l-4-4a1,1,0,0,0-1.41,1.41L18.59,11H7a1,1,0,0,0,0,2H18.59l-2.29,2.29a1,1,0,1,0,1.41,1.41l4-4h0a1,1,0,0,0,.22-1.09Z" /></g></svg></div>
             </div>
           </div>
-          <div style={{ display: 'flex', height: '100%' }}>
+          <div style={{ display: 'flex', height: '93%' }}>
             <div className="leftbar">
               <ul className="leftbar__menu">
                 <li>
