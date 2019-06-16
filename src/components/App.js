@@ -7,6 +7,7 @@ import Dashboard from './Dashboard.js';
 import Register from './Register';
 import Login from './Login'
 import Stocks from './Stocks'
+import stockPage from './stockPage'
 import AAPL from './AAPL'
 
 function PrivateRoute({ component: Component, authed, ...rest }) {
@@ -14,7 +15,7 @@ function PrivateRoute({ component: Component, authed, ...rest }) {
     <Route
       {...rest}
       render={(props) => authed === true
-        ? <Component {...props} />
+        ? <Component {...props} {...rest} />
         : <Redirect to={{ pathname: '/login', state: { from: props.location } }} />}
     />
   )
@@ -72,7 +73,7 @@ class App extends Component {
               <PublicRoute authed={this.state.authed} path="/login" component={Login} />
               <PrivateRoute authed={this.state.authed} path="/dashboard" component={Dashboard} />
               <PrivateRoute authed={this.state.authed} path="/stocks" component={Stocks} />
-              <PrivateRoute authed={this.state.authed} path="/aapl" component={AAPL} />
+              <PrivateRoute authed={this.state.authed} path="/amd" component={stockPage} symbol="AMD"/>
             </Switch>
           </div>
         </Router>
