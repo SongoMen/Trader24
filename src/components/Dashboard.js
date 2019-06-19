@@ -41,6 +41,7 @@ var options = {
 let chartData1 = [];
 let chartData2 = [];
 
+let toCheckSymbols = []
 let stockSymbols = []
 let stockPrices = []
 let stockChanges = []
@@ -51,6 +52,11 @@ let stockListPrices = []
 let stockListTickers = []
 let stockListChange = []
 let stockListChangeColors = []
+
+let tempStocksSymbols = []
+let tempStockName = []
+let tempStockPrice = [];
+
 
 let portfolioStocks = []
 let portfolioShares = []
@@ -166,10 +172,8 @@ class Dashboard extends React.Component {
     fetch(stockApi)
       .then(res => res.json())
       .then(result => {
-        if (!error) {
-          for (let i = 0; i < result.length - 1; i++) {
-            if (result[i].average !== null) dataChart.push(parseFloat(result[i].average));
-          }
+        for (let i = 0; i < result.length - 1; i++) {
+          if (result[i].average !== null) dataChart.push(parseFloat(result[i].average));
         }
       });
 
@@ -179,35 +183,67 @@ class Dashboard extends React.Component {
     fetch(stocks)
       .then(res => res.json())
       .then(result => {
-        for (let i = 0; i < 9; i++) {
-          stockList[i] = result[i].companyName
-          const percentageChange =
-            `https://cloud.iexapis.com/stable/stock/${result[i].symbol}/quote?displayPercent=true&token=pk_c4db94f67a0b42a1884238b690ab06db`;
-          stockListPrices[i] = "$" + result[i].latestPrice.toFixed(2)
-          stockListTickers[i] = result[i].symbol
-          fetch(percentageChange)
-            .then(res => res.json())
-            .then(result => {
-              stockListChange[i] = parseFloat(result.changePercent).toFixed(2);
-              if (Math.sign(stockListChange[i]) === -1) {
-                stockListChangeColors[i] = "rgb(244,84,133"
-              } else if (Math.sign(stockListChange[i]) === 1) {
-                stockListChangeColors[i] = "rgb(102,249,218"
-                stockListChange[i] = "+" + stockListChange[i]
-                if (stockListChange[i].charAt(0) === "+" && stockListChange[i].charAt(1) === "+")
-                  stockListChange[i] = stockListChange[i].substr(1)
+        const gainers = "https://cloud.iexapis.com/stable/stock/market/list/gainers?token=pk_c4db94f67a0b42a1884238b690ab06db"
+        let counter = 0;
+        fetch(gainers)
+          .then(res => res.json())
+          .then(result => {
+            for (let i = 2; i < 4; i++) {
+              tempStocksSymbols.push(result[i].symbol)
+              tempStockName.push(result[i].companyName)
+              tempStockPrice.push("$" + result[i].latestPrice.toFixed(2))
+            }
+          })
+          .then(() => {
+            for (let i = 0; i < 9; i++) {
+              if (this.isInArray(stockSymbols, result[i].symbol.toString())) {
+                stockList[i] = tempStockName[counter]
+                stockListPrices[i] = tempStockPrice[counter]
+                stockListTickers[i] = tempStocksSymbols[counter]
+                counter++
               }
               else {
-                stockListChangeColors[i] = "rgb(153,158,175"
+                stockList[i] = result[i].companyName
+                stockListPrices[i] = "$" + result[i].latestPrice.toFixed(2)
+                stockListTickers[i] = result[i].symbol
               }
-              stockListChange[i] = stockListChange[i] + "%"
-            });
-        }
+            }
+          })
       })
       .then(() => {
-        this.setState({
-          loader3: true
-        })
+        setTimeout(() => {
+          for (let i = 0; i < 9; i++) {
+            const percentageChange =
+              `https://cloud.iexapis.com/stable/stock/${stockListTickers[i]}/quote?displayPercent=true&token=pk_c4db94f67a0b42a1884238b690ab06db`;
+            fetch(percentageChange)
+              .then(res => res.json())
+              .then(result => {
+                stockListChange[i] = parseFloat(result.changePercent).toFixed(2);
+                if (Math.sign(stockListChange[i]) === -1) {
+                  stockListChangeColors[i] = "rgb(244,84,133"
+                } else if (Math.sign(stockListChange[i]) === 1) {
+                  stockListChangeColors[i] = "rgb(102,249,218"
+                  stockListChange[i] = "+" + stockListChange[i]
+                  if (stockListChange[i].charAt(0) === "+" && stockListChange[i].charAt(1) === "+")
+                    stockListChange[i] = stockListChange[i].substr(1)
+                }
+                else {
+                  stockListChangeColors[i] = "rgb(153,158,175"
+                }
+                stockListChange[i] = stockListChange[i] + "%"
+              });
+
+          }
+        }, 1000);
+
+      })
+      .then(() => {
+        setTimeout(() => {
+          this.setState({
+            loader3: true
+          })
+
+        }, 1000);
       })
   }
   routeChange(path) {
@@ -224,7 +260,6 @@ class Dashboard extends React.Component {
     function add(a, b) {
       return a + b;
     }
-
     portfolioStocks = []
     portfolioDifference = []
     let user = firebase.auth().currentUser.uid;
@@ -256,19 +291,19 @@ class Dashboard extends React.Component {
                   .then(result => {
                     portfolioValue.push(doc.data().shares * result)
                   })
-                  .then(()=>{
+                  .then(() => {
                     portfolioDifference[i] = (this.relDiff(portfolioValue[i], parseFloat(doc.data().moneyPaid)).toFixed(2))
                     if (portfolioValue[i] > doc.data().moneyPaid) {
                       portfolioDifference[i] = "+" + portfolioDifference[i]
                       portfolioColor.push("#66F9DA")
                     }
-                    else if(portfolioValue[i]===doc.data().moneyPaid) portfolioColor.push("#999EAF")
+                    else if (portfolioValue[i] === doc.data().moneyPaid) portfolioColor.push("#999EAF")
                     else {
                       portfolioDifference[i] = "-" + portfolioDifference[i]
                       portfolioColor.push("#F45385")
                     }
                   })
-                  .then(()=>{
+                  .then(() => {
                     docRef.get().then(doc => {
                       this.setState({
                         funds: "$" + this.numberWithCommas(doc.data()["currentfunds"])
@@ -330,20 +365,47 @@ class Dashboard extends React.Component {
       */
     console.log("X")
   }
+  isInArray(arr, val) {
+    return arr.indexOf(val) > -1;
+  }
   componentDidMount() {
+    chartData1 = []
+    chartData2 = []
     const gainers = "https://cloud.iexapis.com/stable/stock/market/list/gainers?token=pk_c4db94f67a0b42a1884238b690ab06db"
     fetch(gainers)
       .then(res => res.json())
       .then(result => {
-        for (let i = 0; i < 2; i++) {
-          stockSymbols.push(result[i].symbol)
+        for (let i = 0; i < 9; i++) {
+          toCheckSymbols.push(result[i].symbol)
         }
-        this.getStockInfo(stockSymbols[0], chartData1, stockChanges, stockPrices, 0)
-        this.getStockInfo(stockSymbols[1], chartData2, stockChanges, stockPrices, 1)
-      });
+      })
+      .then(() => {
+        setTimeout(() => {
+          
+        for (let i = 0; i < toCheckSymbols.length; i++) {
+          let nul = 0
+          const stockApi =
+            `https://cloud.iexapis.com/stable/stock/${toCheckSymbols[i]}/intraday-prices?token=pk_c4db94f67a0b42a1884238b690ab06db`
+          fetch(stockApi)
+            .then(res => res.json())
+            .then(result => {
+              for (let b = 0; b < result.length - 1; b++) {
+                if (result[b].average === null) nul++
+              }
+              if (nul < 20 && stockSymbols.length<3) stockSymbols.push(toCheckSymbols[i])
+            })
+        }
+      }, 500);
 
-    chartData1 = []
-    chartData2 = []
+      })
+      .then(() => {
+        setTimeout(() => {
+          this.getStockInfo(stockSymbols[0], chartData1, stockChanges, stockPrices, 0)
+          this.getStockInfo(stockSymbols[1], chartData2, stockChanges, stockPrices, 1)
+        }, 1000);
+
+
+      })
     document.title = "Trader24 - Dashboard"
     // GET CHARTS
 
@@ -369,12 +431,12 @@ class Dashboard extends React.Component {
           loader2: false
         })
       }
-    }, 1700);
-      // STOCK LIST
-      this.getStocksList()
+    }, 2700);
+    // STOCK LIST
+    this.getStocksList()
 
-      //READ PORTFOLIO
-      this.getAccountInfo()
+    //READ PORTFOLIO
+    this.getAccountInfo()
     fetch("https://financialmodelingprep.com/api/v3/is-the-market-open")
       .then(res => res.json())
       .then(result => {
@@ -411,7 +473,7 @@ class Dashboard extends React.Component {
             </div>
             <div className="topbar__container">
               <div className="topbar__searchbar">
-                <div style={{display: 'flex',alignItems: 'center'}}>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
                   <svg enableBackground="new 0 0 250.313 250.313" version="1.1" viewBox="0 0 250.313 250.313" xmlSpace="preserve" xmlns="http://www.w3.org/2000/svg">
                     <path d="m244.19 214.6l-54.379-54.378c-0.289-0.289-0.628-0.491-0.93-0.76 10.7-16.231 16.945-35.66 16.945-56.554 0-56.837-46.075-102.91-102.91-102.91s-102.91 46.075-102.91 102.91c0 56.835 46.074 102.91 102.91 102.91 20.895 0 40.323-6.245 56.554-16.945 0.269 0.301 0.47 0.64 0.759 0.929l54.38 54.38c8.169 8.168 21.413 8.168 29.583 0 8.168-8.169 8.168-21.413 0-29.582zm-141.28-44.458c-37.134 0-67.236-30.102-67.236-67.235 0-37.134 30.103-67.236 67.236-67.236 37.132 0 67.235 30.103 67.235 67.236s-30.103 67.235-67.235 67.235z" clipRule="evenodd" fillRule="evenodd" />
                   </svg>
