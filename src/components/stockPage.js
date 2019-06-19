@@ -107,7 +107,7 @@ export default class stockPage extends React.Component {
     let ago = dd.split(" ")
 
     const apiData =
-      `https://api.intrinio.com/historical_data?ticker=AAPL&item=close_price&start_date=${ago[0].split(",").join("").split(".").join("-")}&end_date=${today[0].split(",").join("").split(".").join("-")}?api_key=OjNmMmQyMjFlZmU5NDAzNWQ2ZWIyNmRhY2QxNzIzMjM2`
+      `https://api.intrinio.com/historical_data?ticker=${this.props.symbol}&item=close_price&start_date=${ago[0].split(",").join("").split(".").join("-")}&end_date=${today[0].split(",").join("").split(".").join("-")}?api_key=OjNmMmQyMjFlZmU5NDAzNWQ2ZWIyNmRhY2QxNzIzMjM2`
     fetch(apiData, {
       method: 'get',
       headers: {
@@ -148,6 +148,7 @@ export default class stockPage extends React.Component {
     this.getChart(30)
   }
   render() {
+    const { symbol } = this.props;
     let user = firebase.auth().currentUser.displayName;
     return (
       <div className="stock">
@@ -177,7 +178,7 @@ export default class stockPage extends React.Component {
               <h5 className="panel__status" id="panel__status">$nbsp;</h5>
         </div>
         
-                      {this.props.symbol}
+                      {symbol}
           {this.state.loaded ?
             <div className="stock__chart">
               <Line data={this.data1} options={options} />
