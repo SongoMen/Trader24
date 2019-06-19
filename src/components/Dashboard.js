@@ -234,7 +234,7 @@ class Dashboard extends React.Component {
               });
 
           }
-        }, 1000);
+        }, 1500);
 
       })
       .then(() => {
@@ -243,7 +243,7 @@ class Dashboard extends React.Component {
             loader3: true
           })
 
-        }, 1000);
+        }, 2500);
       })
   }
   routeChange(path) {
@@ -392,7 +392,7 @@ class Dashboard extends React.Component {
               for (let b = 0; b < result.length - 1; b++) {
                 if (result[b].average === null) nul++
               }
-              if (nul < 20 && stockSymbols.length<3) stockSymbols.push(toCheckSymbols[i])
+              if (nul < 100 && stockSymbols.length<3) stockSymbols.push(toCheckSymbols[i])
             })
         }
       }, 500);
@@ -400,9 +400,11 @@ class Dashboard extends React.Component {
       })
       .then(() => {
         setTimeout(() => {
+          console.log(stockSymbols)
+          console.log(toCheckSymbols)
           this.getStockInfo(stockSymbols[0], chartData1, stockChanges, stockPrices, 0)
           this.getStockInfo(stockSymbols[1], chartData2, stockChanges, stockPrices, 1)
-        }, 1000);
+        }, 1500);
 
 
       })
@@ -431,7 +433,7 @@ class Dashboard extends React.Component {
           loader2: false
         })
       }
-    }, 2700);
+    }, 3500);
     // STOCK LIST
     this.getStocksList()
 
