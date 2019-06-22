@@ -243,7 +243,7 @@ class Dashboard extends React.Component {
           this.setState({
             loader3: true
           })
-        }, 2500);
+        }, 3500);
       })
   }
   routeChange(path) {
@@ -396,8 +396,8 @@ class Dashboard extends React.Component {
                 })
             }
           }
-          else{
-            stockSymbols = toCheckSymbols.map((val)=>{
+          else {
+            stockSymbols = toCheckSymbols.map((val) => {
               return val
             })
           }
@@ -407,7 +407,7 @@ class Dashboard extends React.Component {
         setTimeout(() => {
           this.getStockInfo(stockSymbols[0], chartData1, stockChanges, stockPrices, 0)
           this.getStockInfo(stockSymbols[1], chartData2, stockChanges, stockPrices, 1)
-        }, 1000);
+        }, 2000);
 
 
       })
@@ -504,7 +504,7 @@ class Dashboard extends React.Component {
                   <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0.5 24.5 24 30" xmlSpace="preserve"><g><path d="M10.5,24.5c-5.523,0-10,4.478-10,10s4.478,10,10,10v-10h10C20.5,28.978,16.022,24.5,10.5,24.5z M8.5,34.5v7.747   c-3.447-0.891-6-4.026-6-7.747c0-4.411,3.589-8,8-8c3.721,0,6.856,2.554,7.747,6H10.5C9.396,32.5,8.5,33.396,8.5,34.5z" /><path d="M12.5,36.5v10c5.522,0,10-4.478,10-10H12.5z" /></g></svg>
                 </li>
               </ul>
-              <h5 className="panel__status" id="panel__status">$nbsp;</h5>
+              <h5 className="panel__status" id="panel__status"> </h5>
             </div>
             <div className="panel">
               <div className="panel__markets">
