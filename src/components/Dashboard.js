@@ -188,7 +188,7 @@ class Dashboard extends React.Component {
         fetch(gainers)
           .then(res => res.json())
           .then(result => {
-            for (let i = 2; i < 4; i++) {
+            for (let i = 0; i < result.length; i++) {
               tempStocksSymbols.push(result[i].symbol)
               tempStockName.push(result[i].companyName)
               tempStockPrice.push("$" + result[i].latestPrice.toFixed(2))
@@ -212,6 +212,7 @@ class Dashboard extends React.Component {
       })
       .then(() => {
         setTimeout(() => {
+          console.log(stockListTickers)
           for (let i = 0; i < 9; i++) {
             const percentageChange =
               `https://cloud.iexapis.com/stable/stock/${stockListTickers[i]}/quote?displayPercent=true&token=pk_c4db94f67a0b42a1884238b690ab06db`;
@@ -234,7 +235,7 @@ class Dashboard extends React.Component {
               });
 
           }
-        }, 1500);
+        }, 2500);
 
       })
       .then(() => {
@@ -242,7 +243,6 @@ class Dashboard extends React.Component {
           this.setState({
             loader3: true
           })
-
         }, 2500);
       })
   }
@@ -375,36 +375,39 @@ class Dashboard extends React.Component {
     fetch(gainers)
       .then(res => res.json())
       .then(result => {
-        for (let i = 0; i < 9; i++) {
+        for (let i = 0; i < result.length; i++) {
           toCheckSymbols.push(result[i].symbol)
         }
       })
       .then(() => {
         setTimeout(() => {
-          
-        for (let i = 0; i < toCheckSymbols.length; i++) {
-          let nul = 0
-          const stockApi =
-            `https://cloud.iexapis.com/stable/stock/${toCheckSymbols[i]}/intraday-prices?token=pk_c4db94f67a0b42a1884238b690ab06db`
-          fetch(stockApi)
-            .then(res => res.json())
-            .then(result => {
-              for (let b = 0; b < result.length - 1; b++) {
-                if (result[b].average === null) nul++
-              }
-              if (nul < 100 && stockSymbols.length<3) stockSymbols.push(toCheckSymbols[i])
+          if (toCheckSymbols.length > 2) {
+            for (let i = 0; i < toCheckSymbols.length; i++) {
+              let nul = 0
+              const stockApi =
+                `https://cloud.iexapis.com/stable/stock/${toCheckSymbols[i]}/intraday-prices?token=pk_c4db94f67a0b42a1884238b690ab06db`
+              fetch(stockApi)
+                .then(res => res.json())
+                .then(result => {
+                  for (let b = 0; b < result.length - 1; b++) {
+                    if (result[b].average === null) nul++
+                  }
+                  if (nul < 200 && stockSymbols.length < 3) stockSymbols.push(toCheckSymbols[i])
+                })
+            }
+          }
+          else{
+            stockSymbols = toCheckSymbols.map((val)=>{
+              return val
             })
-        }
-      }, 500);
-
+          }
+        }, 500);
       })
       .then(() => {
         setTimeout(() => {
-          console.log(stockSymbols)
-          console.log(toCheckSymbols)
           this.getStockInfo(stockSymbols[0], chartData1, stockChanges, stockPrices, 0)
           this.getStockInfo(stockSymbols[1], chartData2, stockChanges, stockPrices, 1)
-        }, 1500);
+        }, 1000);
 
 
       })
@@ -504,6 +507,9 @@ class Dashboard extends React.Component {
               <h5 className="panel__status" id="panel__status">$nbsp;</h5>
             </div>
             <div className="panel">
+              <div className="panel__markets">
+                <div className="panel__marketPrice"></div>
+              </div>
               <div className="panel__container" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
                 <div className="panel__top">
                   <div className="panel__title">
