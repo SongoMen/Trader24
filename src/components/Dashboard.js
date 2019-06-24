@@ -348,7 +348,8 @@ class Dashboard extends React.Component {
         })
       })
   }
-  searchStocks() {
+  searchStocks(e) {
+    if(document.getElementById("results").childElementCount === 1 && e.key === "Enter") window.location = $("#results li a h4").html()
     document.getElementById("results").innerHTML = ""
     let b = 0
     let filter = document.getElementById("searchBar").value.toUpperCase()
@@ -473,7 +474,6 @@ class Dashboard extends React.Component {
       }
       if (document.getElementById("searchBar") === document.activeElement) {
         document.getElementById("topbar__searchbar").style.boxShadow = "0px 0px 30px 0px rgba(0,0,0,0.17)"
-        console.log("XX")
       }
     }
     return (

@@ -31,12 +31,26 @@ function PublicRoute({ component: Component, authed, ...rest }) {
   )
 }
 
+let allSymbols = [];
+
+(() => {
+  fetch("https://cloud.iexapis.com/stable/ref-data/symbols?token=pk_c4db94f67a0b42a1884238b690ab06db")
+    .then(res => res.json())
+    .then(result => {
+      allSymbols = result.map((val) => {
+        return val
+      })
+    })
+})()
+
 class App extends Component {
   state = {
     authed: false,
     loading: true,
   }
   componentDidMount() {
+    setTimeout(() => {
+
     this.removeListener = firebaseAuth().onAuthStateChanged((user) => {
       if (user) {
         this.setState({
@@ -50,6 +64,8 @@ class App extends Component {
         })
       }
     })
+          
+  }, 1500);
   }
   componentWillUnmount() {
     this.removeListener()
@@ -72,7 +88,10 @@ class App extends Component {
               <PublicRoute authed={this.state.authed} path="/login" component={Login} />
               <PrivateRoute authed={this.state.authed} path="/dashboard" component={Dashboard} />
               <PrivateRoute authed={this.state.authed} path="/stocks" component={Stocks} />
-              <PrivateRoute authed={this.state.authed} path="/amd" component={stockPage} symbol="AMD"/>
+              {allSymbols.map((val,index) =>{
+                return <PrivateRoute key={index} authed={this.state.authed} path={"/" + val.symbol} component={stockPage} symbol={val.symbol}/>
+
+              })}
             </Switch>
           </div>
         </Router>

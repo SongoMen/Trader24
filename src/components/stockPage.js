@@ -138,7 +138,8 @@ export default class stockPage extends React.Component {
         }, 2000);
       });
   }
-  searchStocks() {
+  searchStocks(e) {
+    if(document.getElementById("results").childElementCount === 1 && e.key === "Enter") window.location = $("#results li a h4").html()
     document.getElementById("results").innerHTML = ""
     let b = 0
     let filter = document.getElementById("searchBar").value.toUpperCase()
