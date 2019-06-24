@@ -53,11 +53,44 @@
   .topbar__searchbar
     display: flex
     background-color: $searchbar-color
+    flex-direction: column
     border-radius: 50px
     margin-right: 80px
     display: flex
     align-items: center
     padding: 0 20px
+    position: relative
+    z-index: 10
+    transition: .5s all
+    .topbar__results
+      position: absolute
+      display: flex
+      width: 100%
+      flex-direction: column
+      background-color: $searchbar-color
+      z-index: -1
+      padding: 0
+      margin-top: 15px
+      border: 15px solid $searchbar-color
+      border-radius: 5px 
+      display: none
+      li
+        display: flex
+        justify-content: space-between
+        width: 100%
+        padding: 0 15px
+        a
+          color: white
+        h4,h6
+          margin: 5px 0
+        h6
+          color: $inactive-color
+          text-align: left
+        &:hover
+          color: $main-color
+          background-color: $elements-color
+          cursor: pointer
+
     svg
       height: 15px
       fill: $searchbarText-color
