@@ -349,10 +349,10 @@ class Dashboard extends React.Component {
       })
   }
   searchStocks(e) {
-    if(document.getElementById("results").childElementCount === 1 && e.key === "Enter") window.location = $("#results li a h4").html()
     document.getElementById("results").innerHTML = ""
     let b = 0
     let filter = document.getElementById("searchBar").value.toUpperCase()
+    if(e.key === "Enter") window.location = filter
     if (filter.length === 0) {
       document.getElementById("results").innerHTML = ""
       document.getElementById("results").style.display = "none"
@@ -364,7 +364,7 @@ class Dashboard extends React.Component {
           $("#results").append(`<li><a href=${allSymbols[i].symbol}><h4>${allSymbols[i].symbol}</h4><h6>${allSymbols[i].name}</h6></a></li>`)
           b++
         }
-        if (b === 5) break
+        if (b === 10) break
       }
     }
   }
@@ -397,7 +397,7 @@ class Dashboard extends React.Component {
                     if (result[b].average === null) nul++
                     else good++
                   }
-                  if (nul < 200 && stockSymbols.length < 3 && good > 2) stockSymbols.push(toCheckSymbols[i])
+                  if (nul < 100 && stockSymbols.length < 3 && good > 2) stockSymbols.push(toCheckSymbols[i])
                 })
             }
           }
@@ -628,6 +628,7 @@ class Dashboard extends React.Component {
                     {this.state.portfolioLoader ?
                       <div>
                         <ul className="panel__portfolio-list">
+                          <li><h6>SYMBOL</h6><h6>QUANTITY</h6><h6>TOTAL GAIN/LOSS (%)</h6><h6>CURRENT VALUE</h6></li>
                           {portfolioStocks.map((value, index) => {
                             return <li key={index}><h5>{value}</h5><h5>{portfolioShares[index]}</h5><h5 style={{ color: portfolioColor[index] }}>{portfolioDifference[index]}%</h5><h5>${this.numberWithCommas(portfolioValue[index])}</h5></li>
                           })}
