@@ -39,6 +39,9 @@
   &:nth-child(3)
     -webkit-animation: loadbars 0.6s ease-in-out infinite -0.4s
   
+a
+  color: white
+
 .topbar
   width: 100%
   height: 7%
@@ -104,7 +107,7 @@
 .leftbar
     position: relative
     background-color: $bar-color
-    width: 4%
+    width: 3%
     display: flex
     align-items: center
     justify-content: center
@@ -135,7 +138,7 @@
   justify-content: center
   align-items: center
   flex-direction: row
-  max-width: 200px
+  max-width: 160px
   .topbar__logo
     width: 5%
     min-width: 40px
@@ -313,8 +316,8 @@
   padding: 0
   font-weight: 800
   svg
-    width: 80%
-    min-width: 18px
+    width: 100%
+    min-width: 23px
     margin-bottom: -7px
   li
     fill: $inactive-color
@@ -343,16 +346,18 @@
     min-width: 20px
     margin-right: 10px
     fill: $main-color
-  h3
-    margin: 0
 .panel__stockList
   width: 30%
-  margin-right: 20px
   min-width: 300px
 
 .panel__list
   width: 100%
   margin: 0
+  a
+    color: white
+    display: flex
+    width: 100%
+    justify-content: space-between
   .panel__fullname
     display: flex
     flex-direction: column

@@ -553,7 +553,7 @@ class Dashboard extends React.Component {
                           <div />
                         )}
                       {this.state.loader1 === true ? (
-                        <div className="stockChart__chart" onClick={() => this.routeChange(stockSymbols[0])}>
+                        <div className="stockChart__chart">
                           <Line data={this.data1} options={options} />
                         </div>
                       ) : (
@@ -647,9 +647,9 @@ class Dashboard extends React.Component {
                   {this.state.loader3 ?
                     <ul className="panel__list">
                       {stockList.map((value, index) => {
-                        if (index < 3) return <li className={stockListTickers[index]} onClick={() => this.routeChange(stockListTickers[index])} key={index}><span className="panel__fullname">
+                        if (index < 3) return <li key={index}><a href={stockListTickers[index]}><span className="panel__fullname">
                           <h4>{stockListTickers[index]}</h4><h6 className="panel__name">{value}</h6></span><div className="panel__list-change"><h4> {stockListPrices[index]}</h4><h5 style=
-                            {{ color: stockListChangeColors[index] + ")", margin: '5px 0 0 0', textShadow: '0px 0px 7px ' + stockListChangeColors[index] + ",0.5)" }}>{stockListChange[index]}</h5></div></li>
+                            {{ color: stockListChangeColors[index] + ")", margin: '5px 0 0 0', textShadow: '0px 0px 7px ' + stockListChangeColors[index] + ",0.5)" }}>{stockListChange[index]}</h5></div></a></li>
                         else return ""
                       })}
                     </ul>
@@ -665,9 +665,9 @@ class Dashboard extends React.Component {
                   {this.state.loader3 ?
                     <ul className="panel__list">
                       {stockList.map((value, index) => {
-                        if (index >= 3 && index < 6) return <li onClick={() => this.routeChange(stockListTickers[index])} key={index}><span className="panel__fullname">
+                        if (index >= 3 && index < 6) return <li key={index}><a href={stockListTickers[index]}><span className="panel__fullname">
                           <h4>{stockListTickers[index]}</h4><h6 className="panel__name">{value}</h6></span><div className="panel__list-change"><h4> {stockListPrices[index]}</h4><h5 style=
-                            {{ color: stockListChangeColors[index] + ")", margin: '5px 0 0 0', textShadow: '0px 0px 7px ' + stockListChangeColors[index] + ",0.5)" }}>{stockListChange[index]}</h5></div></li>
+                            {{ color: stockListChangeColors[index] + ")", margin: '5px 0 0 0', textShadow: '0px 0px 7px ' + stockListChangeColors[index] + ",0.5)" }}>{stockListChange[index]}</h5></div></a></li>
                         else return ""
                       })}
                     </ul>
@@ -683,9 +683,9 @@ class Dashboard extends React.Component {
                   {this.state.loader3 ?
                     <ul className="panel__list">
                       {stockList.map((value, index) => {
-                        if (index >= 6) return <li onClick={() => this.routeChange(stockListTickers[index])} key={index}><span className="panel__fullname">
+                        if (index >= 6) return <li key={index}><a href={stockListTickers[index]}><span className="panel__fullname">
                           <h4>{stockListTickers[index]}</h4><h6 className="panel__name">{value}</h6></span><div className="panel__list-change"><h4> {stockListPrices[index]}</h4><h5 style=
-                            {{ color: stockListChangeColors[index] + ")", margin: '5px 0 0 0', textShadow: '0px 0px 7px ' + stockListChangeColors[index] + ",0.5)" }}>{stockListChange[index]}</h5></div></li>
+                            {{ color: stockListChangeColors[index] + ")", margin: '5px 0 0 0', textShadow: '0px 0px 7px ' + stockListChangeColors[index] + ",0.5)" }}>{stockListChange[index]}</h5></div></a></li>
                         else return ""
                       })}
                     </ul>

@@ -65,7 +65,7 @@ class App extends Component {
       }
     })
           
-  }, 1500);
+  }, 2500);
   }
   componentWillUnmount() {
     this.removeListener()

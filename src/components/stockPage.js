@@ -127,11 +127,9 @@ export default class stockPage extends React.Component {
             chartLength++
           }
         }
-        console.log(chartData1);
       })
       .then(() => {
         setTimeout(() => {
-          console.log(chartData1)
           this.setState({
             loaded: true
           });
@@ -185,7 +183,6 @@ export default class stockPage extends React.Component {
         console.log("Error getting document:", error);
       });
     this.getChart();
-    console.log(chartData1);
   }
   render() {
     const { symbol } = this.props;
