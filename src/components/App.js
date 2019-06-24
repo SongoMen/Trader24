@@ -8,7 +8,6 @@ import Register from './Register';
 import Login from './Login'
 import Stocks from './Stocks'
 import stockPage from './stockPage'
-import AAPL from './AAPL'
 
 function PrivateRoute({ component: Component, authed, ...rest }) {
   return (
