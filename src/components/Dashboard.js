@@ -352,17 +352,23 @@ class Dashboard extends React.Component {
     document.getElementById("results").innerHTML = ""
     let b = 0
     let filter = document.getElementById("searchBar").value.toUpperCase()
-    if(e.key === "Enter") window.location = filter
+    if (e.key === "Enter") window.location = filter
     if (filter.length === 0) {
       document.getElementById("results").innerHTML = ""
       document.getElementById("results").style.display = "none"
     }
     else {
       for (let i = 0; i < allSymbols.length; i++) {
-        if (allSymbols[i].symbol.indexOf(filter) > -1) {
-          document.getElementById("results").style.display = "flex"
-          $("#results").append(`<li><a href=${allSymbols[i].symbol}><h4>${allSymbols[i].symbol}</h4><h6>${allSymbols[i].name}</h6></a></li>`)
-          b++
+        let splitSymbol = allSymbols[i].symbol.split("")
+        let splitFilter = filter.split("")
+        for (let a = 0; a < splitFilter.length; a++) {
+          if (allSymbols[i].symbol.indexOf(filter) > -1 && splitSymbol[a] === splitFilter[a]) {
+            if(a===0){
+            document.getElementById("results").style.display = "flex"
+            $("#results").append(`<li><a href=${allSymbols[i].symbol}><h4>${allSymbols[i].symbol}</h4><h6>${allSymbols[i].name}</h6></a></li>`)
+            b++
+            }
+          }
         }
         if (b === 10) break
       }
@@ -491,12 +497,12 @@ class Dashboard extends React.Component {
                     <path d="m244.19 214.6l-54.379-54.378c-0.289-0.289-0.628-0.491-0.93-0.76 10.7-16.231 16.945-35.66 16.945-56.554 0-56.837-46.075-102.91-102.91-102.91s-102.91 46.075-102.91 102.91c0 56.835 46.074 102.91 102.91 102.91 20.895 0 40.323-6.245 56.554-16.945 0.269 0.301 0.47 0.64 0.759 0.929l54.38 54.38c8.169 8.168 21.413 8.168 29.583 0 8.168-8.169 8.168-21.413 0-29.582zm-141.28-44.458c-37.134 0-67.236-30.102-67.236-67.235 0-37.134 30.103-67.236 67.236-67.236 37.132 0 67.235 30.103 67.235 67.236s-30.103 67.235-67.235 67.235z" clipRule="evenodd" fillRule="evenodd" />
                   </svg>
                   <input type="text" id="searchBar" onKeyUp={this.searchStocks} placeholder="Search by symbol" onFocus={() => {
-                    if(document.getElementById("results").firstChild) document.getElementById("results").style.display = "flex"
+                    if (document.getElementById("results").firstChild) document.getElementById("results").style.display = "flex"
                     document.getElementById("topbar__searchbar").style.boxShadow = "0px 0px 30px 0px rgba(0,0,0,0.17)"
                   }} onBlur={() => {
                     setTimeout(() => {
                       document.getElementById("results").style.display = "none"
-                      
+
                     }, 200);
                     document.getElementById("topbar__searchbar").style.boxShadow = "none"
                   }} autoComplete="off"></input>

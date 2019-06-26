@@ -140,19 +140,25 @@ export default class stockPage extends React.Component {
     document.getElementById("results").innerHTML = ""
     let b = 0
     let filter = document.getElementById("searchBar").value.toUpperCase()
-    if(e.key === "Enter") window.location = filter
+    if (e.key === "Enter") window.location = filter
     if (filter.length === 0) {
       document.getElementById("results").innerHTML = ""
       document.getElementById("results").style.display = "none"
     }
     else {
       for (let i = 0; i < allSymbols.length; i++) {
-        if (allSymbols[i].symbol.indexOf(filter) > -1) {
-          document.getElementById("results").style.display = "flex"
-          $("#results").append(`<li><a href=${allSymbols[i].symbol}><h4>${allSymbols[i].symbol}</h4><h6>${allSymbols[i].name}</h6></a></li>`)
-          b++
+        let splitSymbol = allSymbols[i].symbol.split("")
+        let splitFilter = filter.split("")
+        for (let a = 0; a < splitFilter.length; a++) {
+          if (allSymbols[i].symbol.indexOf(filter) > -1 && splitSymbol[a] === splitFilter[a]) {
+            if(a===0){
+            document.getElementById("results").style.display = "flex"
+            $("#results").append(`<li><a href=${allSymbols[i].symbol}><h4>${allSymbols[i].symbol}</h4><h6>${allSymbols[i].name}</h6></a></li>`)
+            b++
+            }
+          }
         }
-        if (b === 5) break
+        if (b === 10) break
       }
     }
   }
