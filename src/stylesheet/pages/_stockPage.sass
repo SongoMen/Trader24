@@ -3,14 +3,39 @@
     height: 100%
 .stock__chart
     margin-top: 50px
-    width: 60%
+    width: 80%
     height: 60%
     padding: 20px
-    border-radius: 20px
-canvas
-    color: white
+    canvas
+        color: white
+
+.stockPage
+    width: 97%
+    padding: 50px
+    display: flex
+
+.stockPage__top
+    display: flex
+    width: 100%
+    
+.stockPage__trade
+    width: 20%
+    margin: 50px
+    height: 60%
+    display: flex
+    justify-content: center
+    align-items: center
+    background-color: $elements-color
+    box-shadow: 0px 0px 30px 0px rgba(0,0,0,0.05)
+    border-radius: 8px
+    flex-direction: column
+    min-width: 300px
+    h5
+        color: $inactive-color
+    
 
 
+    
 @media (max-width: 1380px)
     .stock
         flex-direction: column

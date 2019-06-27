@@ -189,6 +189,10 @@ class Dashboard extends React.Component {
           if (result[i].average !== null) dataChart.push(parseFloat(result[i].average));
         }
       });
+      console.log(symbol)
+      console.log(dataChart)
+      console.log(changeStash)
+
 
   }
   getStocksList() {
@@ -639,7 +643,7 @@ class Dashboard extends React.Component {
                             return <li key={index}><h5>{value}</h5><h5>{portfolioShares[index]}</h5><h5 style={{ color: portfolioColor[index] }}>{portfolioDifference[index]}%</h5><h5>${this.numberWithCommas(portfolioValue[index])}</h5></li>
                           })}
                         </ul>
-                        <div className="panel__value"><h5>ACCOUNT VALUE</h5><h5>{this.state.accountValue}</h5></div></div>
+                        <div className="panel__value"><h5>NET WORTH</h5><h5>{this.state.accountValue}</h5></div></div>
                       : <div />
                     }
                   </div>
