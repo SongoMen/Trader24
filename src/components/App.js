@@ -37,7 +37,6 @@ class App extends Component {
     loading: true,
   }
   componentDidMount() {
-    setTimeout(() => {
       this.removeListener = firebaseAuth().onAuthStateChanged((user) => {
         if (user) {
           this.setState({
@@ -51,8 +50,6 @@ class App extends Component {
           })
         }
       })
-
-    }, 1500);
   }
   componentWillUnmount() {
     this.removeListener()
