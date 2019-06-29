@@ -562,9 +562,9 @@ class Dashboard extends React.Component {
       }
       if (document.getElementById("searchBar") === document.activeElement) {
         document.getElementById("topbar__searchbar").style.boxShadow =
-          "0px 0px 30px 0px rgba(0,0,0,0.17)";
+          "0px 0px 30px 0px rgba(0,0,0,0.10)";
         document.getElementById("results").style.boxShadow =
-          "0px 30px 20px 0px rgba(0,0,0,0.17)";
+          "0px 30px 20px 0px rgba(0,0,0,0.10)";
       }
     }
     return (
@@ -670,9 +670,9 @@ class Dashboard extends React.Component {
                             "flex";
                         document.getElementById(
                           "topbar__searchbar"
-                        ).style.boxShadow = "0px 0px 30px 0px rgba(0,0,0,0.17)";
+                        ).style.boxShadow = "0px 0px 30px 0px rgba(0,0,0,0.10)";
                         document.getElementById("results").style.boxShadow =
-                        "0px 30px 20px 0px rgba(0,0,0,0.17)";
+                        "0px 30px 20px 0px rgba(0,0,0,0.10)";
                       }}
                       onBlur={() => {
                         setTimeout(() => {

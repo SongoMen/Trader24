@@ -2,10 +2,10 @@
     width: 100%
     height: 100%
 .stock__chart
-    margin-top: 50px
     width: 80%
     height: 100%
     padding: 20px
+    position: relative
 
 .stockPage
     width: 97%
@@ -16,11 +16,28 @@
 .stockPage__top
     display: flex
     width: 100%
-    height: 40%
+    height: 50%
+    .stockPage__timers
+        position: absolute
+        top: 0
+        right: 20px
+        color: white
+        transition: all .5s
+        cursor: pointer
+        display: flex
+        h6
+            padding: 10px
+            border-radius: 10px
+            background-color: $elements-color
+            margin: 0 5px
+            transition: all .5s
+            &:hover
+                background-color: $inactive-color
+        .active
+            background-color: $inactive-color
     
 .stockPage__trade
     width: 20%
-    margin: 50px
     height: 100%
     display: flex
     justify-content: center
@@ -32,7 +49,8 @@
     min-width: 300px
     h5
         color: $inactive-color
-    
+
+
 @media (max-width: 1380px)
     .stock
         flex-direction: column
