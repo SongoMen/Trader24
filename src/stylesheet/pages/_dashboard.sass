@@ -24,7 +24,6 @@
     height: 10px
     margin-top: 25px
 
-
 .loader li
   background-color: $main-color
   width: 10px
@@ -45,17 +44,29 @@ a
 .topbar
   width: 100%
   height: 7%
-  background-color: $bar-color
   display: flex
   align-items: center
   justify-content: space-between
-  padding: 0 20px
+  margin-bottom: 35px
+  .topbar__power
+    padding: 10px
+    background: linear-gradient(to right, rgb(124, 131, 255) 30%, rgb(124, 193, 255) 100%);
+    border-radius: 10px
+    margin-right: 30px
+    display: flex
+    box-shadow: 0px 0px 15px 0px $main-color
+    transition: all .5s
+    svg
+      fill: white
+      width: 20px
+      margin-right: 10px
+    h3
+      margin: 0
   .topbar__container
     display: flex
     align-items: center
   .topbar__searchbar
     display: flex
-    background-color: $searchbar-color
     flex-direction: column
     border-radius: 50px
     margin-right: 80px
@@ -64,20 +75,21 @@ a
     padding: 0 20px
     position: relative
     z-index: 10
-    height: 35px
+    height: 45px
     justify-content: center
     transition: .5s all
+    width: 30%
     .topbar__results
       position: absolute
       left: 0
       width: 100%
       flex-direction: column
-      background-color: $searchbar-color
+      background-color: $panel-color
       z-index: -1
       padding: 0
       top: 0
-      border-top: 30px solid $searchbar-color!important
-      border: 15px solid $searchbar-color
+      border-top: 40px solid $panel-color!important
+      border: 15px solid $panel-color
       border-radius: 5px 
       border-bottom-left-radius: 20px
       border-bottom-right-radius: 20px
@@ -105,21 +117,29 @@ a
       fill: $searchbarText-color
     input
       height: 30px
-      background-color: $searchbar-color
+      background-color: $panel-color
       color: $searchbarText-color
       padding: 10px
-      min-width: 250px
+      font-weight: bold
+      font-size: 16px
+      width: 100%
 
 .leftbar
-    position: relative
-    background-color: $bar-color
-    width: 3%
-    display: flex
-    align-items: center
-    justify-content: center
-    flex-direction: column
-    padding: 0 10px
-
+  position: relative
+  background-color: $bar-color
+  width: 5%
+  display: flex
+  align-items: center
+  justify-content: center
+  flex-direction: column
+  padding: 0 10px
+  .leftbar__log
+    fill: white
+    width: 30%
+    cursor: pointer
+    position: absolute
+    bottom: 20px
+    
 .topbar__user
   bottom: 20px
   white-space: nowrap
@@ -129,27 +149,15 @@ a
   justify-content: center
   h3
     margin-right: 20px
-  svg
-    width: 20px
-    margin-bottom: -6px
-    cursor: pointer
-    margin-left: 20px
-    fill: white
-
 .leftbar__name
   font-weight: 800
 
-.topbar__heading
-  display: flex
-  justify-content: center
-  align-items: center
-  flex-direction: row
-  max-width: 160px
-  .topbar__logo
-    width: 5%
-    min-width: 40px
-    margin-right: 20px
-
+.topbar__logo
+  width: 5%
+  min-width: 40px
+  margin-right: 20px
+  position: absolute
+  top: 50px
 
 .topbar__bottom
   display: flex
@@ -161,12 +169,13 @@ a
     width: 100%
     height: 100%
     padding: 3%
+    padding-top: 2%
     transition: all .5s
     .panel__container
       display: flex
       align-items: center
       flex-wrap: wrap
-      height: 50%
+      height: 45%
       margin-bottom: 20px
     .panel__topCharts
       height: 90%
@@ -176,7 +185,7 @@ a
     .panel__top
       display: flex
       flex-wrap: wrap
-      width: 69%
+      width: 100%
       height: 100%
       min-width: 700px
       @media only screen and (max-width: 1200px) 
@@ -185,7 +194,7 @@ a
         display: flex
         align-items: center  
         justify-content: space-between
-        width: 100%
+        width: 50%
         padding-right: 200px
         h2
           margin: 10px 0
@@ -198,14 +207,14 @@ a
 
 .panel__status
   position: absolute
-  bottom: 55px
+  bottom: 105px
   transform: rotate(-90deg)
   white-space: nowrap
 
 .stockChart
     background-color: $elements-color
     box-shadow: 0px 0px 30px 0px rgba(0,0,0,0.07)
-    width: 45%
+    width: 35%
     flex-direction: row
     position: relative
     display: flex
@@ -213,7 +222,7 @@ a
     align-items: center
     justify-content: center
     text-align: center
-    margin-right: 30px
+    margin-right: 40px
     margin-bottom: 20px
     min-width: 300px
     height: 100%
@@ -223,11 +232,10 @@ a
   width: 30%
   height: 100%
   min-width: 250px
-  padding-left: 20px
+  margin-top: -60px
+
   @media only screen and (max-width: 1200px) 
     display: none
-  h2
-    margin: 10px 0
   .panel__portfolio
     margin-right: 50px
     justify-content: center
@@ -239,7 +247,7 @@ a
     background-color: $elements-color
     box-shadow: 0px 0px 30px 0px rgba(0,0,0,0.07)
     min-height: 250px
-    height: 90%
+    height: 100%
     margin-bottom: 20px
     position: relative
     padding: 10px 20px
@@ -335,7 +343,7 @@ a
   padding: 0
   font-weight: 800
   svg
-    width: 100%
+    width: 40%
     min-width: 23px
     margin-bottom: -7px
   li

@@ -1,8 +1,8 @@
 import React from "react";
-import { Line } from "react-chartjs-2";
+import {Line} from "react-chartjs-2";
 import firebase from "firebase/app";
 import "firebase/firestore";
-import { logout } from "./auth";
+import {logout} from "./auth";
 import $ from "jquery";
 
 const db = firebase.firestore();
@@ -23,8 +23,8 @@ var options = {
     },
     displayColors: false,
   },*/
-  tooltips: { enabled: false },
-  hover: { mode: null },
+  tooltips: {enabled: false},
+  hover: {mode: null},
   legend: {
     display: false
   },
@@ -100,7 +100,8 @@ class Dashboard extends React.Component {
       loader3: "",
       portfolioLoader: "",
       funds: "",
-      accountValue: ""
+      accountValue: "",
+      fundsLoader: ""
     };
     this.componentDidMount = this.componentDidMount.bind(this);
     this.getAccountInfo = this.getAccountInfo.bind(this);
@@ -241,7 +242,7 @@ class Dashboard extends React.Component {
           for (let i = 0; i < 9; i++) {
             const percentageChange = `https://cloud.iexapis.com/stable/stock/${
               stockListTickers[i]
-              }/quote?displayPercent=true&token=pk_95c4a35c80274553987b93e74bb825d7`;
+            }/quote?displayPercent=true&token=pk_95c4a35c80274553987b93e74bb825d7`;
             fetch(percentageChange)
               .then((res) => res.json())
               .then((result) => {
@@ -323,7 +324,7 @@ class Dashboard extends React.Component {
             for (let i = 0; i < portfolioStocks.length; i++) {
               const lastPrice = `https://cloud.iexapis.com/stable/stock/${
                 portfolioStocks[i]
-                }/price?token=pk_95c4a35c80274553987b93e74bb825d7`;
+              }/price?token=pk_95c4a35c80274553987b93e74bb825d7`;
               await new Promise((resolve) =>
                 fetch(lastPrice)
                   .then((res) => res.json())
@@ -359,8 +360,11 @@ class Dashboard extends React.Component {
                             "$" +
                             this.numberWithCommas(
                               parseFloat(doc.data()["currentfunds"]) +
-                              parseFloat(portfolioValue.reduce(add, 0))
+                                parseFloat(portfolioValue.reduce(add, 0))
                             )
+                        });
+                        this.setState({
+                          fundsLoader: true
                         });
                         resolve();
                       })
@@ -410,7 +414,7 @@ class Dashboard extends React.Component {
               document.getElementById("results").style.display = "flex";
               $("#results").append(
                 `<li><a href=${allSymbols[i].symbol}><h4>${
-                allSymbols[i].symbol
+                  allSymbols[i].symbol
                 }</h4><h6>${allSymbols[i].name}</h6></a></li>`
               );
               b++;
@@ -444,7 +448,7 @@ class Dashboard extends React.Component {
               let nul = 0;
               const stockApi = `https://cloud.iexapis.com/stable/stock/${
                 toCheckSymbols[i]
-                }/intraday-prices?token=pk_95c4a35c80274553987b93e74bb825d7`;
+              }/intraday-prices?token=pk_95c4a35c80274553987b93e74bb825d7`;
               fetch(stockApi)
                 .then((res) => res.json())
                 .then((result) => {
@@ -481,40 +485,16 @@ class Dashboard extends React.Component {
               1
             );
           }
-        }, 2000);
-      });
+        }, 3000);
+      })
+      .then(()=>{
+        setTimeout(() => {
+          this.checkCharts()          
+        }, 4000);
+      })
     document.title = "Trader24 - Dashboard";
     // GET CHARTS
 
-    // CHECK CHARTS
-    setTimeout(() => {
-      if (
-        stockChanges[0] !== undefined &&
-        stockPrices[0] !== undefined &&
-        chartData1.length >= 2
-      ) {
-        this.setState({
-          loader1: true
-        });
-      } else {
-        this.setState({
-          loader1: false
-        });
-      }
-      if (
-        stockChanges[1] !== undefined &&
-        stockPrices[1] !== undefined &&
-        chartData2.length >= 2
-      ) {
-        this.setState({
-          loader2: true
-        });
-      } else {
-        this.setState({
-          loader2: false
-        });
-      }
-    }, 4000);
     // STOCK LIST
     this.getStocksList();
 
@@ -529,12 +509,40 @@ class Dashboard extends React.Component {
         document.getElementById(
           "panel__status"
         ).innerHTML = result.isTheStockMarketOpen
-            ? "Market status: Open"
-            : "Market status: Closed";
+          ? "Market status: Open"
+          : "Market status: Closed";
       });
     //setTimeout(() => {
     //console.clear()
     //}, 2500);
+  }
+  checkCharts(){
+    if (
+      stockChanges[0] !== undefined &&
+      stockPrices[0] !== undefined &&
+      chartData1.length >= 2
+    ) {
+      this.setState({
+        loader1: true
+      });
+    } else {
+      this.setState({
+        loader1: false
+      });
+    }
+    if (
+      stockChanges[1] !== undefined &&
+      stockPrices[1] !== undefined &&
+      chartData2.length >= 2
+    ) {
+      this.setState({
+        loader2: true
+      });
+    } else {
+      this.setState({
+        loader2: false
+      });
+    }
   }
   render() {
     let user = firebase.auth().currentUser.displayName;
@@ -556,91 +564,23 @@ class Dashboard extends React.Component {
         document.getElementById("topbar__searchbar").style.boxShadow =
           "0px 0px 30px 0px rgba(0,0,0,0.17)";
         document.getElementById("results").style.boxShadow =
-          "0px 0px 30px 0px rgba(0,0,0,0.17)";
+          "0px 30px 20px 0px rgba(0,0,0,0.17)";
       }
     }
     return (
       <div className="Dashboard">
-        <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
-          <div className="topbar">
-            <div className="topbar__heading">
+        <div style={{display: "flex", flexDirection: "column", width: "100%"}}>
+          <div style={{display: "flex", height: "100%"}}>
+            <div className="leftbar">
               <img
                 className="topbar__logo"
                 src={require("../images/logo.png")}
                 alt="logo"
               />
-              <h2>Dashboard</h2>
-            </div>
-            <div className="topbar__container">
-              <div className="topbar__searchbar" id="topbar__searchbar">
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <svg
-                    enableBackground="new 0 0 250.313 250.313"
-                    version="1.1"
-                    viewBox="0 0 250.313 250.313"
-                    xmlSpace="preserve"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="m244.19 214.6l-54.379-54.378c-0.289-0.289-0.628-0.491-0.93-0.76 10.7-16.231 16.945-35.66 16.945-56.554 0-56.837-46.075-102.91-102.91-102.91s-102.91 46.075-102.91 102.91c0 56.835 46.074 102.91 102.91 102.91 20.895 0 40.323-6.245 56.554-16.945 0.269 0.301 0.47 0.64 0.759 0.929l54.38 54.38c8.169 8.168 21.413 8.168 29.583 0 8.168-8.169 8.168-21.413 0-29.582zm-141.28-44.458c-37.134 0-67.236-30.102-67.236-67.235 0-37.134 30.103-67.236 67.236-67.236 37.132 0 67.235 30.103 67.235 67.236s-30.103 67.235-67.235 67.235z"
-                      clipRule="evenodd"
-                      fillRule="evenodd"
-                    />
-                  </svg>
-                  <input
-                    autoCorrect="off"
-                    autoCapitalize="off"
-                    spellCheck="false"
-                    type="text"
-                    id="searchBar"
-                    onKeyUp={this.searchStocks}
-                    placeholder="Search by symbol"
-                    onFocus={() => {
-                      if (document.getElementById("results").firstChild)
-                        document.getElementById("results").style.display =
-                          "flex";
-                      document.getElementById(
-                        "topbar__searchbar"
-                      ).style.boxShadow = "0px 0px 30px 0px rgba(0,0,0,0.17)";
-                    }}
-                    onBlur={() => {
-                      setTimeout(() => {
-                        document.getElementById("results").style.display =
-                          "none";
-                      }, 500);
-                      document.getElementById(
-                        "topbar__searchbar"
-                      ).style.boxShadow = "none";
-                    }}
-                    autoComplete="off"
-                  />
-                </div>
-                <ul className="topbar__results" id="results" />
-              </div>
-              <div className="topbar__user">
-                <h3>{this.state.funds}</h3>
-                Hi, <span className="leftbar__name"> &nbsp;{user} !</span>
-                <svg
-                  onClick={() => logout()}
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 30"
-                  x="0px"
-                  y="0px"
-                >
-                  <title>LOG OUT</title>
-                  <g data-name="LOG OUT">
-                    <path d="M13,21a1,1,0,0,1-1,1H3a1,1,0,0,1-1-1V3A1,1,0,0,1,3,2h9a1,1,0,0,1,0,2H4V20h8A1,1,0,0,1,13,21Zm8.92-9.38a1,1,0,0,0-.22-.32h0l-4-4a1,1,0,0,0-1.41,1.41L18.59,11H7a1,1,0,0,0,0,2H18.59l-2.29,2.29a1,1,0,1,0,1.41,1.41l4-4h0a1,1,0,0,0,.22-1.09Z" />
-                  </g>
-                </svg>
-              </div>
-            </div>
-          </div>
-          <div style={{ display: "flex", height: "93%" }}>
-            <div className="leftbar">
               <ul className="leftbar__menu">
                 <li>
                   <svg
-                    style={{ fill: "#5eb5f8" }}
+                    style={{fill: "#5eb5f8"}}
                     xmlns="http://www.w3.org/2000/svg"
                     xmlnsXlink="http://www.w3.org/1999/xlink"
                     version="1.1"
@@ -685,12 +625,142 @@ class Dashboard extends React.Component {
               <h5 className="panel__status" id="panel__status">
                 {" "}
               </h5>
+              <svg
+                className="leftbar__log"
+                onClick={() => logout()}
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 30"
+                x="0px"
+                y="0px"
+              >
+                <title>Log Out</title>
+                <g data-name="Log Out">
+                  <path d="M13,21a1,1,0,0,1-1,1H3a1,1,0,0,1-1-1V3A1,1,0,0,1,3,2h9a1,1,0,0,1,0,2H4V20h8A1,1,0,0,1,13,21Zm8.92-9.38a1,1,0,0,0-.22-.32h0l-4-4a1,1,0,0,0-1.41,1.41L18.59,11H7a1,1,0,0,0,0,2H18.59l-2.29,2.29a1,1,0,1,0,1.41,1.41l4-4h0a1,1,0,0,0,.22-1.09Z" />
+                </g>
+              </svg>
             </div>
             <div className="panel">
+              <div className="topbar">
+                <div className="topbar__searchbar" id="topbar__searchbar">
+                  <div style={{display: "flex", alignItems: "center",width: "100%"}}>
+                    <svg
+                      enableBackground="new 0 0 250.313 250.313"
+                      version="1.1"
+                      viewBox="0 0 250.313 250.313"
+                      xmlSpace="preserve"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="m244.19 214.6l-54.379-54.378c-0.289-0.289-0.628-0.491-0.93-0.76 10.7-16.231 16.945-35.66 16.945-56.554 0-56.837-46.075-102.91-102.91-102.91s-102.91 46.075-102.91 102.91c0 56.835 46.074 102.91 102.91 102.91 20.895 0 40.323-6.245 56.554-16.945 0.269 0.301 0.47 0.64 0.759 0.929l54.38 54.38c8.169 8.168 21.413 8.168 29.583 0 8.168-8.169 8.168-21.413 0-29.582zm-141.28-44.458c-37.134 0-67.236-30.102-67.236-67.235 0-37.134 30.103-67.236 67.236-67.236 37.132 0 67.235 30.103 67.235 67.236s-30.103 67.235-67.235 67.235z"
+                        clipRule="evenodd"
+                        fillRule="evenodd"
+                      />
+                    </svg>
+                    <input
+                      autoCorrect="off"
+                      autoCapitalize="off"
+                      spellCheck="false"
+                      type="text"
+                      id="searchBar"
+                      onKeyUp={this.searchStocks}
+                      placeholder="Search by symbol"
+                      onFocus={() => {
+                        if (document.getElementById("results").firstChild)
+                          document.getElementById("results").style.display =
+                            "flex";
+                        document.getElementById(
+                          "topbar__searchbar"
+                        ).style.boxShadow = "0px 0px 30px 0px rgba(0,0,0,0.17)";
+                        document.getElementById("results").style.boxShadow =
+                        "0px 30px 20px 0px rgba(0,0,0,0.17)";
+                      }}
+                      onBlur={() => {
+                        setTimeout(() => {
+                          document.getElementById("results").style.display =
+                            "none";
+                        }, 400);
+                        document.getElementById(
+                          "topbar__searchbar"
+                        ).style.boxShadow = "none";
+                      }}
+                      autoComplete="off"
+                    />
+                  </div>
+                  <ul className="topbar__results" id="results" />
+                </div>
+                <div className="topbar__container">
+                  <div className="topbar__user">
+                    {this.state.fundsLoader === true && (
+                      <div className="topbar__power">
+                        <svg
+                          version="1.1"
+                          id="Layer_1"
+                          x="0px"
+                          y="0px"
+                          viewBox="0 0 512 512"
+                        >
+                          <g>
+                            <g>
+                              <g>
+                                <path
+                                  d="M498.409,175.706L336.283,13.582c-8.752-8.751-20.423-13.571-32.865-13.571c-12.441,0-24.113,4.818-32.865,13.569
+				L13.571,270.563C4.82,279.315,0,290.985,0,303.427c0,12.442,4.82,24.114,13.571,32.864l19.992,19.992
+				c0.002,0.001,0.003,0.003,0.005,0.005c0.002,0.002,0.004,0.004,0.006,0.006l134.36,134.36H149.33
+				c-5.89,0-10.666,4.775-10.666,10.666c0,5.89,4.776,10.666,10.666,10.666h59.189c0.014,0,0.027,0.001,0.041,0.001
+				s0.027-0.001,0.041-0.001l154.053,0.002c5.89,0,10.666-4.776,10.666-10.666c0-5.891-4.776-10.666-10.666-10.666l-113.464-0.002
+				L498.41,241.434C516.53,223.312,516.53,193.826,498.409,175.706z M483.325,226.35L226.341,483.334
+				c-4.713,4.712-11.013,7.31-17.742,7.32h-0.081c-6.727-0.011-13.025-2.608-17.736-7.32L56.195,348.746L302.99,101.949
+				c4.165-4.165,4.165-10.919,0-15.084c-4.166-4.165-10.918-4.165-15.085,0.001L41.11,333.663l-12.456-12.456
+				c-4.721-4.721-7.321-11.035-7.321-17.779c0-6.744,2.6-13.059,7.322-17.781L285.637,28.665c4.722-4.721,11.037-7.321,17.781-7.321
+				c6.744,0,13.059,2.6,17.781,7.322l57.703,57.702l-246.798,246.8c-4.165,4.164-4.165,10.918,0,15.085
+				c2.083,2.082,4.813,3.123,7.542,3.123c2.729,0,5.459-1.042,7.542-3.124l246.798-246.799l89.339,89.336
+				C493.128,200.593,493.127,216.546,483.325,226.35z"
+                                />
+                                <path
+                                  d="M262.801,308.064c-4.165-4.165-10.917-4.164-15.085,0l-83.934,83.933c-4.165,4.165-4.165,10.918,0,15.085
+				c2.083,2.083,4.813,3.124,7.542,3.124c2.729,0,5.459-1.042,7.542-3.124l83.934-83.933
+				C266.966,318.982,266.966,312.229,262.801,308.064z"
+                                />
+                                <path
+                                  d="M228.375,387.741l-34.425,34.425c-4.165,4.165-4.165,10.919,0,15.085c2.083,2.082,4.813,3.124,7.542,3.124
+				c2.731,0,5.459-1.042,7.542-3.124l34.425-34.425c4.165-4.165,4.165-10.919,0-15.085
+				C239.294,383.575,232.543,383.575,228.375,387.741z"
+                                />
+                                <path
+                                  d="M260.054,356.065l-4.525,4.524c-4.166,4.165-4.166,10.918-0.001,15.085c2.082,2.083,4.813,3.125,7.542,3.125
+				c2.729,0,5.459-1.042,7.541-3.125l4.525-4.524c4.166-4.165,4.166-10.918,0.001-15.084
+				C270.974,351.901,264.219,351.9,260.054,356.065z"
+                                />
+                                <path
+                                  d="M407.073,163.793c-2-2-4.713-3.124-7.542-3.124c-2.829,0-5.541,1.124-7.542,3.124l-45.255,45.254
+				c-2,2.001-3.124,4.713-3.124,7.542s1.124,5.542,3.124,7.542l30.17,30.167c2.083,2.083,4.813,3.124,7.542,3.124
+				c2.731,0,5.459-1.042,7.542-3.124l45.253-45.252c4.165-4.165,4.165-10.919,0-15.084L407.073,163.793z M384.445,231.673
+				l-15.085-15.084l30.17-30.169l15.084,15.085L384.445,231.673z"
+                                />
+                                <path
+                                  d="M320.339,80.186c2.731,0,5.461-1.042,7.543-3.126l4.525-4.527c4.164-4.166,4.163-10.92-0.003-15.084
+				c-4.165-4.164-10.92-4.163-15.084,0.003l-4.525,4.527c-4.164,4.166-4.163,10.92,0.003,15.084
+				C314.881,79.146,317.609,80.186,320.339,80.186z"
+                                />
+                                <path
+                                  d="M107.215,358.057l-4.525,4.525c-4.165,4.164-4.165,10.918,0,15.085c2.083,2.082,4.813,3.123,7.542,3.123
+				s5.459-1.041,7.542-3.123l4.525-4.525c4.165-4.166,4.165-10.92,0-15.085C118.133,353.891,111.381,353.891,107.215,358.057z"
+                                />
+                              </g>
+                            </g>
+                          </g>
+                        </svg>
+                        <h3>{this.state.funds}</h3>
+                      </div>
+                    )}
+                    <span className="leftbar__name"> &nbsp;{user}</span>
+                  </div>
+                </div>
+              </div>
               <div className="panel__container">
                 <div className="panel__top">
                   <div className="panel__title">
-                    <div style={{ display: "flex", alignItems: "center" }}>
+                    <div style={{display: "flex", alignItems: "center"}}>
                       <svg
                         className="panel__popular"
                         xmlns="http://www.w3.org/2000/svg"
@@ -711,7 +781,7 @@ class Dashboard extends React.Component {
                       <h2>Gainers</h2>
                     </div>
                   </div>
-                  <div className="panel__topCharts" style={{ display: "flex" }}>
+                  <div className="panel__topCharts" style={{display: "flex"}}>
                     <div className="stockChart">
                       {this.state.loader1 === "" && (
                         <ul className="loader">
@@ -736,7 +806,7 @@ class Dashboard extends React.Component {
                           <div className="stockChart__price-info">
                             <h4
                               className="stockChart__change"
-                              style={{ color: changesColors[0] }}
+                              style={{color: changesColors[0]}}
                             >
                               {stockChanges[0]}%
                             </h4>
@@ -746,8 +816,8 @@ class Dashboard extends React.Component {
                           </div>
                         </div>
                       ) : (
-                          <div />
-                        )}
+                        <div />
+                      )}
                     </div>
                     <div className="stockChart">
                       {this.state.loader2 === "" ? (
@@ -757,8 +827,8 @@ class Dashboard extends React.Component {
                           <li />
                         </ul>
                       ) : (
-                          <div />
-                        )}
+                        <div />
+                      )}
                       {this.state.loader2 === false && (
                         <h5>Couldn't load chart try again in few minutes</h5>
                       )}
@@ -778,7 +848,7 @@ class Dashboard extends React.Component {
                           <div className="stockChart__price-info">
                             <h4
                               className="stockChart__change"
-                              style={{ color: changesColors[1] }}
+                              style={{color: changesColors[1]}}
                             >
                               {stockChanges[1]}%
                             </h4>
@@ -788,121 +858,123 @@ class Dashboard extends React.Component {
                           </div>
                         </div>
                       )}
-                    </div>{" "}
-                  </div>
-                </div>
-                <div className="panel__portfolio-section">
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      flexWrap: "wrap"
-                    }}
-                  >
-                    <svg
-                      className="panel__portfolio-title"
-                      xmlns="http://www.w3.org/2000/svg"
-                      xmlnsXlink="http://www.w3.org/1999/xlink"
-                      version="1.1"
-                      x="0px"
-                      y="0px"
-                      viewBox="0 0 200 250"
-                      enableBackground="new 0 0 200 200"
-                      xmlSpace="preserve"
-                    >
-                      <g>
-                        <g>
-                          <path d="M156.811,54.528H43.159L0,97.64l96.874,96.875l3.119,3.117l3.117-3.117L200,97.64L156.811,54.528z     M99.992,187.565l-8.136-8.134L10.082,97.64l36.02-35.99h107.763l36.056,35.99l-81.793,81.792L99.992,187.565z" />
+                    </div>
+                    <div className="panel__portfolio-section">
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          flexWrap: "wrap"
+                        }}
+                      >
+                        <svg
+                          className="panel__portfolio-title"
+                          xmlns="http://www.w3.org/2000/svg"
+                          xmlnsXlink="http://www.w3.org/1999/xlink"
+                          version="1.1"
+                          x="0px"
+                          y="0px"
+                          viewBox="0 0 200 250"
+                          enableBackground="new 0 0 200 200"
+                          xmlSpace="preserve"
+                        >
                           <g>
-                            <path d="M63.434,94.079l28.423,85.353l5.017,15.083l3.119,3.117l3.117-3.117l5.018-15.083l28.409-85.353H63.434z      M99.992,181.331l-26.684-80.13h53.351L99.992,181.331z" />
-                            <polygon points="74.664,101.198 5.041,101.198 5.041,94.076 62.083,94.076 41.576,59.925 47.684,56.259    " />
-                            <polygon points="67.956,103.86 41.576,59.925 47.684,56.259 68.791,91.413 97.21,55.868 102.771,60.316    " />
-                            <polygon points="132.02,103.86 97.21,60.316 102.771,55.868 131.185,91.413 152.288,56.259 158.396,59.925    " />
-                            <polygon points="194.96,101.198 125.312,101.198 152.288,56.259 158.396,59.925 137.893,94.076 194.96,94.076         " />
+                            <g>
+                              <path d="M156.811,54.528H43.159L0,97.64l96.874,96.875l3.119,3.117l3.117-3.117L200,97.64L156.811,54.528z     M99.992,187.565l-8.136-8.134L10.082,97.64l36.02-35.99h107.763l36.056,35.99l-81.793,81.792L99.992,187.565z" />
+                              <g>
+                                <path d="M63.434,94.079l28.423,85.353l5.017,15.083l3.119,3.117l3.117-3.117l5.018-15.083l28.409-85.353H63.434z      M99.992,181.331l-26.684-80.13h53.351L99.992,181.331z" />
+                                <polygon points="74.664,101.198 5.041,101.198 5.041,94.076 62.083,94.076 41.576,59.925 47.684,56.259    " />
+                                <polygon points="67.956,103.86 41.576,59.925 47.684,56.259 68.791,91.413 97.21,55.868 102.771,60.316    " />
+                                <polygon points="132.02,103.86 97.21,60.316 102.771,55.868 131.185,91.413 152.288,56.259 158.396,59.925    " />
+                                <polygon points="194.96,101.198 125.312,101.198 152.288,56.259 158.396,59.925 137.893,94.076 194.96,94.076         " />
+                              </g>
+                            </g>
+                            <g>
+                              <rect
+                                x="96.439"
+                                y="2.368"
+                                width="7.123"
+                                height="23.74"
+                              />
+                              <rect
+                                x="120.786"
+                                y="7.211"
+                                transform="matrix(0.9238 0.3828 -0.3828 0.9238 16.7729 -46.1416)"
+                                width="7.124"
+                                height="23.742"
+                              />
+                              <rect
+                                x="141.429"
+                                y="21.002"
+                                transform="matrix(0.7071 0.7071 -0.7071 0.7071 65.7174 -92.8988)"
+                                width="7.121"
+                                height="23.742"
+                              />
+                              <rect
+                                x="63.779"
+                                y="15.52"
+                                transform="matrix(0.3827 0.9239 -0.9239 0.3827 64.3313 -58.112)"
+                                width="23.742"
+                                height="7.124"
+                              />
+                              <rect
+                                x="43.139"
+                                y="29.312"
+                                transform="matrix(0.707 0.7072 -0.7072 0.707 39.3628 -29.2704)"
+                                width="23.74"
+                                height="7.121"
+                              />
+                            </g>
                           </g>
-                        </g>
-                        <g>
-                          <rect
-                            x="96.439"
-                            y="2.368"
-                            width="7.123"
-                            height="23.74"
-                          />
-                          <rect
-                            x="120.786"
-                            y="7.211"
-                            transform="matrix(0.9238 0.3828 -0.3828 0.9238 16.7729 -46.1416)"
-                            width="7.124"
-                            height="23.742"
-                          />
-                          <rect
-                            x="141.429"
-                            y="21.002"
-                            transform="matrix(0.7071 0.7071 -0.7071 0.7071 65.7174 -92.8988)"
-                            width="7.121"
-                            height="23.742"
-                          />
-                          <rect
-                            x="63.779"
-                            y="15.52"
-                            transform="matrix(0.3827 0.9239 -0.9239 0.3827 64.3313 -58.112)"
-                            width="23.742"
-                            height="7.124"
-                          />
-                          <rect
-                            x="43.139"
-                            y="29.312"
-                            transform="matrix(0.707 0.7072 -0.7072 0.707 39.3628 -29.2704)"
-                            width="23.74"
-                            height="7.121"
-                          />
-                        </g>
-                      </g>
-                    </svg>{" "}
-                    <h2>Portfolio</h2>
-                  </div>
-                  <div className="panel__portfolio" id="portfolio">
-                    {this.state.portfolioLoader === "" && (
-                      <ul className="loader">
-                        <li />
-                        <li />
-                        <li />
-                      </ul>
-                    )}
-                    {this.state.portfolioLoader === false && (
-                      <h5>Couldn't load chart try again in few minutes</h5>
-                    )}
-                    {this.state.portfolioLoader && (
-                      <div>
-                        <ul className="panel__portfolio-list">
-                          <li>
-                            <h6>SYMBOL</h6>
-                            <h6>QUANTITY</h6>
-                            <h6>TOTAL GAIN/LOSS (%)</h6>
-                            <h6>CURRENT VALUE</h6>
-                          </li>
-                          {portfolioStocks.map((value, index) => {
-                            return (
-                              <li key={index}>
-                                <h5>{value}</h5>
-                                <h5>{portfolioShares[index]}</h5>
-                                <h5 style={{ color: portfolioColor[index] }}>
-                                  {portfolioDifference[index]}%
-                                </h5>
-                                <h5>
-                                  $
-                                  {this.numberWithCommas(portfolioValue[index])}
-                                </h5>
-                              </li>
-                            );
-                          })}
-                        </ul>
-                        <div className="panel__value">
-                          <h5>NET WORTH</h5>
-                          <h5>{this.state.accountValue}</h5>
-                        </div>
+                        </svg>{" "}
+                        <h2>Portfolio</h2>
                       </div>
-                    )}
+                      <div className="panel__portfolio" id="portfolio">
+                        {this.state.portfolioLoader === "" && (
+                          <ul className="loader">
+                            <li />
+                            <li />
+                            <li />
+                          </ul>
+                        )}
+                        {this.state.portfolioLoader === false && (
+                          <h5>Couldn't load chart try again in few minutes</h5>
+                        )}
+                        {this.state.portfolioLoader && (
+                          <div>
+                            <ul className="panel__portfolio-list">
+                              <li>
+                                <h6>SYMBOL</h6>
+                                <h6>QUANTITY</h6>
+                                <h6>TOTAL GAIN/LOSS (%)</h6>
+                                <h6>CURRENT VALUE</h6>
+                              </li>
+                              {portfolioStocks.map((value, index) => {
+                                return (
+                                  <li key={index}>
+                                    <h5>{value}</h5>
+                                    <h5>{portfolioShares[index]}</h5>
+                                    <h5 style={{color: portfolioColor[index]}}>
+                                      {portfolioDifference[index]}%
+                                    </h5>
+                                    <h5>
+                                      $
+                                      {this.numberWithCommas(
+                                        portfolioValue[index]
+                                      )}
+                                    </h5>
+                                  </li>
+                                );
+                              })}
+                            </ul>
+                            <div className="panel__value">
+                              <h5>NET WORTH</h5>
+                              <h5>{this.state.accountValue}</h5>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -958,12 +1030,12 @@ class Dashboard extends React.Component {
                         })}
                       </ul>
                     ) : (
-                        <ul className="loader">
-                          <li />
-                          <li />
-                          <li />
-                        </ul>
-                      )}
+                      <ul className="loader">
+                        <li />
+                        <li />
+                        <li />
+                      </ul>
+                    )}
                   </div>
                   <div className="panel__stockList">
                     {this.state.loader3 ? (
@@ -1000,12 +1072,12 @@ class Dashboard extends React.Component {
                         })}
                       </ul>
                     ) : (
-                        <ul className="loader">
-                          <li />
-                          <li />
-                          <li />
-                        </ul>
-                      )}
+                      <ul className="loader">
+                        <li />
+                        <li />
+                        <li />
+                      </ul>
+                    )}
                   </div>
                   <div className="panel__stockList">
                     {this.state.loader3 ? (
@@ -1042,12 +1114,12 @@ class Dashboard extends React.Component {
                         })}
                       </ul>
                     ) : (
-                        <ul className="loader">
-                          <li />
-                          <li />
-                          <li />
-                        </ul>
-                      )}
+                      <ul className="loader">
+                        <li />
+                        <li />
+                        <li />
+                      </ul>
+                    )}
                   </div>
                 </div>
               </div>

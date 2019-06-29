@@ -13,7 +13,8 @@
     "react-google-charts": "^3.0.12",
     "react-router-dom": "^5.0.0",
     "react-scripts": "^3.0.0",
-    "react-stockcharts": "^0.7.8"
+    "react-stockcharts": "^0.7.8",
+    "react-transition-group": "^4.2.0"
   },
   "scripts": {
     "start": "react-scripts start",
