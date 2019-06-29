@@ -300,7 +300,7 @@ export default class stockPage extends React.Component {
           <div className="stockPage">
           <div className="topbar">
                 <div className="topbar__searchbar" id="topbar__searchbar">
-                  <div style={{display: "flex", alignItems: "center"}}>
+                  <div style={{display: "flex", alignItems: "center",width:"100%"}}>
                     <svg
                       enableBackground="new 0 0 250.313 250.313"
                       version="1.1"
