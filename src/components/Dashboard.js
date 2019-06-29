@@ -4,6 +4,7 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import {logout} from "./auth";
 import $ from "jquery";
+import {Link} from "react-router-dom"
 
 const db = firebase.firestore();
 
@@ -1002,7 +1003,7 @@ class Dashboard extends React.Component {
                           if (index < 3)
                             return (
                               <li key={index}>
-                                <a href={stockListTickers[index]}>
+                                <Link to={stockListTickers[index]} params={{symbol: "AMD"}}>
                                   <span className="panel__fullname">
                                     <h4>{stockListTickers[index]}</h4>
                                     <h6 className="panel__name">{value}</h6>
@@ -1023,7 +1024,7 @@ class Dashboard extends React.Component {
                                       {stockListChange[index]}
                                     </h5>
                                   </div>
-                                </a>
+                                </Link>
                               </li>
                             );
                           else return "";

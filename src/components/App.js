@@ -31,18 +31,6 @@ function PublicRoute({ component: Component, authed, ...rest }) {
   )
 }
 
-let allSymbols = [];
-
-(() => {
-  fetch("https://cloud.iexapis.com/stable/ref-data/symbols?token=pk_95c4a35c80274553987b93e74bb825d7")
-    .then(res => res.json())
-    .then(result => {
-      allSymbols = result.map((val) => {
-        return val
-      })
-    })
-})()
-
 class App extends Component {
   state = {
     authed: false,
@@ -87,9 +75,7 @@ class App extends Component {
               <PublicRoute authed={this.state.authed} path="/login" component={Login} />
               <PrivateRoute authed={this.state.authed} path="/dashboard" component={Dashboard} />
               <PrivateRoute authed={this.state.authed} path="/stocks" component={Stocks} />
-              {allSymbols.map((val, index) => {
-                return <PrivateRoute key={index} authed={this.state.authed} path={"/" + val.symbol} component={stockPage} symbol={val.symbol} />
-              })}
+              <PrivateRoute name="stocks" authed={this.state.authed} path="/:symbol" component={stockPage} symbol={window.location.pathname.split("/")[1]} />
             </Switch>
           </div>
         </Router>
