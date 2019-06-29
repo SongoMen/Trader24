@@ -14,6 +14,7 @@ var options = {
     mode: 'index',
     intersect: false,
     callbacks: {
+      title: function() {},
       label: function (tooltipItems, data) {
         return '$' + tooltipItems.yLabel
       }

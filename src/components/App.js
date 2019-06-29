@@ -50,22 +50,21 @@ class App extends Component {
   }
   componentDidMount() {
     setTimeout(() => {
+      this.removeListener = firebaseAuth().onAuthStateChanged((user) => {
+        if (user) {
+          this.setState({
+            authed: true,
+            loading: false,
+          })
+        } else {
+          this.setState({
+            authed: false,
+            loading: false
+          })
+        }
+      })
 
-    this.removeListener = firebaseAuth().onAuthStateChanged((user) => {
-      if (user) {
-        this.setState({
-          authed: true,
-          loading: false,
-        })
-      } else {
-        this.setState({
-          authed: false,
-          loading: false
-        })
-      }
-    })
-          
-  }, 2500);
+    }, 1500);
   }
   componentWillUnmount() {
     this.removeListener()
@@ -88,9 +87,8 @@ class App extends Component {
               <PublicRoute authed={this.state.authed} path="/login" component={Login} />
               <PrivateRoute authed={this.state.authed} path="/dashboard" component={Dashboard} />
               <PrivateRoute authed={this.state.authed} path="/stocks" component={Stocks} />
-              {allSymbols.map((val,index) =>{
-                return <PrivateRoute key={index} authed={this.state.authed} path={"/" + val.symbol} component={stockPage} symbol={val.symbol}/>
-
+              {allSymbols.map((val, index) => {
+                return <PrivateRoute key={index} authed={this.state.authed} path={"/" + val.symbol} component={stockPage} symbol={val.symbol} />
               })}
             </Switch>
           </div>
