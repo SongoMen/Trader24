@@ -34,7 +34,7 @@ function PublicRoute({ component: Component, authed, ...rest }) {
 let allSymbols = [];
 
 (() => {
-  fetch("https://cloud.iexapis.com/stable/ref-data/symbols?token=pk_c4db94f67a0b42a1884238b690ab06db")
+  fetch("https://cloud.iexapis.com/stable/ref-data/symbols?token=pk_95c4a35c80274553987b93e74bb825d7")
     .then(res => res.json())
     .then(result => {
       allSymbols = result.map((val) => {

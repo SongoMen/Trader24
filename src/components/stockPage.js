@@ -69,7 +69,7 @@ let chartLength = 0;
 let allSymbols = [];
 
 (() => {
-  fetch("https://cloud.iexapis.com/stable/ref-data/symbols?token=pk_c4db94f67a0b42a1884238b690ab06db")
+  fetch("https://cloud.iexapis.com/stable/ref-data/symbols?token=pk_95c4a35c80274553987b93e74bb825d7")
     .then(res => res.json())
     .then(result => {
       allSymbols = result.map((val) => {
@@ -135,7 +135,7 @@ export default class stockPage extends React.Component {
   getChart() {
     const stockApi = `https://cloud.iexapis.com/stable/stock/${
       this.props.symbol
-      }/intraday-prices?token=pk_c4db94f67a0b42a1884238b690ab06db`;
+      }/intraday-prices?token=pk_95c4a35c80274553987b93e74bb825d7`;
     fetch(stockApi)
       .then(res => res.json())
       .then(result => {
@@ -211,7 +211,7 @@ export default class stockPage extends React.Component {
   }
   render() {
       const lastPrice =
-        `https://cloud.iexapis.com/stable/stock/${this.props.symbol}/price?token=pk_c4db94f67a0b42a1884238b690ab06db`;
+        `https://cloud.iexapis.com/stable/stock/${this.props.symbol}/price?token=pk_95c4a35c80274553987b93e74bb825d7`;
       fetch(lastPrice)
         .then(res => res.json())
         .then(result => {

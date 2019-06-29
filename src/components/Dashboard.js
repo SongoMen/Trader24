@@ -10,6 +10,19 @@ const db = firebase.firestore();
 var options = {
   maintainAspectRatio: false,
   responsive: true,
+  /*tooltips: {
+    mode: 'index',
+    intersect: false,
+    backgroundColor: '#373a46',
+    bodyFontSize: 15,
+    callbacks: {
+      label: function (tooltipItems, data) {
+        return '$' + tooltipItems.yLabel
+      },
+      title: function() {},
+    },
+    displayColors: false,
+  },*/
   tooltips: { enabled: false },
   hover: { mode: null },
   legend: {
@@ -68,7 +81,7 @@ let portfolioDifference = []
 let portfolioColor = [];
 
 (() => {
-  fetch("https://cloud.iexapis.com/stable/ref-data/symbols?token=pk_c4db94f67a0b42a1884238b690ab06db")
+  fetch("https://cloud.iexapis.com/stable/ref-data/symbols?token=pk_95c4a35c80274553987b93e74bb825d7")
     .then(res => res.json())
     .then(result => {
       allSymbols = result.map((val) => {
@@ -162,11 +175,11 @@ class Dashboard extends React.Component {
   }
   getStockInfo(symbol, dataChart, changeStash, priceStash, num) {
     const stockApi =
-      `https://cloud.iexapis.com/stable/stock/${symbol}/intraday-prices?token=pk_c4db94f67a0b42a1884238b690ab06db`
+      `https://cloud.iexapis.com/stable/stock/${symbol}/intraday-prices?token=pk_95c4a35c80274553987b93e74bb825d7`
     const lastPrice =
-      `https://cloud.iexapis.com/stable/stock/${symbol}/price?token=pk_c4db94f67a0b42a1884238b690ab06db`;
+      `https://cloud.iexapis.com/stable/stock/${symbol}/price?token=pk_95c4a35c80274553987b93e74bb825d7`;
     const percentageChange =
-      `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_c4db94f67a0b42a1884238b690ab06db`;
+      `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_95c4a35c80274553987b93e74bb825d7`;
     let error
     fetch(percentageChange)
       .then(res => res.json())
@@ -186,21 +199,16 @@ class Dashboard extends React.Component {
       .then(res => res.json())
       .then(result => {
         for (let i = 0; i < result.length - 1; i++) {
-          if (result[i].average !== null) dataChart.push(parseFloat(result[i].average));
+          if (result[i].average !== null) dataChart.push(parseFloat(result[i].average).toFixed(2));
         }
       });
-      console.log(symbol)
-      console.log(dataChart)
-      console.log(changeStash)
-
-
   }
   getStocksList() {
-    const stocks = "https://cloud.iexapis.com/stable/stock/market/list/mostactive?token=pk_c4db94f67a0b42a1884238b690ab06db"
+    const stocks = "https://cloud.iexapis.com/stable/stock/market/list/mostactive?token=pk_95c4a35c80274553987b93e74bb825d7"
     fetch(stocks)
       .then(res => res.json())
       .then(result => {
-        const gainers = "https://cloud.iexapis.com/stable/stock/market/list/gainers?token=pk_c4db94f67a0b42a1884238b690ab06db"
+        const gainers = "https://cloud.iexapis.com/stable/stock/market/list/gainers?token=pk_95c4a35c80274553987b93e74bb825d7"
         let counter = 0;
         fetch(gainers)
           .then(res => res.json())
@@ -232,7 +240,7 @@ class Dashboard extends React.Component {
           console.log(stockListTickers)
           for (let i = 0; i < 9; i++) {
             const percentageChange =
-              `https://cloud.iexapis.com/stable/stock/${stockListTickers[i]}/quote?displayPercent=true&token=pk_c4db94f67a0b42a1884238b690ab06db`;
+              `https://cloud.iexapis.com/stable/stock/${stockListTickers[i]}/quote?displayPercent=true&token=pk_95c4a35c80274553987b93e74bb825d7`;
             fetch(percentageChange)
               .then(res => res.json())
               .then(result => {
@@ -301,7 +309,7 @@ class Dashboard extends React.Component {
           (async () => {
             for (let i = 0; i < portfolioStocks.length; i++) {
               const lastPrice =
-                `https://cloud.iexapis.com/stable/stock/${portfolioStocks[i]}/price?token=pk_c4db94f67a0b42a1884238b690ab06db`;
+                `https://cloud.iexapis.com/stable/stock/${portfolioStocks[i]}/price?token=pk_95c4a35c80274553987b93e74bb825d7`;
               await new Promise(resolve =>
                 fetch(lastPrice)
                   .then(res => res.json())
@@ -384,7 +392,7 @@ class Dashboard extends React.Component {
   componentDidMount() {
     chartData1 = []
     chartData2 = []
-    const gainers = "https://cloud.iexapis.com/stable/stock/market/list/gainers?token=pk_c4db94f67a0b42a1884238b690ab06db"
+    const gainers = "https://cloud.iexapis.com/stable/stock/market/list/gainers?token=pk_95c4a35c80274553987b93e74bb825d7"
     fetch(gainers)
       .then(res => res.json())
       .then(result => {
@@ -399,7 +407,7 @@ class Dashboard extends React.Component {
               let good = 0
               let nul = 0
               const stockApi =
-                `https://cloud.iexapis.com/stable/stock/${toCheckSymbols[i]}/intraday-prices?token=pk_c4db94f67a0b42a1884238b690ab06db`
+                `https://cloud.iexapis.com/stable/stock/${toCheckSymbols[i]}/intraday-prices?token=pk_95c4a35c80274553987b93e74bb825d7`
               fetch(stockApi)
                 .then(res => res.json())
                 .then(result => {
@@ -407,7 +415,7 @@ class Dashboard extends React.Component {
                     if (result[b].average === null) nul++
                     else good++
                   }
-                  if (nul < 100 && stockSymbols.length < 3 && good > 2) stockSymbols.push(toCheckSymbols[i])
+                  if (nul < 200 && stockSymbols.length < 3 && good > 2) stockSymbols.push(toCheckSymbols[i])
                 })
             }
           }
@@ -420,8 +428,10 @@ class Dashboard extends React.Component {
       })
       .then(() => {
         setTimeout(() => {
+          if(stockSymbols.length>0){
           this.getStockInfo(stockSymbols[0], chartData1, stockChanges, stockPrices, 0)
           this.getStockInfo(stockSymbols[1], chartData2, stockChanges, stockPrices, 1)
+          }
         }, 2000);
 
 
@@ -451,7 +461,7 @@ class Dashboard extends React.Component {
           loader2: false
         })
       }
-    }, 3500);
+    }, 4000);
     // STOCK LIST
     this.getStocksList()
 
@@ -484,6 +494,8 @@ class Dashboard extends React.Component {
       }
       if (document.getElementById("searchBar") === document.activeElement) {
         document.getElementById("topbar__searchbar").style.boxShadow = "0px 0px 30px 0px rgba(0,0,0,0.17)"
+        document.getElementById("results").style.boxShadow = "0px 0px 30px 0px rgba(0,0,0,0.17)"
+
       }
     }
     return (
@@ -506,8 +518,7 @@ class Dashboard extends React.Component {
                   }} onBlur={() => {
                     setTimeout(() => {
                       document.getElementById("results").style.display = "none"
-
-                    }, 200);
+                    }, 500);
                     document.getElementById("topbar__searchbar").style.boxShadow = "none"
                   }} autoComplete="off"></input>
                 </div>
@@ -535,10 +546,7 @@ class Dashboard extends React.Component {
               <h5 className="panel__status" id="panel__status"> </h5>
             </div>
             <div className="panel">
-              <div className="panel__markets">
-                <div className="panel__marketPrice"></div>
-              </div>
-              <div className="panel__container" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
+              <div className="panel__container">
                 <div className="panel__top">
                   <div className="panel__title">
                     <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -546,7 +554,7 @@ class Dashboard extends React.Component {
                       <h2>Gainers</h2>
                     </div>
                   </div>
-                  <div className="panel__topCharts" style={{ display: 'flex', alignItems: 'center' }}>
+                  <div className="panel__topCharts" style={{ display: 'flex' }}>
                     <div className="stockChart">
                       {this.state.loader1 === "" ? (
                         <ul className="loader">
@@ -649,6 +657,7 @@ class Dashboard extends React.Component {
                   </div>
                 </div>
               </div>
+              <div className="panel__low">
               <div className="panel__bottom-title">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 80" x="0px" y="0px"><g data-name="Layer 2"><g data-name="Layer 4"><path d="M24,64A24,24,0,0,1,11.44,19.55a2,2,0,0,1,2.71,2.82C13,24.08,10,29.35,10,33a6.93,6.93,0,0,0,7,7c3.48,0,7-2.16,7-7,0-1.89-1-3.57-2.06-5.53-3-5.38-6.83-12.07,6.58-26.82a2,2,0,0,1,3.33,2.11c-4.11,10,0,13.59,5.75,18.58C42.47,25.6,48,30.42,48,40A24,24,0,0,1,24,64ZM6.2,30.84A20,20,0,1,0,44,40c0-7.76-4.39-11.59-9-15.64-4.13-3.61-8.67-7.56-8.74-14.41-5.17,7.85-3,11.62-.81,15.56C26.69,27.74,28,30.06,28,33A10.64,10.64,0,0,1,17,44,10.88,10.88,0,0,1,6,33,12.59,12.59,0,0,1,6.2,30.84Z" /></g></g></svg>
                 <h3>Most Active</h3>
@@ -709,6 +718,7 @@ class Dashboard extends React.Component {
                   }
                 </div>
               </div>
+            </div>
             </div>
           </div>
         </div>
