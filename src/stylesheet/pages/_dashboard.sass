@@ -59,7 +59,6 @@ a
     flex-direction: column
     border-radius: 50px
     margin-right: 80px
-    width: 350px
     display: flex
     align-items: flex-start
     padding: 0 20px
@@ -172,11 +171,16 @@ a
     .panel__topCharts
       height: 90%
       width: 100%
+      @media only screen and (max-width: 1200px) 
+        justify-content: space-between
     .panel__top
       display: flex
       flex-wrap: wrap
-      width: 70%
+      width: 69%
       height: 100%
+      min-width: 700px
+      @media only screen and (max-width: 1200px) 
+        width: 100%
       .panel__title
         display: flex
         align-items: center  
@@ -209,7 +213,7 @@ a
     align-items: center
     justify-content: center
     text-align: center
-    margin-right: 50px
+    margin-right: 30px
     margin-bottom: 20px
     min-width: 300px
     height: 100%
@@ -219,6 +223,9 @@ a
   width: 30%
   height: 100%
   min-width: 250px
+  padding-left: 20px
+  @media only screen and (max-width: 1200px) 
+    display: none
   h2
     margin: 10px 0
   .panel__portfolio
@@ -369,6 +376,12 @@ a
   min-width: 300px
   display: flex
   align-items: center
+  @media only screen and (max-width: 1000px) and (min-width: 770px)
+    justify-content: space-between
+    min-width: 0
+  @media only screen and (max-width: 770px) 
+    &:nth-child(3)
+      display: none
 
 .panel__list
   width: 100%
