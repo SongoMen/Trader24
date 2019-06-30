@@ -79,6 +79,8 @@ a
     justify-content: center
     transition: .5s all
     width: 30%
+    @media only screen and (max-width: 900px) 
+      width: 100%
     .topbar__results
       position: absolute
       left: 0
@@ -137,11 +139,15 @@ a
   flex-direction: column
   padding: 0 10px
   .leftbar__log
-    fill: white
+    fill: $inactive-color
     width: 30%
     cursor: pointer
     position: absolute
+    transition: all .5s
     bottom: 20px
+    min-width: 20px
+    &:hover
+      fill: $main-color
     
 .topbar__user
   bottom: 20px
@@ -213,7 +219,8 @@ a
   bottom: 105px
   transform: rotate(-90deg)
   white-space: nowrap
-
+  margin-right: 55px
+  margin-bottom: 30px
 .stockChart
     background-color: $elements-color
     box-shadow: 0px 0px 30px 0px rgba(0,0,0,0.07)
@@ -230,14 +237,17 @@ a
     min-width: 300px
     height: 100%
     cursor: pointer
-  
+    @media only screen and (max-width: 1050px) 
+      width: 50%
+      &:nth-child(2)
+        margin-right: 0
 .panel__portfolio-section
   width: 34%
   height: 100%
   min-width: 250px
   margin-top: -60px
 
-  @media only screen and (max-width: 1200px) 
+  @media only screen and (max-width: 1050px) 
     display: none
   .panel__portfolio
     margin-right: 50px
