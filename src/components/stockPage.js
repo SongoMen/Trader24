@@ -4,6 +4,7 @@ import firebase from "firebase/app";
 import {Line} from "react-chartjs-2";
 import {defaults} from "react-chartjs-2";
 import $ from "jquery";
+import "chartjs-plugin-annotation";
 
 defaults.global.defaultFontStyle = "Bold";
 defaults.global.defaultFontFamily = "Quicksand";
@@ -15,7 +16,6 @@ var options = {
     mode: "index",
     intersect: false,
     callbacks: {
-      title: function() {},
       label: function(tooltipItems, data) {
         return "$" + tooltipItems.yLabel;
       }
@@ -31,7 +31,6 @@ var options = {
   legend: {
     display: false
   },
-
   scales: {
     xAxes: [
       {
@@ -60,20 +59,18 @@ var options = {
     },
     line: {
       borderCapStyle: "round",
-      borderJoinStyle: "round",
-      tension: 50
+      borderJoinStyle: "round"
     }
   }
 };
 
 let chartData1 = [];
-let chartLength = 0;
-
+let labels = [];
 let allSymbols = [];
-
+let closePrice;
 (() => {
   fetch(
-    "https://cloud.iexapis.com/stable/ref-data/symbols?token=pk_95c4a35c80274553987b93e74bb825d7"
+    "https://cloud.iexapis.com/stable/ref-data/symbols?token=pk_7a3afe7fd31b450693dc69be9b7622d6"
   )
     .then((res) => res.json())
     .then((result) => {
@@ -93,6 +90,15 @@ export default class stockPage extends React.Component {
       lastPrice: "",
       fundsLoader: ""
     };
+    fetch(
+      `https://cloud.iexapis.com/beta/stock/${
+        this.props.symbol
+      }/batch?token=pk_7a3afe7fd31b450693dc69be9b7622d6&types=chart,quote&range=1d&changeFromClose=true`
+    )
+      .then((res) => res.json())
+      .then((result) => {
+        closePrice = result.quote.previousClose;
+      });
     this.data1 = (canvas) => {
       function labelGen(length) {
         let result = "";
@@ -115,7 +121,7 @@ export default class stockPage extends React.Component {
       ctx.shadowOffsetX = 0;
       ctx.shadowOffsetY = 4;
       return {
-        labels: labelGen(chartLength),
+        labels: labels,
         datasets: [
           {
             lineTension: 0.1,
@@ -125,7 +131,7 @@ export default class stockPage extends React.Component {
             borderColor: gradient,
             backgroundColor: gradientFill,
             fill: true,
-            borderWidth: 2,
+            borderWidth: 1,
             data: chartData1
           }
         ]
@@ -137,29 +143,6 @@ export default class stockPage extends React.Component {
   }
   routeChange(path) {
     this.props.history.push(path);
-  }
-  getMinutesChart(minutes) {
-    chartLength = 0;
-    const stockApi = `https://cloud.iexapis.com/stable/stock/${
-      this.props.symbol
-    }/intraday-prices?token=pk_95c4a35c80274553987b93e74bb825d7`;
-    fetch(stockApi)
-      .then((res) => res.json())
-      .then((result) => {
-        for (let i = 0; i < minutes; i++) {
-          if (result[i].average !== null) {
-            chartData1.push(parseFloat(result[i].average).toFixed(2));
-            chartLength++;
-          }
-        }
-      })
-      .then(() => {
-        setTimeout(() => {
-          this.setState({
-            loaded: true
-          });
-        }, 1000);
-      });
   }
   searchStocks(e) {
     document.getElementById("results").innerHTML = "";
@@ -193,19 +176,59 @@ export default class stockPage extends React.Component {
       }
     }
   }
-  changeChartMinutes(minutes) {
-    chartLength = 0;
+  getOneDayChart() {
+    const anno = {
+      annotations: [
+        {
+          borderDash: [2, 2],
+          drawTime: "afterDatasetsDraw",
+          type: "line",
+          mode: "horizontal",
+          scaleID: "y-axis-0",
+          value: closePrice,
+          borderColor: "#676976",
+          borderWidth: 1
+        }
+      ]
+    };
+    labels = [];
     chartData1 = [];
-    const stockApi = `https://cloud.iexapis.com/stable/stock/${
+    const stockApi = `https://cloud.iexapis.com/beta/stock/${
       this.props.symbol
-    }/intraday-prices?token=pk_95c4a35c80274553987b93e74bb825d7`;
+    }/batch?token=pk_7a3afe7fd31b450693dc69be9b7622d6&types=chart,quote&range=1d&changeFromClose=true`;
     fetch(stockApi)
       .then((res) => res.json())
       .then((result) => {
-        for (let i = 0; i < minutes; i++) {
-          if (result[i].average !== null) {
-            chartData1.push(parseFloat(result[i].average).toFixed(2));
-            chartLength++;
+        for (let i = 0; i < result.chart.length; i++) {
+          if (result.chart[i].average !== null) {
+            chartData1.push(result.chart[i].average.toFixed(2));
+            labels.push(result.chart[i].label);
+          }
+        }
+      })
+      .then(() => {
+        setTimeout(() => {
+          this.setState({
+            loaded: true
+          });
+        }, 1000);
+      });
+    options.annotation = anno;
+    console.log(options);
+  }
+  getYTDChart() {
+    labels = [];
+    chartData1 = [];
+    const stockApi = `https://cloud.iexapis.com/beta/stock/${
+      this.props.symbol
+    }/batch?token=pk_7a3afe7fd31b450693dc69be9b7622d6&types=chart,quote&range=ytd`;
+    fetch(stockApi)
+      .then((res) => res.json())
+      .then((result) => {
+        for (let i = 0; i < result.chart.length; i++) {
+          if (result.chart[i].average !== null) {
+            chartData1.push(result.chart[i].close.toFixed(2));
+            labels.push(result.chart[i].label);
           }
         }
       })
@@ -217,21 +240,72 @@ export default class stockPage extends React.Component {
         }, 1000);
       });
   }
-  getYTDChart() {
-    chartLength = 0;
+  getOneYearChart() {
+    labels = [];
     chartData1 = [];
-    const stockApi = `https://cloud.iexapis.com/stable/stock/${
+    const stockApi = `https://cloud.iexapis.com/beta/stock/${
       this.props.symbol
-    }/chart/ytd?token=pk_95c4a35c80274553987b93e74bb825d7`;
+    }/batch?token=pk_7a3afe7fd31b450693dc69be9b7622d6&types=chart,quote&range=1y`;
     fetch(stockApi)
       .then((res) => res.json())
       .then((result) => {
-        for (let i = 0; i < result.length; i++) {
-          if (result[i].average !== null) {
-            chartData1.push(parseFloat(result[i].close).toFixed(2));
-            chartLength++;
+        for (let i = 0; i < result.chart.length; i++) {
+          if (result.chart[i].average !== null) {
+            chartData1.push(result.chart[i].close.toFixed(2));
+            labels.push(result.chart[i].label);
           }
         }
+        console.log(chartData1);
+      })
+      .then(() => {
+        setTimeout(() => {
+          this.setState({
+            loaded: true
+          });
+        }, 1000);
+      });
+  }
+  getTwoYearChart() {
+    labels = [];
+    chartData1 = [];
+    const stockApi = `https://cloud.iexapis.com/beta/stock/${
+      this.props.symbol
+    }/batch?token=pk_7a3afe7fd31b450693dc69be9b7622d6&types=chart,quote&range=2y`;
+    fetch(stockApi)
+      .then((res) => res.json())
+      .then((result) => {
+        for (let i = 0; i < result.chart.length; i++) {
+          if (result.chart[i].average !== null) {
+            chartData1.push(result.chart[i].close.toFixed(2));
+            labels.push(result.chart[i].label);
+          }
+        }
+        console.log(chartData1);
+      })
+      .then(() => {
+        setTimeout(() => {
+          this.setState({
+            loaded: true
+          });
+        }, 1000);
+      });
+  }
+  getOneMonthChart() {
+    labels = [];
+    chartData1 = [];
+    const stockApi = `https://cloud.iexapis.com/beta/stock/${
+      this.props.symbol
+    }/batch?token=pk_7a3afe7fd31b450693dc69be9b7622d6&types=chart,quote&range=1m`;
+    fetch(stockApi)
+      .then((res) => res.json())
+      .then((result) => {
+        for (let i = 0; i < result.chart.length; i++) {
+          if (result.chart[i].average !== null) {
+            chartData1.push(result.chart[i].close.toFixed(2));
+            labels.push(result.chart[i].label);
+          }
+        }
+        console.log(chartData1);
       })
       .then(() => {
         setTimeout(() => {
@@ -274,7 +348,7 @@ export default class stockPage extends React.Component {
     this.getYTDChart();
     const lastPrice = `https://cloud.iexapis.com/stable/stock/${
       this.props.symbol
-    }/price?token=pk_95c4a35c80274553987b93e74bb825d7`;
+    }/price?token=pk_7a3afe7fd31b450693dc69be9b7622d6`;
     fetch(lastPrice)
       .then((res) => res.json())
       .then((result) => {
@@ -481,6 +555,21 @@ export default class stockPage extends React.Component {
                   <Line data={this.data1} options={options} />
                   <div className="stockPage__timers">
                     <h6
+                      onClick={() => {
+                        this.getTwoYearChart();
+                      }}
+                    >
+                      2Y
+                    </h6>
+                    <h6
+                      onClick={() => {
+                        this.getOneYearChart();
+                      }}
+                    >
+                      1Y
+                    </h6>
+
+                    <h6
                       className="active"
                       onClick={() => {
                         this.getYTDChart();
@@ -490,18 +579,18 @@ export default class stockPage extends React.Component {
                     </h6>
                     <h6
                       onClick={() => {
-                        this.changeChartMinutes(30);
+                        this.getOneMonthChart();
                         console.log(this.className);
                       }}
                     >
-                      30 minutes
+                      1M
                     </h6>
                     <h6
                       onClick={() => {
-                        this.changeChartMinutes(5);
+                        this.getOneDayChart();
                       }}
                     >
-                      5 minutes
+                      1D
                     </h6>
                   </div>
                 </div>

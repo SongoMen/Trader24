@@ -81,7 +81,7 @@ let portfolioColor = [];
 
 (() => {
   fetch(
-    "https://cloud.iexapis.com/stable/ref-data/symbols?token=pk_95c4a35c80274553987b93e74bb825d7"
+    "https://cloud.iexapis.com/stable/ref-data/symbols?token=pk_7a3afe7fd31b450693dc69be9b7622d6"
   )
     .then((res) => res.json())
     .then((result) => {
@@ -176,9 +176,9 @@ class Dashboard extends React.Component {
     };
   }
   getStockInfo(symbol, dataChart, changeStash, priceStash, num) {
-    const stockApi = `https://cloud.iexapis.com/stable/stock/${symbol}/intraday-prices?token=pk_95c4a35c80274553987b93e74bb825d7`;
-    const lastPrice = `https://cloud.iexapis.com/stable/stock/${symbol}/price?token=pk_95c4a35c80274553987b93e74bb825d7`;
-    const percentageChange = `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_95c4a35c80274553987b93e74bb825d7`;
+    const stockApi = `https://cloud.iexapis.com/stable/stock/${symbol}/intraday-prices?token=pk_7a3afe7fd31b450693dc69be9b7622d6`;
+    const lastPrice = `https://cloud.iexapis.com/stable/stock/${symbol}/price?token=pk_7a3afe7fd31b450693dc69be9b7622d6`;
+    const percentageChange = `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_7a3afe7fd31b450693dc69be9b7622d6`;
     let error;
     fetch(percentageChange)
       .then((res) => res.json())
@@ -205,12 +205,12 @@ class Dashboard extends React.Component {
   }
   getStocksList() {
     const stocks =
-      "https://cloud.iexapis.com/stable/stock/market/list/mostactive?token=pk_95c4a35c80274553987b93e74bb825d7";
+      "https://cloud.iexapis.com/stable/stock/market/list/mostactive?token=pk_7a3afe7fd31b450693dc69be9b7622d6";
     fetch(stocks)
       .then((res) => res.json())
       .then((result) => {
         const gainers =
-          "https://cloud.iexapis.com/stable/stock/market/list/gainers?token=pk_95c4a35c80274553987b93e74bb825d7";
+          "https://cloud.iexapis.com/stable/stock/market/list/gainers?token=pk_7a3afe7fd31b450693dc69be9b7622d6";
         let counter = 0;
         fetch(gainers)
           .then((res) => res.json())
@@ -242,7 +242,7 @@ class Dashboard extends React.Component {
           for (let i = 0; i < 9; i++) {
             const percentageChange = `https://cloud.iexapis.com/stable/stock/${
               stockListTickers[i]
-            }/quote?displayPercent=true&token=pk_95c4a35c80274553987b93e74bb825d7`;
+            }/quote?displayPercent=true&token=pk_7a3afe7fd31b450693dc69be9b7622d6`;
             fetch(percentageChange)
               .then((res) => res.json())
               .then((result) => {
@@ -324,7 +324,7 @@ class Dashboard extends React.Component {
             for (let i = 0; i < portfolioStocks.length; i++) {
               const lastPrice = `https://cloud.iexapis.com/stable/stock/${
                 portfolioStocks[i]
-              }/price?token=pk_95c4a35c80274553987b93e74bb825d7`;
+              }/price?token=pk_7a3afe7fd31b450693dc69be9b7622d6`;
               await new Promise((resolve) =>
                 fetch(lastPrice)
                   .then((res) => res.json())
@@ -432,7 +432,7 @@ class Dashboard extends React.Component {
     chartData1 = [];
     chartData2 = [];
     const gainers =
-      "https://cloud.iexapis.com/stable/stock/market/list/gainers?token=pk_95c4a35c80274553987b93e74bb825d7";
+      "https://cloud.iexapis.com/stable/stock/market/list/gainers?token=pk_7a3afe7fd31b450693dc69be9b7622d6";
     fetch(gainers)
       .then((res) => res.json())
       .then((result) => {
@@ -448,7 +448,7 @@ class Dashboard extends React.Component {
               let nul = 0;
               const stockApi = `https://cloud.iexapis.com/stable/stock/${
                 toCheckSymbols[i]
-              }/intraday-prices?token=pk_95c4a35c80274553987b93e74bb825d7`;
+              }/intraday-prices?token=pk_7a3afe7fd31b450693dc69be9b7622d6`;
               fetch(stockApi)
                 .then((res) => res.json())
                 .then((result) => {
