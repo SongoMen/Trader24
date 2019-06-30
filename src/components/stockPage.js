@@ -7,6 +7,7 @@ import $ from "jquery";
 
 defaults.global.defaultFontStyle = "Bold";
 defaults.global.defaultFontFamily = "Quicksand";
+defaults.global.animation.duration = 200;
 
 const db = firebase.firestore();
 var options = {
@@ -138,6 +139,7 @@ export default class stockPage extends React.Component {
     this.props.history.push(path);
   }
   getMinutesChart(minutes) {
+    chartLength = 0;
     const stockApi = `https://cloud.iexapis.com/stable/stock/${
       this.props.symbol
     }/intraday-prices?token=pk_95c4a35c80274553987b93e74bb825d7`;
@@ -192,6 +194,7 @@ export default class stockPage extends React.Component {
     }
   }
   changeChartMinutes(minutes) {
+    chartLength = 0;
     chartData1 = [];
     const stockApi = `https://cloud.iexapis.com/stable/stock/${
       this.props.symbol
@@ -215,6 +218,7 @@ export default class stockPage extends React.Component {
       });
   }
   getYTDChart() {
+    chartLength = 0;
     chartData1 = [];
     const stockApi = `https://cloud.iexapis.com/stable/stock/${
       this.props.symbol
@@ -268,8 +272,6 @@ export default class stockPage extends React.Component {
         console.log("Error getting document:", error);
       });
     this.getYTDChart();
-  }
-  render() {
     const lastPrice = `https://cloud.iexapis.com/stable/stock/${
       this.props.symbol
     }/price?token=pk_95c4a35c80274553987b93e74bb825d7`;
@@ -280,6 +282,8 @@ export default class stockPage extends React.Component {
           lastPrice: result.toFixed(2)
         });
       });
+  }
+  render() {
     const {symbol} = this.props;
     let user = firebase.auth().currentUser.displayName;
     return (
@@ -484,7 +488,14 @@ export default class stockPage extends React.Component {
                     >
                       YTD
                     </h6>
-                    <h6>30 minutes</h6>
+                    <h6
+                      onClick={() => {
+                        this.changeChartMinutes(30);
+                        console.log(this.className);
+                      }}
+                    >
+                      30 minutes
+                    </h6>
                     <h6
                       onClick={() => {
                         this.changeChartMinutes(5);
