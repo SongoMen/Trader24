@@ -1,40 +1,40 @@
 .stock
     width: 100%
     height: 100%
-.stock__chart
-    width: 80%
-    height: 100%
-    padding: 20px
-    position: relative
-
 .stockPage
     width: 97%
     padding: 50px
     display: flex
     flex-direction: column 
-
 .stockPage__top
     display: flex
     width: 100%
     height: 50%
-    .stockPage__timers
-        position: absolute
-        top: -20px
-        right: 20px
-        color: white
-        transition: all .5s
-        cursor: pointer
-        display: flex
-        h6
-            padding: 5px 10px
-            border-radius: 10px
-            background-color: $elements-color
-            margin: 0 3px
+    .stock__chart
+        width: 80%
+        height: 80%
+        padding: 20px
+        position: relative
+        .stock__info
+            width: 100%
+        .stockPage__timers
+            position: absolute
+            top: -20px
+            right: 20px
+            color: white
             transition: all .5s
-            &:hover
+            cursor: pointer
+            display: flex
+            h6
+                padding: 5px 10px
+                border-radius: 10px
+                background-color: $elements-color
+                margin: 0 3px
+                transition: all .5s
+                &:hover
+                    background-color: $inactive-color
+            .active
                 background-color: $inactive-color
-        .active
-            background-color: $inactive-color
     
 .stockPage__trade
     width: 20%

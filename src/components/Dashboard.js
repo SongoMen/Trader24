@@ -79,18 +79,6 @@ let portfolioValue = [];
 let portfolioDifference = [];
 let portfolioColor = [];
 
-(() => {
-  fetch(
-    "https://cloud.iexapis.com/stable/ref-data/symbols?token=pk_7a3afe7fd31b450693dc69be9b7622d6"
-  )
-    .then((res) => res.json())
-    .then((result) => {
-      allSymbols = result.map((val) => {
-        return val;
-      });
-    });
-})();
-
 class Dashboard extends React.Component {
   constructor(props) {
     super(props);
@@ -429,6 +417,15 @@ class Dashboard extends React.Component {
     return arr.indexOf(val) > -1;
   }
   componentDidMount() {
+    fetch(
+      "https://cloud.iexapis.com/stable/ref-data/symbols?token=pk_7a3afe7fd31b450693dc69be9b7622d6"
+    )
+      .then((res) => res.json())
+      .then((result) => {
+        allSymbols = result.map((val) => {
+          return val;
+        });
+      });
     chartData1 = [];
     chartData2 = [];
     const gainers =

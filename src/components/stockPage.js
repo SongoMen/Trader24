@@ -68,17 +68,8 @@ let chartData1 = [];
 let labels = [];
 let allSymbols = [];
 let closePrice;
-(() => {
-  fetch(
-    "https://cloud.iexapis.com/stable/ref-data/symbols?token=pk_7a3afe7fd31b450693dc69be9b7622d6"
-  )
-    .then((res) => res.json())
-    .then((result) => {
-      allSymbols = result.map((val) => {
-        return val;
-      });
-    });
-})();
+let stockData = {};
+
 
 export default class stockPage extends React.Component {
   constructor(props) {
@@ -229,8 +220,7 @@ export default class stockPage extends React.Component {
           });
         }, 1000);
       });
-      options.annotation = "";
-
+    options.annotation = "";
   }
   getOneYearChart() {
     labels = [];
@@ -255,7 +245,7 @@ export default class stockPage extends React.Component {
           });
         }, 1000);
       });
-      options.annotation = ""
+    options.annotation = "";
   }
   getTwoYearChart() {
     labels = [];
@@ -280,7 +270,7 @@ export default class stockPage extends React.Component {
           });
         }, 1000);
       });
-      options.annotation = ""
+    options.annotation = "";
   }
   getOneMonthChart() {
     labels = [];
@@ -306,9 +296,34 @@ export default class stockPage extends React.Component {
           });
         }, 1000);
       });
-      options.annotation = ""
+    options.annotation = "";
   }
   componentDidMount() {
+    fetch(
+      "https://cloud.iexapis.com/stable/ref-data/symbols?token=pk_7a3afe7fd31b450693dc69be9b7622d6"
+    )
+      .then((res) => res.json())
+      .then((result) => {
+        allSymbols = result.map((val) => {
+          return val;
+        });
+      });
+    fetch(
+      "https://cloud.iexapis.com/beta/stock/AMD/realtime-update?token=pk_7a3afe7fd31b450693dc69be9b7622d6&last=3&changeFromClose=true"
+    )
+      .then((res) => res.json())
+      .then((result) => {
+        stockData.name = result.quote.companyName
+        stockData.previousClose = result.quote.previousClose
+        stockData.latestTime = result.quote.latestTime
+        stockData.extendedPrice = result.quote.extendedPrice
+        stockData.extendedChange = result.quote.extendedChange
+        stockData.latestPrice = result.quote.latestPrice
+        stockData.change = result.quote.change
+        stockData.changePercent = result.quote.changePercent
+
+        console.log(stockData)
+      });
     document.title = "Trader24 - " + this.props.symbol;
     fetch("https://financialmodelingprep.com/api/v3/is-the-market-open")
       .then((res) => res.json())
@@ -545,6 +560,7 @@ export default class stockPage extends React.Component {
             {this.state.loaded ? (
               <div className="stockPage__top">
                 <div className="stock__chart">
+                  <div className="stock__info">{stockData.companyName}</div>
                   <Line data={this.data1} options={options} />
                   <div className="stockPage__timers">
                     <h6
