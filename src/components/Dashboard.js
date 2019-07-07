@@ -456,7 +456,7 @@ class Dashboard extends React.Component {
                     if (result[b].average === null) nul++;
                     else good++;
                   }
-                  if (nul < 200 && stockSymbols.length < 3 && good > 2)
+                  if (nul < 350 && stockSymbols.length < 3 && good > 2)
                     stockSymbols.push(toCheckSymbols[i]);
                 });
             }
@@ -525,10 +525,12 @@ class Dashboard extends React.Component {
       this.setState({
         loader1: true
       });
+      document.getElementById("chartFirst").href = stockSymbols[0];
     } else {
       this.setState({
         loader1: false
       });
+      document.getElementById("chartFirst").href = "#";
     }
     if (
       stockChanges[1] !== undefined &&
@@ -538,10 +540,12 @@ class Dashboard extends React.Component {
       this.setState({
         loader2: true
       });
+      document.getElementById("chartSecond").href = stockSymbols[1];
     } else {
       this.setState({
         loader2: false
       });
+      document.getElementById("chartSecond").href = "#";
     }
   }
   render() {
@@ -786,83 +790,87 @@ class Dashboard extends React.Component {
                     </div>
                   </div>
                   <div className="panel__topCharts" style={{display: "flex"}}>
-                    <div className="stockChart">
-                      {this.state.loader1 === "" && (
-                        <ul className="loader">
-                          <li />
-                          <li />
-                          <li />
-                        </ul>
-                      )}
-                      {this.state.loader1 === false && (
-                        <h5>Couldn't load chart try again in few minutes</h5>
-                      )}
-                      {this.state.loader1 === true && (
-                        <div className="stockChart__chart">
-                          <Line data={this.data1} options={options} />
-                        </div>
-                      )}
-                      {this.state.loader1 ? (
-                        <div className="stockChart__info">
-                          <h3 className="stockChart__name">
-                            {stockSymbols[0]}
-                          </h3>
-                          <div className="stockChart__price-info">
-                            <h4
-                              className="stockChart__change"
-                              style={{color: changesColors[0]}}
-                            >
-                              {stockChanges[0]}%
-                            </h4>
-                            <h3 className="stockChart__price">
-                              ${stockPrices[0]}
-                            </h3>
+                    <a id="chartFirst" href="/" className="chartLink">
+                      <div className="stockChart">
+                        {this.state.loader1 === "" && (
+                          <ul className="loader">
+                            <li />
+                            <li />
+                            <li />
+                          </ul>
+                        )}
+                        {this.state.loader1 === false && (
+                          <h5>Couldn't load chart try again in few minutes</h5>
+                        )}
+                        {this.state.loader1 === true && (
+                          <div className="stockChart__chart">
+                            <Line data={this.data1} options={options} />
                           </div>
-                        </div>
-                      ) : (
-                        <div />
-                      )}
-                    </div>
-                    <div className="stockChart">
-                      {this.state.loader2 === "" ? (
-                        <ul className="loader">
-                          <li />
-                          <li />
-                          <li />
-                        </ul>
-                      ) : (
-                        <div />
-                      )}
-                      {this.state.loader2 === false && (
-                        <h5>Couldn't load chart try again in few minutes</h5>
-                      )}
-                      {this.state.loader2 === true && (
-                        <div
-                          onClick={() => this.routeChange(stockSymbols[1])}
-                          className="stockChart__chart"
-                        >
-                          <Line data={this.data2} options={options} />
-                        </div>
-                      )}
-                      {this.state.loader2 && (
-                        <div className="stockChart__info">
-                          <h3 className="stockChart__name">
-                            {stockSymbols[1]}
-                          </h3>
-                          <div className="stockChart__price-info">
-                            <h4
-                              className="stockChart__change"
-                              style={{color: changesColors[1]}}
-                            >
-                              {stockChanges[1]}%
-                            </h4>
-                            <h3 className="stockChart__price">
-                              ${stockPrices[1]}
+                        )}
+                        {this.state.loader1 ? (
+                          <div className="stockChart__info">
+                            <h3 className="stockChart__name">
+                              {stockSymbols[0]}
                             </h3>
+                            <div className="stockChart__price-info">
+                              <h4
+                                className="stockChart__change"
+                                style={{color: changesColors[0]}}
+                              >
+                                {stockChanges[0]}%
+                              </h4>
+                              <h3 className="stockChart__price">
+                                ${stockPrices[0]}
+                              </h3>
+                            </div>
                           </div>
-                        </div>
-                      )}
-                    </div>
+                        ) : (
+                          <div />
+                        )}
+                      </div>
+                    </a>
+                    <a id="chartSecond" href="/" className="chartLink">
+                      <div className="stockChart">
+                        {this.state.loader2 === "" ? (
+                          <ul className="loader">
+                            <li />
+                            <li />
+                            <li />
+                          </ul>
+                        ) : (
+                          <div />
+                        )}
+                        {this.state.loader2 === false && (
+                          <h5>Couldn't load chart try again in few minutes</h5>
+                        )}
+                        {this.state.loader2 === true && (
+                          <div
+                            onClick={() => this.routeChange(stockSymbols[1])}
+                            className="stockChart__chart"
+                          >
+                            <Line data={this.data2} options={options} />
+                          </div>
+                        )}
+                        {this.state.loader2 && (
+                          <div className="stockChart__info">
+                            <h3 className="stockChart__name">
+                              {stockSymbols[1]}
+                            </h3>
+                            <div className="stockChart__price-info">
+                              <h4
+                                className="stockChart__change"
+                                style={{color: changesColors[1]}}
+                              >
+                                {stockChanges[1]}%
+                              </h4>
+                              <h3 className="stockChart__price">
+                                ${stockPrices[1]}
+                              </h3>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </a>
                     <div className="panel__portfolio-section">
                       <div
                         style={{

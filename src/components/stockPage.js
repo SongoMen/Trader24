@@ -100,15 +100,6 @@ export default class stockPage extends React.Component {
         closePrice = result.quote.previousClose;
       });
     this.data1 = (canvas) => {
-      function labelGen(length) {
-        let result = "";
-        let b = 0;
-        for (let i = length; i >= 1; i--) {
-          b++;
-          result = result + b + ",";
-        }
-        return result.split(",");
-      }
       const ctx = canvas.getContext("2d");
       const gradient = ctx.createLinearGradient(0, 0, 600, 10);
       gradient.addColorStop(0, "#7c83ff");
@@ -214,7 +205,6 @@ export default class stockPage extends React.Component {
         }, 1000);
       });
     options.annotation = anno;
-    console.log(options);
   }
   getYTDChart() {
     labels = [];
@@ -239,6 +229,8 @@ export default class stockPage extends React.Component {
           });
         }, 1000);
       });
+      options.annotation = "";
+
   }
   getOneYearChart() {
     labels = [];
@@ -255,7 +247,6 @@ export default class stockPage extends React.Component {
             labels.push(result.chart[i].label);
           }
         }
-        console.log(chartData1);
       })
       .then(() => {
         setTimeout(() => {
@@ -264,6 +255,7 @@ export default class stockPage extends React.Component {
           });
         }, 1000);
       });
+      options.annotation = ""
   }
   getTwoYearChart() {
     labels = [];
@@ -280,7 +272,6 @@ export default class stockPage extends React.Component {
             labels.push(result.chart[i].label);
           }
         }
-        console.log(chartData1);
       })
       .then(() => {
         setTimeout(() => {
@@ -289,6 +280,7 @@ export default class stockPage extends React.Component {
           });
         }, 1000);
       });
+      options.annotation = ""
   }
   getOneMonthChart() {
     labels = [];
@@ -314,6 +306,7 @@ export default class stockPage extends React.Component {
           });
         }, 1000);
       });
+      options.annotation = ""
   }
   componentDidMount() {
     document.title = "Trader24 - " + this.props.symbol;
