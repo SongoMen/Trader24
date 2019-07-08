@@ -227,7 +227,6 @@ class Dashboard extends React.Component {
       })
       .then(() => {
         setTimeout(() => {
-          console.log(stockListTickers);
           for (let i = 0; i < 9; i++) {
             const percentageChange = `https://cloud.iexapis.com/stable/stock/${
               stockListTickers[i]
@@ -254,14 +253,14 @@ class Dashboard extends React.Component {
                 stockListChange[i] = stockListChange[i] + "%";
               });
           }
-        }, 2500);
+        }, 2000);
       })
       .then(() => {
         setTimeout(() => {
           this.setState({
             loader3: true
           });
-        }, 3500);
+        }, 2500);
       });
   }
   routeChange(path) {
@@ -456,12 +455,12 @@ class Dashboard extends React.Component {
               1
             );
           }
-        }, 2500);
+        }, 1500);
       })
       .then(() => {
         setTimeout(() => {
           this.checkCharts();
-        }, 3500);
+        }, 2500);
       });
     document.title = "Trader24 - Dashboard";
     // GET CHARTS
@@ -518,6 +517,10 @@ class Dashboard extends React.Component {
       });
       document.getElementById("chartSecond").href = "#";
     }
+    console.log(stockChanges)
+    console.log(stockPrices)
+    console.log("data1: ",chartData1)
+    console.log("data2: ",chartData2)
   }
   render() {
     let user = firebase.auth().currentUser.displayName;
