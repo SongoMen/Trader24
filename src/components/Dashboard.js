@@ -260,7 +260,7 @@ class Dashboard extends React.Component {
           this.setState({
             loader3: true
           });
-        }, 2500);
+        }, 3000);
       });
   }
   routeChange(path) {
