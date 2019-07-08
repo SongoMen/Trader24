@@ -57,7 +57,6 @@ let chartData2 = [];
 
 let allSymbols = [];
 
-let toCheckSymbols = [];
 let stockSymbols = [];
 let stockPrices = [];
 let stockChanges = [];
@@ -164,7 +163,9 @@ class Dashboard extends React.Component {
     };
   }
   getStockInfo(symbol, dataChart, changeStash, priceStash, num) {
-    const stockApi = `https://cloud.iexapis.com/stable/stock/${symbol}/intraday-prices?token=pk_7a3afe7fd31b450693dc69be9b7622d6`;
+    const stockApi = `https://cloud.iexapis.com/beta/stock/${
+      symbol
+    }/batch?token=pk_7a3afe7fd31b450693dc69be9b7622d6&types=chart,quote&range=1d`;
     const lastPrice = `https://cloud.iexapis.com/stable/stock/${symbol}/price?token=pk_7a3afe7fd31b450693dc69be9b7622d6`;
     const percentageChange = `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_7a3afe7fd31b450693dc69be9b7622d6`;
     let error;
@@ -185,9 +186,9 @@ class Dashboard extends React.Component {
     fetch(stockApi)
       .then((res) => res.json())
       .then((result) => {
-        for (let i = 0; i < result.length - 1; i++) {
-          if (result[i].average !== null)
-            dataChart.push(parseFloat(result[i].average).toFixed(2));
+        for (let i = 0; i < result.chart.length - 1; i++) {
+          if (result.chart[i].average !== null)
+            dataChart.push(parseFloat(result.chart[i].average).toFixed(2));
         }
       });
   }
@@ -433,36 +434,9 @@ class Dashboard extends React.Component {
     fetch(gainers)
       .then((res) => res.json())
       .then((result) => {
-        for (let i = 0; i < result.length; i++) {
-          toCheckSymbols.push(result[i].symbol);
+        for (let i = 0; i < 2; i++) {
+          stockSymbols.push(result[i].symbol);
         }
-      })
-      .then(() => {
-        setTimeout(() => {
-          if (toCheckSymbols.length > 2) {
-            for (let i = 0; i < toCheckSymbols.length - 5; i++) {
-              let good = 0;
-              let nul = 0;
-              const stockApi = `https://cloud.iexapis.com/stable/stock/${
-                toCheckSymbols[i]
-              }/intraday-prices?token=pk_7a3afe7fd31b450693dc69be9b7622d6`;
-              fetch(stockApi)
-                .then((res) => res.json())
-                .then((result) => {
-                  for (let b = 0; b < result.length - 1; b++) {
-                    if (result[b].average === null) nul++;
-                    else good++;
-                  }
-                  if (nul < 350 && stockSymbols.length < 3 && good > 2)
-                    stockSymbols.push(toCheckSymbols[i]);
-                });
-            }
-          } else {
-            stockSymbols = toCheckSymbols.map((val) => {
-              return val;
-            });
-          }
-        }, 500);
       })
       .then(() => {
         setTimeout(() => {
@@ -482,12 +456,12 @@ class Dashboard extends React.Component {
               1
             );
           }
-        }, 3000);
+        }, 2500);
       })
       .then(() => {
         setTimeout(() => {
           this.checkCharts();
-        }, 4000);
+        }, 3500);
       });
     document.title = "Trader24 - Dashboard";
     // GET CHARTS
@@ -783,7 +757,7 @@ class Dashboard extends React.Component {
                           <path d="M314 0c-29,0 -29,44 0,44l23 0 -113 112 -92 -92c-9,-8 -22,-8 -31,0l-94 95c-21,20 10,51 30,31l79 -79 92 92c9,8 23,8 31,0l128 -129 0 23c0,29 44,29 44,0l0 -75c0,-12 -10,-22 -22,-22l-75 0z" />
                         </g>
                       </svg>
-                      <h2>Gainers</h2>
+                      <h3>Gainers</h3>
                     </div>
                   </div>
                   <div className="panel__topCharts" style={{display: "flex"}}>
@@ -936,7 +910,7 @@ class Dashboard extends React.Component {
                             </g>
                           </g>
                         </svg>{" "}
-                        <h2>Portfolio</h2>
+                        <h3>Portfolio</h3>
                       </div>
                       <div className="panel__portfolio" id="portfolio">
                         {this.state.portfolioLoader === "" && (

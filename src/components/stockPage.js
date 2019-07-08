@@ -1,8 +1,8 @@
 import React from "react";
-import {logout} from "./auth";
+import { logout } from "./auth";
 import firebase from "firebase/app";
-import {Line} from "react-chartjs-2";
-import {defaults} from "react-chartjs-2";
+import { Line } from "react-chartjs-2";
+import { defaults } from "react-chartjs-2";
 import $ from "jquery";
 import "chartjs-plugin-annotation";
 
@@ -70,7 +70,6 @@ let allSymbols = [];
 let closePrice;
 let stockData = {};
 
-
 export default class stockPage extends React.Component {
   constructor(props) {
     super(props);
@@ -78,19 +77,21 @@ export default class stockPage extends React.Component {
       loaded: "",
       funds: "",
       accountValue: "",
-      lastPrice: "",
-      fundsLoader: ""
+      fundsLoader: "",
+      changeColor: "",
+      extendedColor: "",
+      marketStatus: ""
     };
     fetch(
       `https://cloud.iexapis.com/beta/stock/${
         this.props.symbol
       }/batch?token=pk_7a3afe7fd31b450693dc69be9b7622d6&types=chart,quote&range=1d&changeFromClose=true`
     )
-      .then((res) => res.json())
-      .then((result) => {
+      .then(res => res.json())
+      .then(result => {
         closePrice = result.quote.previousClose;
       });
-    this.data1 = (canvas) => {
+    this.data1 = canvas => {
       const ctx = canvas.getContext("2d");
       const gradient = ctx.createLinearGradient(0, 0, 600, 10);
       gradient.addColorStop(0, "#7c83ff");
@@ -179,8 +180,8 @@ export default class stockPage extends React.Component {
       this.props.symbol
     }/batch?token=pk_7a3afe7fd31b450693dc69be9b7622d6&types=chart,quote&range=1d&changeFromClose=true`;
     fetch(stockApi)
-      .then((res) => res.json())
-      .then((result) => {
+      .then(res => res.json())
+      .then(result => {
         for (let i = 0; i < result.chart.length; i++) {
           if (result.chart[i].average !== null) {
             chartData1.push(result.chart[i].average.toFixed(2));
@@ -204,8 +205,8 @@ export default class stockPage extends React.Component {
       this.props.symbol
     }/batch?token=pk_7a3afe7fd31b450693dc69be9b7622d6&types=chart,quote&range=ytd`;
     fetch(stockApi)
-      .then((res) => res.json())
-      .then((result) => {
+      .then(res => res.json())
+      .then(result => {
         for (let i = 0; i < result.chart.length; i++) {
           if (result.chart[i].average !== null) {
             chartData1.push(result.chart[i].close.toFixed(2));
@@ -229,8 +230,8 @@ export default class stockPage extends React.Component {
       this.props.symbol
     }/batch?token=pk_7a3afe7fd31b450693dc69be9b7622d6&types=chart,quote&range=1y`;
     fetch(stockApi)
-      .then((res) => res.json())
-      .then((result) => {
+      .then(res => res.json())
+      .then(result => {
         for (let i = 0; i < result.chart.length; i++) {
           if (result.chart[i].average !== null) {
             chartData1.push(result.chart[i].close.toFixed(2));
@@ -254,8 +255,8 @@ export default class stockPage extends React.Component {
       this.props.symbol
     }/batch?token=pk_7a3afe7fd31b450693dc69be9b7622d6&types=chart,quote&range=2y`;
     fetch(stockApi)
-      .then((res) => res.json())
-      .then((result) => {
+      .then(res => res.json())
+      .then(result => {
         for (let i = 0; i < result.chart.length; i++) {
           if (result.chart[i].average !== null) {
             chartData1.push(result.chart[i].close.toFixed(2));
@@ -279,8 +280,8 @@ export default class stockPage extends React.Component {
       this.props.symbol
     }/batch?token=pk_7a3afe7fd31b450693dc69be9b7622d6&types=chart,quote&range=1m`;
     fetch(stockApi)
-      .then((res) => res.json())
-      .then((result) => {
+      .then(res => res.json())
+      .then(result => {
         for (let i = 0; i < result.chart.length; i++) {
           if (result.chart[i].average !== null) {
             chartData1.push(result.chart[i].close.toFixed(2));
@@ -302,35 +303,39 @@ export default class stockPage extends React.Component {
     fetch(
       "https://cloud.iexapis.com/stable/ref-data/symbols?token=pk_7a3afe7fd31b450693dc69be9b7622d6"
     )
-      .then((res) => res.json())
-      .then((result) => {
-        allSymbols = result.map((val) => {
+      .then(res => res.json())
+      .then(result => {
+        allSymbols = result.map(val => {
           return val;
         });
       });
     fetch(
-      "https://cloud.iexapis.com/beta/stock/AMD/realtime-update?token=pk_7a3afe7fd31b450693dc69be9b7622d6&last=3&changeFromClose=true"
+      `https://cloud.iexapis.com/beta/stock/${
+        this.props.symbol
+      }/realtime-update?token=pk_7a3afe7fd31b450693dc69be9b7622d6&last=3&changeFromClose=true`
     )
-      .then((res) => res.json())
-      .then((result) => {
-        stockData.name = result.quote.companyName
-        stockData.previousClose = result.quote.previousClose
-        stockData.latestTime = result.quote.latestTime
-        stockData.extendedPrice = result.quote.extendedPrice
-        stockData.extendedChange = result.quote.extendedChange
-        stockData.latestPrice = result.quote.latestPrice
-        stockData.change = result.quote.change
-        stockData.changePercent = result.quote.changePercent
+      .then(res => res.json())
+      .then(result => {
+        stockData.name = result.quote.companyName;
+        stockData.previousClose = result.quote.previousClose;
+        stockData.latestTime = result.quote.latestTime;
+        stockData.extendedPrice = result.quote.extendedPrice;
+        stockData.extendedChange = result.quote.extendedChange.toFixed(2);
+        stockData.latestPrice = result.quote.latestPrice.toFixed(2);
+        stockData.change = result.quote.change;
+        stockData.changePercent = result.quote.changePercent;
 
-        console.log(stockData)
+        console.log(stockData);
       });
     document.title = "Trader24 - " + this.props.symbol;
     fetch("https://financialmodelingprep.com/api/v3/is-the-market-open")
-      .then((res) => res.json())
-      .then((result) => {
+      .then(res => res.json())
+      .then(result => {
         if (result.isTheStockMarketOpen)
           document.getElementById("panel__status").style.color = "#5efad7";
         else document.getElementById("panel__status").style.color = "#eb5887";
+        if (result.isTheStockMarketOpen) this.setState({ marketStatus: true });
+        else this.setState({ marketStatus: false });
         document.getElementById(
           "panel__status"
         ).innerHTML = result.isTheStockMarketOpen
@@ -342,7 +347,7 @@ export default class stockPage extends React.Component {
 
     docRef
       .get()
-      .then((doc) => {
+      .then(doc => {
         this.setState({
           funds: "$" + this.numberWithCommas(doc.data()["currentfunds"])
         });
@@ -354,23 +359,33 @@ export default class stockPage extends React.Component {
         console.log("Error getting document:", error);
       });
     this.getYTDChart();
-    const lastPrice = `https://cloud.iexapis.com/stable/stock/${
-      this.props.symbol
-    }/price?token=pk_7a3afe7fd31b450693dc69be9b7622d6`;
-    fetch(lastPrice)
-      .then((res) => res.json())
-      .then((result) => {
+    setTimeout(() => {
+      if (stockData.change > 0) {
         this.setState({
-          lastPrice: result.toFixed(2)
+          changeColor: "#66F9DA"
         });
-      });
+      } else {
+        this.setState({
+          changeColor: "#F45385"
+        });
+      }
+      if (stockData.extendedChange > 0) {
+        this.setState({
+          extendedColor: "#66F9DA"
+        });
+      } else {
+        this.setState({
+          extendedColor: "#F45385"
+        });
+      }
+    }, 1000);
   }
   render() {
-    const {symbol} = this.props;
+    const { symbol } = this.props;
     let user = firebase.auth().currentUser.displayName;
     return (
       <div className="stock">
-        <div style={{display: "flex", height: "100%"}}>
+        <div style={{ display: "flex", height: "100%" }}>
           <div className="leftbar">
             <img
               className="topbar__logo"
@@ -441,7 +456,11 @@ export default class stockPage extends React.Component {
             <div className="topbar">
               <div className="topbar__searchbar" id="topbar__searchbar">
                 <div
-                  style={{display: "flex", alignItems: "center", width: "100%"}}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    width: "100%"
+                  }}
                 >
                   <svg
                     enableBackground="new 0 0 250.313 250.313"
@@ -604,15 +623,48 @@ export default class stockPage extends React.Component {
                   </div>
                 </div>
                 <div className="stockPage__trade">
-                  <h5>Market Price:</h5>
-                  <h1>${this.state.lastPrice}</h1>
+                  <h4>{stockData.name}</h4>
+                  <div className="stockPage__trade-top">
+                    <h2>${stockData.latestPrice}</h2>
+                    <h6 style={{ color: this.state.changeColor }}>
+                      {stockData.change} (
+                      {stockData.changePercent / Math.pow(10, -2)}%)
+                    </h6>
+                  </div>
+                  {!this.state.marketStatus && (
+                    <h6>
+                      Extended Hours:{" "}
+                      <span style={{ color: this.state.extendedColor }}>
+                        ${stockData.extendedPrice} (
+                        {(stockData.extendedChange / Math.pow(10, -2)).toFixed(
+                          2
+                        )}
+                        %)
+                      </span>
+                    </h6>
+                  )}
                   <h5>Buy {this.props.symbol}</h5>
                 </div>
               </div>
             ) : (
               <div />
             )}
-            <div className="stockPage__keyStats" />
+            <div className="stockPage__keyStats">
+              <h3>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  xmlnsXlink="http://www.w3.org/1999/xlink"
+                  version="1.1"
+                  x="0px"
+                  y="0px"
+                  viewBox="0 0 100 125"
+                  xmlSpace="preserve"
+                >
+                  <path d="M95.3,25.8c0,0-3.1-14.8-16.5-20c-6.3-2.4-17.8-3.6-29.1-3.7C38.3,2.1,26.8,3.3,20.5,5.7C7.1,10.9,4,25.8,4,25.8  c-2,8.4-2.7,16.9-2.6,24.4C1.4,57.7,2,66.3,4,74.6c0,0,3.1,14.8,16.5,20c6.3,2.4,17.8,3.6,29.1,3.7c11.3-0.1,22.8-1.2,29.1-3.7  c13.4-5.2,16.5-20,16.5-20c2-8.4,2.7-16.9,2.6-24.4C97.9,42.6,97.3,34.1,95.3,25.8z M69,51.5c0,12.8-9.5,23.3-21.1,23.3  c-12.8,0-23.3-10.4-23.3-23.3c0-11.7,10.4-21.1,23.3-21.1h0.6v20.5l20.5,0V51.5z M54.3,45.3V25.6c10.9,0,19.8,8.9,19.8,19.8  L54.3,45.3z" />
+                </svg>
+                Key Informations
+              </h3>
+            </div>
           </div>
         </div>
       </div>
