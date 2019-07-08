@@ -1,6 +1,7 @@
 import * as firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
+import "firebase/performance";
 
 const config = {
   apiKey: "AIzaSyDm7zrnUA3hk0kPzFhTXaVN5xGuB-3fbJs",
@@ -16,6 +17,7 @@ firebase.initializeApp(config)
 export const googleProvider = new firebase.auth.GoogleAuthProvider();
 export const firebaseAuth = firebase.auth
 export const db = firebase.firestore();
+export const perf = firebase.performance();
 
 export function loginWithGoogle() {
   return firebaseAuth().signInWithRedirect(googleProvider);
