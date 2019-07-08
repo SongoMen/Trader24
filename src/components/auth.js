@@ -9,7 +9,8 @@ const config = {
   databaseURL: "https://stocks-af048.firebaseio.com",
   projectId: "stocks-af048",
   storageBucket: "stocks-af048.appspot.com",
-  messagingSenderId: "120406405318"
+  messagingSenderId: "120406405318",
+  appId: "1:120406405318:web:7edf6b661ae6e26b"
 };
 
 firebase.initializeApp(config)
