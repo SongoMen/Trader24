@@ -69,6 +69,8 @@ let labels = [];
 let allSymbols = [];
 let closePrice;
 let stockData = {};
+let keyData = [];
+let keyDataLabel = [];
 
 export default class stockPage extends React.Component {
   constructor(props) {
@@ -80,12 +82,13 @@ export default class stockPage extends React.Component {
       fundsLoader: "",
       changeColor: "",
       extendedColor: "",
-      marketStatus: ""
+      marketStatus: "",
+      valid: ""
     };
     fetch(
       `https://cloud.iexapis.com/beta/stock/${
         this.props.symbol
-      }/batch?token=pk_7a3afe7fd31b450693dc69be9b7622d6&types=chart,quote&range=1d&changeFromClose=true`
+      }/batch?token=pk_95c4a35c80274553987b93e74bb825d7&types=chart,quote&range=1d&changeFromClose=true`
     )
       .then(res => res.json())
       .then(result => {
@@ -178,7 +181,7 @@ export default class stockPage extends React.Component {
     chartData1 = [];
     const stockApi = `https://cloud.iexapis.com/beta/stock/${
       this.props.symbol
-    }/batch?token=pk_7a3afe7fd31b450693dc69be9b7622d6&types=chart,quote&range=1d&changeFromClose=true`;
+    }/batch?token=pk_95c4a35c80274553987b93e74bb825d7&types=chart,quote&range=1d&changeFromClose=true`;
     fetch(stockApi)
       .then(res => res.json())
       .then(result => {
@@ -203,7 +206,7 @@ export default class stockPage extends React.Component {
     chartData1 = [];
     const stockApi = `https://cloud.iexapis.com/beta/stock/${
       this.props.symbol
-    }/batch?token=pk_7a3afe7fd31b450693dc69be9b7622d6&types=chart,quote&range=ytd`;
+    }/batch?token=pk_95c4a35c80274553987b93e74bb825d7&types=chart,quote&range=ytd`;
     fetch(stockApi)
       .then(res => res.json())
       .then(result => {
@@ -228,7 +231,7 @@ export default class stockPage extends React.Component {
     chartData1 = [];
     const stockApi = `https://cloud.iexapis.com/beta/stock/${
       this.props.symbol
-    }/batch?token=pk_7a3afe7fd31b450693dc69be9b7622d6&types=chart,quote&range=1y`;
+    }/batch?token=pk_95c4a35c80274553987b93e74bb825d7&types=chart,quote&range=1y`;
     fetch(stockApi)
       .then(res => res.json())
       .then(result => {
@@ -253,7 +256,7 @@ export default class stockPage extends React.Component {
     chartData1 = [];
     const stockApi = `https://cloud.iexapis.com/beta/stock/${
       this.props.symbol
-    }/batch?token=pk_7a3afe7fd31b450693dc69be9b7622d6&types=chart,quote&range=2y`;
+    }/batch?token=pk_95c4a35c80274553987b93e74bb825d7&types=chart,quote&range=2y`;
     fetch(stockApi)
       .then(res => res.json())
       .then(result => {
@@ -278,7 +281,7 @@ export default class stockPage extends React.Component {
     chartData1 = [];
     const stockApi = `https://cloud.iexapis.com/beta/stock/${
       this.props.symbol
-    }/batch?token=pk_7a3afe7fd31b450693dc69be9b7622d6&types=chart,quote&range=1m`;
+    }/batch?token=pk_95c4a35c80274553987b93e74bb825d7&types=chart,quote&range=1m`;
     fetch(stockApi)
       .then(res => res.json())
       .then(result => {
@@ -299,9 +302,48 @@ export default class stockPage extends React.Component {
       });
     options.annotation = "";
   }
+  abbrNum(number, decPlaces) {
+    // 2 decimal places => 100, 3 => 1000, etc
+    decPlaces = Math.pow(10, decPlaces);
+
+    // Enumerate number abbreviations
+    var abbrev = ["k", "m", "b", "t"];
+
+    // Go through the array backwards, so we do the largest first
+    for (var i = abbrev.length - 1; i >= 0; i--) {
+      // Convert array index to "1000", "1000000", etc
+      var size = Math.pow(10, (i + 1) * 3);
+
+      // If the number is bigger or equal do the abbreviation
+      if (size <= number) {
+        // Here, we multiply by decPlaces, round, and then divide by decPlaces.
+        // This gives us nice rounding to a particular decimal place.
+        number = Math.round((number * decPlaces) / size) / decPlaces;
+
+        // Handle special case where we round up to the next abbreviation
+        if (number === 1000 && i < abbrev.length - 1) {
+          number = 1;
+          i++;
+        }
+
+        // Add the letter for the abbreviation
+        number += abbrev[i];
+
+        // We are done... stop
+        break;
+      }
+    }
+
+    return number;
+  }
+  isInArray(arr, val) {
+    return arr.indexOf(val) > -1;
+  }
   componentDidMount() {
+    if (this.isInArray(this.props.symbol)) this.setState({ valid: true });
+    else this.setState({ valid: false });
     fetch(
-      "https://cloud.iexapis.com/stable/ref-data/symbols?token=pk_7a3afe7fd31b450693dc69be9b7622d6"
+      "https://cloud.iexapis.com/stable/ref-data/symbols?token=pk_95c4a35c80274553987b93e74bb825d7"
     )
       .then(res => res.json())
       .then(result => {
@@ -312,7 +354,7 @@ export default class stockPage extends React.Component {
     fetch(
       `https://cloud.iexapis.com/beta/stock/${
         this.props.symbol
-      }/realtime-update?token=pk_7a3afe7fd31b450693dc69be9b7622d6&last=3&changeFromClose=true`
+      }/realtime-update?token=pk_95c4a35c80274553987b93e74bb825d7&last=3&changeFromClose=true`
     )
       .then(res => res.json())
       .then(result => {
@@ -323,9 +365,27 @@ export default class stockPage extends React.Component {
         stockData.extendedChange = result.quote.extendedChange.toFixed(2);
         stockData.latestPrice = result.quote.latestPrice.toFixed(2);
         stockData.change = result.quote.change;
-        stockData.changePercent = result.quote.changePercent;
+        stockData.changePercent = (
+          result.quote.changePercent / Math.pow(10, -2)
+        ).toFixed(2);
+        keyData[0] = this.abbrNum(result.quote.marketCap, 2);
+        keyDataLabel[0] = "Market Cap: ";
+        keyData[1] = result.quote.peRatio;
+        keyDataLabel[1] = "PE Ratio: ";
 
-        console.log(stockData);
+        keyData[2] = result.quote.week52High;
+        keyDataLabel[2] = "52 week High: ";
+
+        keyData[3] = result.quote.week52Low;
+        keyDataLabel[3] = "52 Week Low: ";
+
+        keyData[4] = (result.quote.ytdChange / Math.pow(10, -2)).toFixed(2);
+        keyDataLabel[4] = "YTD Change: ";
+
+        keyData[5] = result.quote.latestVolume;
+        keyDataLabel[5] = "Volume: ";
+
+        console.log(keyData);
       });
     document.title = "Trader24 - " + this.props.symbol;
     fetch("https://financialmodelingprep.com/api/v3/is-the-market-open")
@@ -380,8 +440,54 @@ export default class stockPage extends React.Component {
       }
     }, 1000);
   }
+  changeFocus(option) {
+    if (option === 1) {
+      document.getElementById("1d").classList.add("active");
+      document.getElementById("1m").className = "";
+      document.getElementById("ytd").className = "";
+
+      document.getElementById("1y").className = "";
+
+      document.getElementById("2y").className = "";
+    }
+    if (option === 2) {
+      document.getElementById("1m").classList.add("active");
+      document.getElementById("1d").className = "";
+      document.getElementById("ytd").className = "";
+
+      document.getElementById("1y").className = "";
+
+      document.getElementById("2y").className = "";
+    }
+        if (option === 3) {
+      document.getElementById("1y").classList.add("active");
+      document.getElementById("1d").className = "";
+      document.getElementById("ytd").className = "";
+
+      document.getElementById("1m").className = "";
+
+      document.getElementById("2y").className = "";
+    }
+    if (option === 4) {
+      document.getElementById("2y").classList.add("active");
+      document.getElementById("1d").className = "";
+      document.getElementById("ytd").className = "";
+
+      document.getElementById("1m").className = "";
+
+      document.getElementById("1y").className = "";
+    }
+    if (option === 5) {
+      document.getElementById("ytd").classList.add("active");
+      document.getElementById("1d").className = "";
+      document.getElementById("2y").className = "";
+
+      document.getElementById("1m").className = "";
+
+      document.getElementById("1y").className = "";
+    }
+  }
   render() {
-    const { symbol } = this.props;
     let user = firebase.auth().currentUser.displayName;
     return (
       <div className="stock">
@@ -393,7 +499,7 @@ export default class stockPage extends React.Component {
               alt="logo"
             />
             <ul className="leftbar__menu">
-              <li onClick={() => this.routeChange("dashboard")}>
+              <li onClick={() => this.routeChange("/dashboard")}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   xmlnsXlink="http://www.w3.org/1999/xlink"
@@ -451,7 +557,7 @@ export default class stockPage extends React.Component {
               <path d="m282.667969 448.007812h-85.335938c-8.832031 0-16-7.167968-16-16 0-8.832031 7.167969-16 16-16h85.335938c14.699219 0 26.664062-11.96875 26.664062-26.667968v-96c0-8.832032 7.167969-16 16-16s16 7.167968 16 16v96c0 32.363281-26.300781 58.667968-58.664062 58.667968zm0 0" />
             </svg>
           </div>
-          {symbol}
+
           <div className="stockPage">
             <div className="topbar">
               <div className="topbar__searchbar" id="topbar__searchbar">
@@ -583,38 +689,49 @@ export default class stockPage extends React.Component {
                   <Line data={this.data1} options={options} />
                   <div className="stockPage__timers">
                     <h6
+                      id="2y"
                       onClick={() => {
                         this.getTwoYearChart();
+                        this.changeFocus(4)
+
                       }}
                     >
                       2Y
                     </h6>
                     <h6
+                      id="1y"
                       onClick={() => {
                         this.getOneYearChart();
+                        this.changeFocus(3)
                       }}
                     >
                       1Y
                     </h6>
 
                     <h6
+                      id="ytd"
                       className="active"
-                      onClick={() => {
+                      onClick={()=> {
+                        this.classList = "active";
+                        this.changeFocus(5)
                         this.getYTDChart();
                       }}
                     >
                       YTD
                     </h6>
                     <h6
-                      onClick={() => {
+                      id="1m"
+                      onClick={function() {
+                        this.changeFocus(2);
                         this.getOneMonthChart();
-                        console.log(this.className);
-                      }}
+                      }.bind(this)}
                     >
                       1M
                     </h6>
                     <h6
+                      id="1d"
                       onClick={() => {
+                        this.changeFocus(1);
                         this.getOneDayChart();
                       }}
                     >
@@ -627,8 +744,7 @@ export default class stockPage extends React.Component {
                   <div className="stockPage__trade-top">
                     <h2>${stockData.latestPrice}</h2>
                     <h6 style={{ color: this.state.changeColor }}>
-                      {stockData.change} (
-                      {stockData.changePercent / Math.pow(10, -2)}%)
+                      {stockData.change} ({stockData.changePercent}%)
                     </h6>
                   </div>
                   {!this.state.marketStatus && (
@@ -664,6 +780,16 @@ export default class stockPage extends React.Component {
                 </svg>
                 Key Informations
               </h3>
+              <div className="data">
+                {keyData.map((val, index) => {
+                  return (
+                    <h4 key={index}>
+                      {keyDataLabel[index]}
+                      {val}
+                    </h4>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>

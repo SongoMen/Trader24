@@ -165,9 +165,9 @@ class Dashboard extends React.Component {
   getStockInfo(symbol, dataChart, changeStash, priceStash, num) {
     const stockApi = `https://cloud.iexapis.com/beta/stock/${
       symbol
-    }/batch?token=pk_7a3afe7fd31b450693dc69be9b7622d6&types=chart,quote&range=1d`;
-    const lastPrice = `https://cloud.iexapis.com/stable/stock/${symbol}/price?token=pk_7a3afe7fd31b450693dc69be9b7622d6`;
-    const percentageChange = `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_7a3afe7fd31b450693dc69be9b7622d6`;
+    }/batch?token=pk_95c4a35c80274553987b93e74bb825d7&types=chart,quote&range=1d`;
+    const lastPrice = `https://cloud.iexapis.com/stable/stock/${symbol}/price?token=pk_95c4a35c80274553987b93e74bb825d7`;
+    const percentageChange = `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_95c4a35c80274553987b93e74bb825d7`;
     let error;
     fetch(percentageChange)
       .then((res) => res.json())
@@ -194,12 +194,12 @@ class Dashboard extends React.Component {
   }
   getStocksList() {
     const stocks =
-      "https://cloud.iexapis.com/stable/stock/market/list/mostactive?token=pk_7a3afe7fd31b450693dc69be9b7622d6";
+      "https://cloud.iexapis.com/stable/stock/market/list/mostactive?token=pk_95c4a35c80274553987b93e74bb825d7";
     fetch(stocks)
       .then((res) => res.json())
       .then((result) => {
         const gainers =
-          "https://cloud.iexapis.com/stable/stock/market/list/gainers?token=pk_7a3afe7fd31b450693dc69be9b7622d6";
+          "https://cloud.iexapis.com/stable/stock/market/list/gainers?token=pk_95c4a35c80274553987b93e74bb825d7";
         let counter = 0;
         fetch(gainers)
           .then((res) => res.json())
@@ -230,7 +230,7 @@ class Dashboard extends React.Component {
           for (let i = 0; i < 9; i++) {
             const percentageChange = `https://cloud.iexapis.com/stable/stock/${
               stockListTickers[i]
-            }/quote?displayPercent=true&token=pk_7a3afe7fd31b450693dc69be9b7622d6`;
+            }/quote?displayPercent=true&token=pk_95c4a35c80274553987b93e74bb825d7`;
             fetch(percentageChange)
               .then((res) => res.json())
               .then((result) => {
@@ -312,7 +312,7 @@ class Dashboard extends React.Component {
             for (let i = 0; i < portfolioStocks.length; i++) {
               const lastPrice = `https://cloud.iexapis.com/stable/stock/${
                 portfolioStocks[i]
-              }/price?token=pk_7a3afe7fd31b450693dc69be9b7622d6`;
+              }/price?token=pk_95c4a35c80274553987b93e74bb825d7`;
               await new Promise((resolve) =>
                 fetch(lastPrice)
                   .then((res) => res.json())
@@ -401,7 +401,7 @@ class Dashboard extends React.Component {
             if (a === 0) {
               document.getElementById("results").style.display = "flex";
               $("#results").append(
-                `<li><a href=${allSymbols[i].symbol}><h4>${
+                `<li><a href="/stocks/"${allSymbols[i].symbol}><h4>${
                   allSymbols[i].symbol
                 }</h4><h6>${allSymbols[i].name}</h6></a></li>`
               );
@@ -418,7 +418,7 @@ class Dashboard extends React.Component {
   }
   componentDidMount() {
     fetch(
-      "https://cloud.iexapis.com/stable/ref-data/symbols?token=pk_7a3afe7fd31b450693dc69be9b7622d6"
+      "https://cloud.iexapis.com/stable/ref-data/symbols?token=pk_95c4a35c80274553987b93e74bb825d7"
     )
       .then((res) => res.json())
       .then((result) => {
@@ -429,7 +429,7 @@ class Dashboard extends React.Component {
     chartData1 = [];
     chartData2 = [];
     const gainers =
-      "https://cloud.iexapis.com/stable/stock/market/list/gainers?token=pk_7a3afe7fd31b450693dc69be9b7622d6";
+      "https://cloud.iexapis.com/stable/stock/market/list/gainers?token=pk_95c4a35c80274553987b93e74bb825d7";
     fetch(gainers)
       .then((res) => res.json())
       .then((result) => {
@@ -495,7 +495,7 @@ class Dashboard extends React.Component {
       this.setState({
         loader1: true
       });
-      document.getElementById("chartFirst").href = stockSymbols[0];
+      document.getElementById("chartFirst").href = "/stocks/"+stockSymbols[0];
     } else {
       this.setState({
         loader1: false
@@ -510,7 +510,7 @@ class Dashboard extends React.Component {
       this.setState({
         loader2: true
       });
-      document.getElementById("chartSecond").href = stockSymbols[1];
+      document.getElementById("chartSecond").href = "/stocks/"+stockSymbols[1];
     } else {
       this.setState({
         loader2: false
@@ -988,7 +988,7 @@ class Dashboard extends React.Component {
                           if (index < 3)
                             return (
                               <li key={index}>
-                                <a href={stockListTickers[index]}>
+                                <a href={"stocks/"+stockListTickers[index]}>
                                   <span className="panel__fullname">
                                     <h4>{stockListTickers[index]}</h4>
                                     <h6 className="panel__name">{value}</h6>
@@ -1030,7 +1030,7 @@ class Dashboard extends React.Component {
                           if (index >= 3 && index < 6)
                             return (
                               <li key={index}>
-                                <a href={stockListTickers[index]}>
+                                <a href={"stocks/"+stockListTickers[index]}>
                                   <span className="panel__fullname">
                                     <h4>{stockListTickers[index]}</h4>
                                     <h6 className="panel__name">{value}</h6>
@@ -1072,7 +1072,7 @@ class Dashboard extends React.Component {
                           if (index >= 6)
                             return (
                               <li key={index}>
-                                <a href={stockListTickers[index]}>
+                                <a href={"stocks/"+stockListTickers[index]}>
                                   <span className="panel__fullname">
                                     <h4>{stockListTickers[index]}</h4>
                                     <h6 className="panel__name">{value}</h6>

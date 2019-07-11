@@ -71,8 +71,8 @@ class App extends Component {
               <PublicRoute authed={this.state.authed} path="/register" component={Register} />
               <PublicRoute authed={this.state.authed} path="/login" component={Login} />
               <PrivateRoute authed={this.state.authed} path="/dashboard" component={Dashboard} />
-              <PrivateRoute authed={this.state.authed} path="/stocks" component={Stocks} />
-              <PrivateRoute name="stocks" authed={this.state.authed} path="/:symbol" component={stockPage} symbol={window.location.pathname.split("/")[1]} />
+              <PrivateRoute authed={this.state.authed} path="/allstocks" component={Stocks} />
+              <PrivateRoute name="stocks" authed={this.state.authed} path="/stocks/:symbol" component={stockPage} symbol={window.location.pathname.split("/")[2]} />
             </Switch>
           </div>
         </Router>
