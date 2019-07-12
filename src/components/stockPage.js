@@ -1,8 +1,8 @@
 import React from "react";
-import { logout } from "./auth";
+import {logout} from "./auth";
 import firebase from "firebase/app";
-import { Line } from "react-chartjs-2";
-import { defaults } from "react-chartjs-2";
+import {Line} from "react-chartjs-2";
+import {defaults} from "react-chartjs-2";
 import $ from "jquery";
 import "chartjs-plugin-annotation";
 
@@ -12,6 +12,11 @@ defaults.global.animation.duration = 200;
 
 const db = firebase.firestore();
 var options = {
+  layout: {
+    padding: {
+      right: 25 //set that fits the best
+    }
+  },
   tooltips: {
     mode: "index",
     intersect: false,
@@ -83,18 +88,19 @@ export default class stockPage extends React.Component {
       changeColor: "",
       extendedColor: "",
       marketStatus: "",
-      valid: ""
+      valid: "",
+      latestPrice: ""
     };
     fetch(
       `https://cloud.iexapis.com/beta/stock/${
         this.props.symbol
       }/batch?token=pk_95c4a35c80274553987b93e74bb825d7&types=chart,quote&range=1d&changeFromClose=true`
     )
-      .then(res => res.json())
-      .then(result => {
+      .then((res) => res.json())
+      .then((result) => {
         closePrice = result.quote.previousClose;
       });
-    this.data1 = canvas => {
+    this.data1 = (canvas) => {
       const ctx = canvas.getContext("2d");
       const gradient = ctx.createLinearGradient(0, 0, 600, 10);
       gradient.addColorStop(0, "#7c83ff");
@@ -183,8 +189,8 @@ export default class stockPage extends React.Component {
       this.props.symbol
     }/batch?token=pk_95c4a35c80274553987b93e74bb825d7&types=chart,quote&range=1d&changeFromClose=true`;
     fetch(stockApi)
-      .then(res => res.json())
-      .then(result => {
+      .then((res) => res.json())
+      .then((result) => {
         for (let i = 0; i < result.chart.length; i++) {
           if (result.chart[i].average !== null) {
             chartData1.push(result.chart[i].average.toFixed(2));
@@ -208,8 +214,8 @@ export default class stockPage extends React.Component {
       this.props.symbol
     }/batch?token=pk_95c4a35c80274553987b93e74bb825d7&types=chart,quote&range=ytd`;
     fetch(stockApi)
-      .then(res => res.json())
-      .then(result => {
+      .then((res) => res.json())
+      .then((result) => {
         for (let i = 0; i < result.chart.length; i++) {
           if (result.chart[i].average !== null) {
             chartData1.push(result.chart[i].close.toFixed(2));
@@ -233,8 +239,8 @@ export default class stockPage extends React.Component {
       this.props.symbol
     }/batch?token=pk_95c4a35c80274553987b93e74bb825d7&types=chart,quote&range=1y`;
     fetch(stockApi)
-      .then(res => res.json())
-      .then(result => {
+      .then((res) => res.json())
+      .then((result) => {
         for (let i = 0; i < result.chart.length; i++) {
           if (result.chart[i].average !== null) {
             chartData1.push(result.chart[i].close.toFixed(2));
@@ -258,8 +264,8 @@ export default class stockPage extends React.Component {
       this.props.symbol
     }/batch?token=pk_95c4a35c80274553987b93e74bb825d7&types=chart,quote&range=2y`;
     fetch(stockApi)
-      .then(res => res.json())
-      .then(result => {
+      .then((res) => res.json())
+      .then((result) => {
         for (let i = 0; i < result.chart.length; i++) {
           if (result.chart[i].average !== null) {
             chartData1.push(result.chart[i].close.toFixed(2));
@@ -283,8 +289,8 @@ export default class stockPage extends React.Component {
       this.props.symbol
     }/batch?token=pk_95c4a35c80274553987b93e74bb825d7&types=chart,quote&range=1m`;
     fetch(stockApi)
-      .then(res => res.json())
-      .then(result => {
+      .then((res) => res.json())
+      .then((result) => {
         for (let i = 0; i < result.chart.length; i++) {
           if (result.chart[i].average !== null) {
             chartData1.push(result.chart[i].close.toFixed(2));
@@ -340,14 +346,14 @@ export default class stockPage extends React.Component {
     return arr.indexOf(val) > -1;
   }
   componentDidMount() {
-    if (this.isInArray(this.props.symbol)) this.setState({ valid: true });
-    else this.setState({ valid: false });
+    if (this.isInArray(this.props.symbol)) this.setState({valid: true});
+    else this.setState({valid: false});
     fetch(
       "https://cloud.iexapis.com/stable/ref-data/symbols?token=pk_95c4a35c80274553987b93e74bb825d7"
     )
-      .then(res => res.json())
-      .then(result => {
-        allSymbols = result.map(val => {
+      .then((res) => res.json())
+      .then((result) => {
+        allSymbols = result.map((val) => {
           return val;
         });
       });
@@ -356,46 +362,47 @@ export default class stockPage extends React.Component {
         this.props.symbol
       }/realtime-update?token=pk_95c4a35c80274553987b93e74bb825d7&last=3&changeFromClose=true`
     )
-      .then(res => res.json())
-      .then(result => {
+      .then((res) => res.json())
+      .then((result) => {
         stockData.name = result.quote.companyName;
         stockData.previousClose = result.quote.previousClose;
         stockData.latestTime = result.quote.latestTime;
         stockData.extendedPrice = result.quote.extendedPrice;
         stockData.extendedChange = result.quote.extendedChange.toFixed(2);
-        stockData.latestPrice = result.quote.latestPrice.toFixed(2);
-        stockData.change = result.quote.change;
+        this.setState({
+          latestPrice: result.quote.latestPrice.toFixed(2)
+        });
+        stockData.change = result.quote.change.toFixed(2);
         stockData.changePercent = (
           result.quote.changePercent / Math.pow(10, -2)
         ).toFixed(2);
         keyData[0] = this.abbrNum(result.quote.marketCap, 2);
-        keyDataLabel[0] = "Market Cap: ";
+        keyDataLabel[0] = "Market Cap ";
         keyData[1] = result.quote.peRatio;
-        keyDataLabel[1] = "PE Ratio: ";
+        keyDataLabel[1] = "PE Ratio (TTM) ";
 
-        keyData[2] = result.quote.week52High;
-        keyDataLabel[2] = "52 week High: ";
+        keyData[2] = "$" + result.quote.week52High;
+        keyDataLabel[2] = "52 week High";
 
-        keyData[3] = result.quote.week52Low;
-        keyDataLabel[3] = "52 Week Low: ";
+        keyData[3] = "$" + result.quote.week52Low;
+        keyDataLabel[3] = "52 Week Low ";
 
-        keyData[4] = (result.quote.ytdChange / Math.pow(10, -2)).toFixed(2);
-        keyDataLabel[4] = "YTD Change: ";
+        keyData[4] =
+          (result.quote.ytdChange / Math.pow(10, -2)).toFixed(2) + "%";
+        keyDataLabel[4] = "YTD Change ";
 
-        keyData[5] = result.quote.latestVolume;
-        keyDataLabel[5] = "Volume: ";
-
-        console.log(keyData);
+        keyData[5] = this.numberWithCommas(result.quote.latestVolume);
+        keyDataLabel[5] = "Volume ";
       });
     document.title = "Trader24 - " + this.props.symbol;
     fetch("https://financialmodelingprep.com/api/v3/is-the-market-open")
-      .then(res => res.json())
-      .then(result => {
+      .then((res) => res.json())
+      .then((result) => {
         if (result.isTheStockMarketOpen)
           document.getElementById("panel__status").style.color = "#5efad7";
         else document.getElementById("panel__status").style.color = "#eb5887";
-        if (result.isTheStockMarketOpen) this.setState({ marketStatus: true });
-        else this.setState({ marketStatus: false });
+        if (result.isTheStockMarketOpen) this.setState({marketStatus: true});
+        else this.setState({marketStatus: false});
         document.getElementById(
           "panel__status"
         ).innerHTML = result.isTheStockMarketOpen
@@ -407,7 +414,7 @@ export default class stockPage extends React.Component {
 
     docRef
       .get()
-      .then(doc => {
+      .then((doc) => {
         this.setState({
           funds: "$" + this.numberWithCommas(doc.data()["currentfunds"])
         });
@@ -438,60 +445,77 @@ export default class stockPage extends React.Component {
           extendedColor: "#F45385"
         });
       }
-    }, 1000);
+    }, 1500);
+    if (this.state.marketStatus) {
+      setInterval(() => {
+        fetch(
+          `https://cloud.iexapis.com/stable/stock/${
+            this.props.symbol
+          }/price?token=pk_95c4a35c80274553987b93e74bb825d7`
+        )
+          .then((res) => res.json())
+          .then((result) => {
+            this.setState({
+              latestPrice: result.toFixed(2)
+            });
+          });
+      }, 10000);
+    }
   }
   changeFocus(option) {
-    if (option === 1) {
-      document.getElementById("1d").classList.add("active");
-      document.getElementById("1m").className = "";
-      document.getElementById("ytd").className = "";
+    setTimeout(() => {
+      if (option === 1) {
+        document.getElementById("1d").classList.add("active");
+        document.getElementById("1m").className = "";
+        document.getElementById("ytd").className = "";
 
-      document.getElementById("1y").className = "";
+        document.getElementById("1y").className = "";
 
-      document.getElementById("2y").className = "";
-    }
-    if (option === 2) {
-      document.getElementById("1m").classList.add("active");
-      document.getElementById("1d").className = "";
-      document.getElementById("ytd").className = "";
+        document.getElementById("2y").className = "";
+      }
+      if (option === 2) {
+        document.getElementById("1m").classList.add("active");
+        document.getElementById("1d").className = "";
+        document.getElementById("ytd").className = "";
 
-      document.getElementById("1y").className = "";
+        document.getElementById("1y").className = "";
 
-      document.getElementById("2y").className = "";
-    }
-        if (option === 3) {
-      document.getElementById("1y").classList.add("active");
-      document.getElementById("1d").className = "";
-      document.getElementById("ytd").className = "";
+        document.getElementById("2y").className = "";
+      }
+      if (option === 3) {
+        document.getElementById("1y").classList.add("active");
+        document.getElementById("1d").className = "";
+        document.getElementById("ytd").className = "";
 
-      document.getElementById("1m").className = "";
+        document.getElementById("1m").className = "";
 
-      document.getElementById("2y").className = "";
-    }
-    if (option === 4) {
-      document.getElementById("2y").classList.add("active");
-      document.getElementById("1d").className = "";
-      document.getElementById("ytd").className = "";
+        document.getElementById("2y").className = "";
+      }
+      if (option === 4) {
+        document.getElementById("2y").classList.add("active");
+        document.getElementById("1d").className = "";
+        document.getElementById("ytd").className = "";
 
-      document.getElementById("1m").className = "";
+        document.getElementById("1m").className = "";
 
-      document.getElementById("1y").className = "";
-    }
-    if (option === 5) {
-      document.getElementById("ytd").classList.add("active");
-      document.getElementById("1d").className = "";
-      document.getElementById("2y").className = "";
+        document.getElementById("1y").className = "";
+      }
+      if (option === 5) {
+        document.getElementById("ytd").classList.add("active");
+        document.getElementById("1d").className = "";
+        document.getElementById("2y").className = "";
 
-      document.getElementById("1m").className = "";
+        document.getElementById("1m").className = "";
 
-      document.getElementById("1y").className = "";
-    }
+        document.getElementById("1y").className = "";
+      }
+    }, 1000);
   }
   render() {
     let user = firebase.auth().currentUser.displayName;
     return (
       <div className="stock">
-        <div style={{ display: "flex", height: "100%" }}>
+        <div style={{display: "flex", height: "100%"}}>
           <div className="leftbar">
             <img
               className="topbar__logo"
@@ -618,61 +642,12 @@ export default class stockPage extends React.Component {
                   {this.state.fundsLoader === true && (
                     <div className="topbar__power">
                       <svg
-                        version="1.1"
-                        id="Layer_1"
-                        x="0px"
-                        y="0px"
-                        viewBox="0 0 512 512"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
                       >
                         <g>
-                          <g>
-                            <g>
-                              <path
-                                d="M498.409,175.706L336.283,13.582c-8.752-8.751-20.423-13.571-32.865-13.571c-12.441,0-24.113,4.818-32.865,13.569
-				L13.571,270.563C4.82,279.315,0,290.985,0,303.427c0,12.442,4.82,24.114,13.571,32.864l19.992,19.992
-				c0.002,0.001,0.003,0.003,0.005,0.005c0.002,0.002,0.004,0.004,0.006,0.006l134.36,134.36H149.33
-				c-5.89,0-10.666,4.775-10.666,10.666c0,5.89,4.776,10.666,10.666,10.666h59.189c0.014,0,0.027,0.001,0.041,0.001
-				s0.027-0.001,0.041-0.001l154.053,0.002c5.89,0,10.666-4.776,10.666-10.666c0-5.891-4.776-10.666-10.666-10.666l-113.464-0.002
-				L498.41,241.434C516.53,223.312,516.53,193.826,498.409,175.706z M483.325,226.35L226.341,483.334
-				c-4.713,4.712-11.013,7.31-17.742,7.32h-0.081c-6.727-0.011-13.025-2.608-17.736-7.32L56.195,348.746L302.99,101.949
-				c4.165-4.165,4.165-10.919,0-15.084c-4.166-4.165-10.918-4.165-15.085,0.001L41.11,333.663l-12.456-12.456
-				c-4.721-4.721-7.321-11.035-7.321-17.779c0-6.744,2.6-13.059,7.322-17.781L285.637,28.665c4.722-4.721,11.037-7.321,17.781-7.321
-				c6.744,0,13.059,2.6,17.781,7.322l57.703,57.702l-246.798,246.8c-4.165,4.164-4.165,10.918,0,15.085
-				c2.083,2.082,4.813,3.123,7.542,3.123c2.729,0,5.459-1.042,7.542-3.124l246.798-246.799l89.339,89.336
-				C493.128,200.593,493.127,216.546,483.325,226.35z"
-                              />
-                              <path
-                                d="M262.801,308.064c-4.165-4.165-10.917-4.164-15.085,0l-83.934,83.933c-4.165,4.165-4.165,10.918,0,15.085
-				c2.083,2.083,4.813,3.124,7.542,3.124c2.729,0,5.459-1.042,7.542-3.124l83.934-83.933
-				C266.966,318.982,266.966,312.229,262.801,308.064z"
-                              />
-                              <path
-                                d="M228.375,387.741l-34.425,34.425c-4.165,4.165-4.165,10.919,0,15.085c2.083,2.082,4.813,3.124,7.542,3.124
-				c2.731,0,5.459-1.042,7.542-3.124l34.425-34.425c4.165-4.165,4.165-10.919,0-15.085
-				C239.294,383.575,232.543,383.575,228.375,387.741z"
-                              />
-                              <path
-                                d="M260.054,356.065l-4.525,4.524c-4.166,4.165-4.166,10.918-0.001,15.085c2.082,2.083,4.813,3.125,7.542,3.125
-				c2.729,0,5.459-1.042,7.541-3.125l4.525-4.524c4.166-4.165,4.166-10.918,0.001-15.084
-				C270.974,351.901,264.219,351.9,260.054,356.065z"
-                              />
-                              <path
-                                d="M407.073,163.793c-2-2-4.713-3.124-7.542-3.124c-2.829,0-5.541,1.124-7.542,3.124l-45.255,45.254
-				c-2,2.001-3.124,4.713-3.124,7.542s1.124,5.542,3.124,7.542l30.17,30.167c2.083,2.083,4.813,3.124,7.542,3.124
-				c2.731,0,5.459-1.042,7.542-3.124l45.253-45.252c4.165-4.165,4.165-10.919,0-15.084L407.073,163.793z M384.445,231.673
-				l-15.085-15.084l30.17-30.169l15.084,15.085L384.445,231.673z"
-                              />
-                              <path
-                                d="M320.339,80.186c2.731,0,5.461-1.042,7.543-3.126l4.525-4.527c4.164-4.166,4.163-10.92-0.003-15.084
-				c-4.165-4.164-10.92-4.163-15.084,0.003l-4.525,4.527c-4.164,4.166-4.163,10.92,0.003,15.084
-				C314.881,79.146,317.609,80.186,320.339,80.186z"
-                              />
-                              <path
-                                d="M107.215,358.057l-4.525,4.525c-4.165,4.164-4.165,10.918,0,15.085c2.083,2.082,4.813,3.123,7.542,3.123
-				s5.459-1.041,7.542-3.123l4.525-4.525c4.165-4.166,4.165-10.92,0-15.085C118.133,353.891,111.381,353.891,107.215,358.057z"
-                              />
-                            </g>
-                          </g>
+                          <path fill="none" d="M0 0h24v24H0z" />
+                          <path d="M18 7h3a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h15v4zM4 9v10h16V9H4zm0-4v2h12V5H4zm11 8h3v2h-3v-2z" />
                         </g>
                       </svg>
                       <h3>{this.state.funds}</h3>
@@ -692,8 +667,7 @@ export default class stockPage extends React.Component {
                       id="2y"
                       onClick={() => {
                         this.getTwoYearChart();
-                        this.changeFocus(4)
-
+                        this.changeFocus(4);
                       }}
                     >
                       2Y
@@ -702,7 +676,7 @@ export default class stockPage extends React.Component {
                       id="1y"
                       onClick={() => {
                         this.getOneYearChart();
-                        this.changeFocus(3)
+                        this.changeFocus(3);
                       }}
                     >
                       1Y
@@ -711,9 +685,9 @@ export default class stockPage extends React.Component {
                     <h6
                       id="ytd"
                       className="active"
-                      onClick={()=> {
+                      onClick={() => {
                         this.classList = "active";
-                        this.changeFocus(5)
+                        this.changeFocus(5);
                         this.getYTDChart();
                       }}
                     >
@@ -742,20 +716,16 @@ export default class stockPage extends React.Component {
                 <div className="stockPage__trade">
                   <h4>{stockData.name}</h4>
                   <div className="stockPage__trade-top">
-                    <h2>${stockData.latestPrice}</h2>
-                    <h6 style={{ color: this.state.changeColor }}>
+                    <h2>${this.state.latestPrice}</h2>
+                    <h6 style={{color: this.state.changeColor}}>
                       {stockData.change} ({stockData.changePercent}%)
                     </h6>
                   </div>
                   {!this.state.marketStatus && (
                     <h6>
                       Extended Hours:{" "}
-                      <span style={{ color: this.state.extendedColor }}>
-                        ${stockData.extendedPrice} (
-                        {(stockData.extendedChange / Math.pow(10, -2)).toFixed(
-                          2
-                        )}
-                        %)
+                      <span style={{color: this.state.extendedColor}}>
+                        ${stockData.extendedPrice} ({stockData.extendedChange})
                       </span>
                     </h6>
                   )}
@@ -766,29 +736,37 @@ export default class stockPage extends React.Component {
               <div />
             )}
             <div className="stockPage__keyStats">
-              <h3>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  xmlnsXlink="http://www.w3.org/1999/xlink"
-                  version="1.1"
-                  x="0px"
-                  y="0px"
-                  viewBox="0 0 100 125"
-                  xmlSpace="preserve"
-                >
-                  <path d="M95.3,25.8c0,0-3.1-14.8-16.5-20c-6.3-2.4-17.8-3.6-29.1-3.7C38.3,2.1,26.8,3.3,20.5,5.7C7.1,10.9,4,25.8,4,25.8  c-2,8.4-2.7,16.9-2.6,24.4C1.4,57.7,2,66.3,4,74.6c0,0,3.1,14.8,16.5,20c6.3,2.4,17.8,3.6,29.1,3.7c11.3-0.1,22.8-1.2,29.1-3.7  c13.4-5.2,16.5-20,16.5-20c2-8.4,2.7-16.9,2.6-24.4C97.9,42.6,97.3,34.1,95.3,25.8z M69,51.5c0,12.8-9.5,23.3-21.1,23.3  c-12.8,0-23.3-10.4-23.3-23.3c0-11.7,10.4-21.1,23.3-21.1h0.6v20.5l20.5,0V51.5z M54.3,45.3V25.6c10.9,0,19.8,8.9,19.8,19.8  L54.3,45.3z" />
-                </svg>
-                Key Informations
-              </h3>
               <div className="data">
-                {keyData.map((val, index) => {
-                  return (
-                    <h4 key={index}>
-                      {keyDataLabel[index]}
-                      {val}
-                    </h4>
-                  );
-                })}
+                <h3>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <g>
+                      <path fill="none" d="M0 0h24v24H0z" />
+                      <path d="M12 22C6.477 22 2 17.523 2 12c0-4.478 2.943-8.268 7-9.542v2.124A8.003 8.003 0 0 0 12 20a8.003 8.003 0 0 0 7.418-5h2.124c-1.274 4.057-5.064 7-9.542 7zm9.95-9H11V2.05c.329-.033.663-.05 1-.05 5.523 0 10 4.477 10 10 0 .337-.017.671-.05 1zM13 4.062V11h6.938A8.004 8.004 0 0 0 13 4.062z" />
+                    </g>
+                  </svg>{" "}
+                  Key Informations
+                </h3>
+                <div className="stockPage__columns">
+                  {keyData.map((val, index) => {
+                    return (
+                      <div className="data__info" key={index}>
+                        <h5 className="data__label">{keyDataLabel[index]}</h5>
+                        <h4>{val}</h4>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+              <div className="news">
+                <h3>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <g>
+                      <path fill="none" d="M0 0h24v24H0z" />
+                      <path d="M4.929 2.929l1.414 1.414A7.975 7.975 0 0 0 4 10c0 2.21.895 4.21 2.343 5.657L4.93 17.07A9.969 9.969 0 0 1 2 10a9.969 9.969 0 0 1 2.929-7.071zm14.142 0A9.969 9.969 0 0 1 22 10a9.969 9.969 0 0 1-2.929 7.071l-1.414-1.414A7.975 7.975 0 0 0 20 10c0-2.21-.895-4.21-2.343-5.657L19.07 2.93zM7.757 5.757l1.415 1.415A3.987 3.987 0 0 0 8 10c0 1.105.448 2.105 1.172 2.828l-1.415 1.415A5.981 5.981 0 0 1 6 10c0-1.657.672-3.157 1.757-4.243zm8.486 0A5.981 5.981 0 0 1 18 10a5.981 5.981 0 0 1-1.757 4.243l-1.415-1.415A3.987 3.987 0 0 0 16 10a3.987 3.987 0 0 0-1.172-2.828l1.415-1.415zM12 12a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm-1 2h2v8h-2v-8z" />
+                    </g>
+                  </svg>
+                  Latest News
+                </h3>
               </div>
             </div>
           </div>

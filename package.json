@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@firebase/performance": "^0.2.11",
     "chart.js": "^2.8.0",
     "chartjs-plugin-annotation": "^0.5.7",
     "firebase": "^5.11.1",

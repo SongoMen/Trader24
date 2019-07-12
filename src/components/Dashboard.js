@@ -163,9 +163,7 @@ class Dashboard extends React.Component {
     };
   }
   getStockInfo(symbol, dataChart, changeStash, priceStash, num) {
-    const stockApi = `https://cloud.iexapis.com/beta/stock/${
-      symbol
-    }/batch?token=pk_95c4a35c80274553987b93e74bb825d7&types=chart,quote&range=1d`;
+    const stockApi = `https://cloud.iexapis.com/beta/stock/${symbol}/batch?token=pk_95c4a35c80274553987b93e74bb825d7&types=chart,quote&range=1d`;
     const lastPrice = `https://cloud.iexapis.com/stable/stock/${symbol}/price?token=pk_95c4a35c80274553987b93e74bb825d7`;
     const percentageChange = `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_95c4a35c80274553987b93e74bb825d7`;
     let error;
@@ -187,7 +185,7 @@ class Dashboard extends React.Component {
       .then((res) => res.json())
       .then((result) => {
         for (let i = 0; i < result.chart.length - 1; i++) {
-          if (result.chart[i].average !== null)
+          if (result.chart[i].average !== null && dataChart.length < 60)
             dataChart.push(parseFloat(result.chart[i].average).toFixed(2));
         }
       });
@@ -495,7 +493,7 @@ class Dashboard extends React.Component {
       this.setState({
         loader1: true
       });
-      document.getElementById("chartFirst").href = "/stocks/"+stockSymbols[0];
+      document.getElementById("chartFirst").href = "/stocks/" + stockSymbols[0];
     } else {
       this.setState({
         loader1: false
@@ -510,17 +508,18 @@ class Dashboard extends React.Component {
       this.setState({
         loader2: true
       });
-      document.getElementById("chartSecond").href = "/stocks/"+stockSymbols[1];
+      document.getElementById("chartSecond").href =
+        "/stocks/" + stockSymbols[1];
     } else {
       this.setState({
         loader2: false
       });
       document.getElementById("chartSecond").href = "#";
     }
-    console.log(stockChanges)
-    console.log(stockPrices)
-    console.log("data1: ",chartData1)
-    console.log("data2: ",chartData2)
+    console.log(stockChanges);
+    console.log(stockPrices);
+    console.log("data1: ", chartData1);
+    console.log("data2: ", chartData2);
   }
   render() {
     let user = firebase.auth().currentUser.displayName;
@@ -675,61 +674,12 @@ class Dashboard extends React.Component {
                     {this.state.fundsLoader === true && (
                       <div className="topbar__power">
                         <svg
-                          version="1.1"
-                          id="Layer_1"
-                          x="0px"
-                          y="0px"
-                          viewBox="0 0 512 512"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
                         >
                           <g>
-                            <g>
-                              <g>
-                                <path
-                                  d="M498.409,175.706L336.283,13.582c-8.752-8.751-20.423-13.571-32.865-13.571c-12.441,0-24.113,4.818-32.865,13.569
-				L13.571,270.563C4.82,279.315,0,290.985,0,303.427c0,12.442,4.82,24.114,13.571,32.864l19.992,19.992
-				c0.002,0.001,0.003,0.003,0.005,0.005c0.002,0.002,0.004,0.004,0.006,0.006l134.36,134.36H149.33
-				c-5.89,0-10.666,4.775-10.666,10.666c0,5.89,4.776,10.666,10.666,10.666h59.189c0.014,0,0.027,0.001,0.041,0.001
-				s0.027-0.001,0.041-0.001l154.053,0.002c5.89,0,10.666-4.776,10.666-10.666c0-5.891-4.776-10.666-10.666-10.666l-113.464-0.002
-				L498.41,241.434C516.53,223.312,516.53,193.826,498.409,175.706z M483.325,226.35L226.341,483.334
-				c-4.713,4.712-11.013,7.31-17.742,7.32h-0.081c-6.727-0.011-13.025-2.608-17.736-7.32L56.195,348.746L302.99,101.949
-				c4.165-4.165,4.165-10.919,0-15.084c-4.166-4.165-10.918-4.165-15.085,0.001L41.11,333.663l-12.456-12.456
-				c-4.721-4.721-7.321-11.035-7.321-17.779c0-6.744,2.6-13.059,7.322-17.781L285.637,28.665c4.722-4.721,11.037-7.321,17.781-7.321
-				c6.744,0,13.059,2.6,17.781,7.322l57.703,57.702l-246.798,246.8c-4.165,4.164-4.165,10.918,0,15.085
-				c2.083,2.082,4.813,3.123,7.542,3.123c2.729,0,5.459-1.042,7.542-3.124l246.798-246.799l89.339,89.336
-				C493.128,200.593,493.127,216.546,483.325,226.35z"
-                                />
-                                <path
-                                  d="M262.801,308.064c-4.165-4.165-10.917-4.164-15.085,0l-83.934,83.933c-4.165,4.165-4.165,10.918,0,15.085
-				c2.083,2.083,4.813,3.124,7.542,3.124c2.729,0,5.459-1.042,7.542-3.124l83.934-83.933
-				C266.966,318.982,266.966,312.229,262.801,308.064z"
-                                />
-                                <path
-                                  d="M228.375,387.741l-34.425,34.425c-4.165,4.165-4.165,10.919,0,15.085c2.083,2.082,4.813,3.124,7.542,3.124
-				c2.731,0,5.459-1.042,7.542-3.124l34.425-34.425c4.165-4.165,4.165-10.919,0-15.085
-				C239.294,383.575,232.543,383.575,228.375,387.741z"
-                                />
-                                <path
-                                  d="M260.054,356.065l-4.525,4.524c-4.166,4.165-4.166,10.918-0.001,15.085c2.082,2.083,4.813,3.125,7.542,3.125
-				c2.729,0,5.459-1.042,7.541-3.125l4.525-4.524c4.166-4.165,4.166-10.918,0.001-15.084
-				C270.974,351.901,264.219,351.9,260.054,356.065z"
-                                />
-                                <path
-                                  d="M407.073,163.793c-2-2-4.713-3.124-7.542-3.124c-2.829,0-5.541,1.124-7.542,3.124l-45.255,45.254
-				c-2,2.001-3.124,4.713-3.124,7.542s1.124,5.542,3.124,7.542l30.17,30.167c2.083,2.083,4.813,3.124,7.542,3.124
-				c2.731,0,5.459-1.042,7.542-3.124l45.253-45.252c4.165-4.165,4.165-10.919,0-15.084L407.073,163.793z M384.445,231.673
-				l-15.085-15.084l30.17-30.169l15.084,15.085L384.445,231.673z"
-                                />
-                                <path
-                                  d="M320.339,80.186c2.731,0,5.461-1.042,7.543-3.126l4.525-4.527c4.164-4.166,4.163-10.92-0.003-15.084
-				c-4.165-4.164-10.92-4.163-15.084,0.003l-4.525,4.527c-4.164,4.166-4.163,10.92,0.003,15.084
-				C314.881,79.146,317.609,80.186,320.339,80.186z"
-                                />
-                                <path
-                                  d="M107.215,358.057l-4.525,4.525c-4.165,4.164-4.165,10.918,0,15.085c2.083,2.082,4.813,3.123,7.542,3.123
-				s5.459-1.041,7.542-3.123l4.525-4.525c4.165-4.166,4.165-10.92,0-15.085C118.133,353.891,111.381,353.891,107.215,358.057z"
-                                />
-                              </g>
-                            </g>
+                            <path fill="none" d="M0 0h24v24H0z" />
+                            <path d="M18 7h3a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h15v4zM4 9v10h16V9H4zm0-4v2h12V5H4zm11 8h3v2h-3v-2z" />
                           </g>
                         </svg>
                         <h3>{this.state.funds}</h3>
@@ -854,65 +804,15 @@ class Dashboard extends React.Component {
                         }}
                       >
                         <svg
-                          className="panel__portfolio-title"
                           xmlns="http://www.w3.org/2000/svg"
-                          xmlnsXlink="http://www.w3.org/1999/xlink"
-                          version="1.1"
-                          x="0px"
-                          y="0px"
-                          viewBox="0 0 200 250"
-                          enableBackground="new 0 0 200 200"
-                          xmlSpace="preserve"
+                          className="panel__portfolio-title"
+                          viewBox="0 0 24 24"
                         >
                           <g>
-                            <g>
-                              <path d="M156.811,54.528H43.159L0,97.64l96.874,96.875l3.119,3.117l3.117-3.117L200,97.64L156.811,54.528z     M99.992,187.565l-8.136-8.134L10.082,97.64l36.02-35.99h107.763l36.056,35.99l-81.793,81.792L99.992,187.565z" />
-                              <g>
-                                <path d="M63.434,94.079l28.423,85.353l5.017,15.083l3.119,3.117l3.117-3.117l5.018-15.083l28.409-85.353H63.434z      M99.992,181.331l-26.684-80.13h53.351L99.992,181.331z" />
-                                <polygon points="74.664,101.198 5.041,101.198 5.041,94.076 62.083,94.076 41.576,59.925 47.684,56.259    " />
-                                <polygon points="67.956,103.86 41.576,59.925 47.684,56.259 68.791,91.413 97.21,55.868 102.771,60.316    " />
-                                <polygon points="132.02,103.86 97.21,60.316 102.771,55.868 131.185,91.413 152.288,56.259 158.396,59.925    " />
-                                <polygon points="194.96,101.198 125.312,101.198 152.288,56.259 158.396,59.925 137.893,94.076 194.96,94.076         " />
-                              </g>
-                            </g>
-                            <g>
-                              <rect
-                                x="96.439"
-                                y="2.368"
-                                width="7.123"
-                                height="23.74"
-                              />
-                              <rect
-                                x="120.786"
-                                y="7.211"
-                                transform="matrix(0.9238 0.3828 -0.3828 0.9238 16.7729 -46.1416)"
-                                width="7.124"
-                                height="23.742"
-                              />
-                              <rect
-                                x="141.429"
-                                y="21.002"
-                                transform="matrix(0.7071 0.7071 -0.7071 0.7071 65.7174 -92.8988)"
-                                width="7.121"
-                                height="23.742"
-                              />
-                              <rect
-                                x="63.779"
-                                y="15.52"
-                                transform="matrix(0.3827 0.9239 -0.9239 0.3827 64.3313 -58.112)"
-                                width="23.742"
-                                height="7.124"
-                              />
-                              <rect
-                                x="43.139"
-                                y="29.312"
-                                transform="matrix(0.707 0.7072 -0.7072 0.707 39.3628 -29.2704)"
-                                width="23.74"
-                                height="7.121"
-                              />
-                            </g>
+                            <path fill="none" d="M0 0h24v24H0z" />
+                            <path d="M4.873 3h14.254a1 1 0 0 1 .809.412l3.823 5.256a.5.5 0 0 1-.037.633L12.367 21.602a.5.5 0 0 1-.706.028c-.007-.006-3.8-4.115-11.383-12.329a.5.5 0 0 1-.037-.633l3.823-5.256A1 1 0 0 1 4.873 3zm.51 2l-2.8 3.85L12 19.05 21.417 8.85 18.617 5H5.383z" />
                           </g>
-                        </svg>{" "}
+                        </svg>
                         <h3>Portfolio</h3>
                       </div>
                       <div className="panel__portfolio" id="portfolio">
@@ -966,16 +866,13 @@ class Dashboard extends React.Component {
               </div>
               <div className="panel__low">
                 <div className="panel__bottom-title">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 48 80"
-                    x="0px"
-                    y="0px"
-                  >
-                    <g data-name="Layer 2">
-                      <g data-name="Layer 4">
-                        <path d="M24,64A24,24,0,0,1,11.44,19.55a2,2,0,0,1,2.71,2.82C13,24.08,10,29.35,10,33a6.93,6.93,0,0,0,7,7c3.48,0,7-2.16,7-7,0-1.89-1-3.57-2.06-5.53-3-5.38-6.83-12.07,6.58-26.82a2,2,0,0,1,3.33,2.11c-4.11,10,0,13.59,5.75,18.58C42.47,25.6,48,30.42,48,40A24,24,0,0,1,24,64ZM6.2,30.84A20,20,0,1,0,44,40c0-7.76-4.39-11.59-9-15.64-4.13-3.61-8.67-7.56-8.74-14.41-5.17,7.85-3,11.62-.81,15.56C26.69,27.74,28,30.06,28,33A10.64,10.64,0,0,1,17,44,10.88,10.88,0,0,1,6,33,12.59,12.59,0,0,1,6.2,30.84Z" />
-                      </g>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <g>
+                      <path fill="none" d="M0 0h24v24H0z" />
+                      <path
+                        fillRule="nonzero"
+                        d="M12 23a7.5 7.5 0 0 0 7.5-7.5c0-.866-.23-1.697-.5-2.47-1.667 1.647-2.933 2.47-3.8 2.47 3.995-7 1.8-10-4.2-14 .5 5-2.796 7.274-4.138 8.537A7.5 7.5 0 0 0 12 23zm.71-17.765c3.241 2.75 3.257 4.887.753 9.274-.761 1.333.202 2.991 1.737 2.991.688 0 1.384-.2 2.119-.595a5.5 5.5 0 1 1-9.087-5.412c.126-.118.765-.685.793-.71.424-.38.773-.717 1.118-1.086 1.23-1.318 2.114-2.78 2.566-4.462z"
+                      />
                     </g>
                   </svg>
                   <h3>Most Active</h3>
@@ -988,7 +885,7 @@ class Dashboard extends React.Component {
                           if (index < 3)
                             return (
                               <li key={index}>
-                                <a href={"stocks/"+stockListTickers[index]}>
+                                <a href={"stocks/" + stockListTickers[index]}>
                                   <span className="panel__fullname">
                                     <h4>{stockListTickers[index]}</h4>
                                     <h6 className="panel__name">{value}</h6>
@@ -1030,7 +927,7 @@ class Dashboard extends React.Component {
                           if (index >= 3 && index < 6)
                             return (
                               <li key={index}>
-                                <a href={"stocks/"+stockListTickers[index]}>
+                                <a href={"stocks/" + stockListTickers[index]}>
                                   <span className="panel__fullname">
                                     <h4>{stockListTickers[index]}</h4>
                                     <h6 className="panel__name">{value}</h6>
@@ -1072,7 +969,7 @@ class Dashboard extends React.Component {
                           if (index >= 6)
                             return (
                               <li key={index}>
-                                <a href={"stocks/"+stockListTickers[index]}>
+                                <a href={"stocks/" + stockListTickers[index]}>
                                   <span className="panel__fullname">
                                     <h4>{stockListTickers[index]}</h4>
                                     <h6 className="panel__name">{value}</h6>
