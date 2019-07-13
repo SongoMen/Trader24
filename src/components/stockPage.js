@@ -203,7 +203,7 @@ export default class stockPage extends React.Component {
           this.setState({
             loaded: true
           });
-        }, 1000);
+        }, 500);
       });
     options.annotation = anno;
   }
@@ -228,7 +228,7 @@ export default class stockPage extends React.Component {
           this.setState({
             loaded: true
           });
-        }, 1000);
+        }, 500);
       });
     options.annotation = "";
   }
@@ -253,7 +253,7 @@ export default class stockPage extends React.Component {
           this.setState({
             loaded: true
           });
-        }, 1000);
+        }, 500);
       });
     options.annotation = "";
   }
@@ -278,7 +278,7 @@ export default class stockPage extends React.Component {
           this.setState({
             loaded: true
           });
-        }, 1000);
+        }, 500);
       });
     options.annotation = "";
   }
@@ -344,6 +344,55 @@ export default class stockPage extends React.Component {
   }
   isInArray(arr, val) {
     return arr.indexOf(val) > -1;
+  }
+  changeFocus(option) {
+    setTimeout(() => {
+      if (option === 1) {
+        document.getElementById("1d").classList.add("active");
+        document.getElementById("1m").className = "";
+        document.getElementById("ytd").className = "";
+
+        document.getElementById("1y").className = "";
+
+        document.getElementById("2y").className = "";
+      }
+      if (option === 2) {
+        document.getElementById("1m").classList.add("active");
+        document.getElementById("1d").className = "";
+        document.getElementById("ytd").className = "";
+
+        document.getElementById("1y").className = "";
+
+        document.getElementById("2y").className = "";
+      }
+      if (option === 3) {
+        document.getElementById("1y").classList.add("active");
+        document.getElementById("1d").className = "";
+        document.getElementById("ytd").className = "";
+
+        document.getElementById("1m").className = "";
+
+        document.getElementById("2y").className = "";
+      }
+      if (option === 4) {
+        document.getElementById("2y").classList.add("active");
+        document.getElementById("1d").className = "";
+        document.getElementById("ytd").className = "";
+
+        document.getElementById("1m").className = "";
+
+        document.getElementById("1y").className = "";
+      }
+      if (option === 5) {
+        document.getElementById("ytd").classList.add("active");
+        document.getElementById("1d").className = "";
+        document.getElementById("2y").className = "";
+
+        document.getElementById("1m").className = "";
+
+        document.getElementById("1y").className = "";
+      }
+    }, 1000);
   }
   componentDidMount() {
     if (this.isInArray(this.props.symbol)) this.setState({valid: true});
@@ -462,55 +511,6 @@ export default class stockPage extends React.Component {
       }, 10000);
     }
   }
-  changeFocus(option) {
-    setTimeout(() => {
-      if (option === 1) {
-        document.getElementById("1d").classList.add("active");
-        document.getElementById("1m").className = "";
-        document.getElementById("ytd").className = "";
-
-        document.getElementById("1y").className = "";
-
-        document.getElementById("2y").className = "";
-      }
-      if (option === 2) {
-        document.getElementById("1m").classList.add("active");
-        document.getElementById("1d").className = "";
-        document.getElementById("ytd").className = "";
-
-        document.getElementById("1y").className = "";
-
-        document.getElementById("2y").className = "";
-      }
-      if (option === 3) {
-        document.getElementById("1y").classList.add("active");
-        document.getElementById("1d").className = "";
-        document.getElementById("ytd").className = "";
-
-        document.getElementById("1m").className = "";
-
-        document.getElementById("2y").className = "";
-      }
-      if (option === 4) {
-        document.getElementById("2y").classList.add("active");
-        document.getElementById("1d").className = "";
-        document.getElementById("ytd").className = "";
-
-        document.getElementById("1m").className = "";
-
-        document.getElementById("1y").className = "";
-      }
-      if (option === 5) {
-        document.getElementById("ytd").classList.add("active");
-        document.getElementById("1d").className = "";
-        document.getElementById("2y").className = "";
-
-        document.getElementById("1m").className = "";
-
-        document.getElementById("1y").className = "";
-      }
-    }, 1000);
-  }
   render() {
     let user = firebase.auth().currentUser.displayName;
     return (
@@ -581,7 +581,6 @@ export default class stockPage extends React.Component {
               <path d="m282.667969 448.007812h-85.335938c-8.832031 0-16-7.167968-16-16 0-8.832031 7.167969-16 16-16h85.335938c14.699219 0 26.664062-11.96875 26.664062-26.667968v-96c0-8.832032 7.167969-16 16-16s16 7.167968 16 16v96c0 32.363281-26.300781 58.667968-58.664062 58.667968zm0 0" />
             </svg>
           </div>
-
           <div className="stockPage">
             <div className="topbar">
               <div className="topbar__searchbar" id="topbar__searchbar">
@@ -621,7 +620,7 @@ export default class stockPage extends React.Component {
                         "topbar__searchbar"
                       ).style.boxShadow = "0px 0px 30px 0px rgba(0,0,0,0.10)";
                       document.getElementById("results").style.boxShadow =
-                        "0px 0px 30px 0px rgba(0,0,0,0.10)";
+                        "0px 30px 30px 0px rgba(0,0,0,0.10)";
                     }}
                     onBlur={() => {
                       setTimeout(() => {
@@ -733,7 +732,11 @@ export default class stockPage extends React.Component {
                 </div>
               </div>
             ) : (
-              <div />
+              <ul className="loader">
+                <li />
+                <li />
+                <li />
+              </ul>
             )}
             <div className="stockPage__keyStats">
               <div className="data">

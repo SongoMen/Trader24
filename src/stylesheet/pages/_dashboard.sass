@@ -203,17 +203,18 @@ a
       .panel__title
         display: flex
         align-items: center  
-        justify-content: space-between
-        width: 50%
-        padding-right: 200px
+        flex-direction: row
+        width: 100%
+        div:nth-child(1)
+          width: 73%
+          @media only screen and (max-width: 1050px) 
+            width: 53%
         h2
           margin: 10px 0
         .panel__popular
-          width: 6%
+          width: 3%
           min-width: 20px
           margin-right: 10px
-          fill: $main-color
-          margin-bottom: -5px
 
 .panel__status
   position: absolute
@@ -247,11 +248,16 @@ a
     &:nth-child(2)
       margin-right: 0
   
+.panel__portfolio-title
+  width: 5.5%
+  fill: $main-color
+  margin-right: 10px
+  min-width: 20px
+
 .panel__portfolio-section
   width: 34%
   height: 100%
   min-width: 250px
-  margin-top: -62px
   @media only screen and (max-width: 1050px) 
     display: none
   .panel__portfolio
@@ -282,12 +288,6 @@ a
           margin: 10px 0
         h5
           margin: 0
-
-  .panel__portfolio-title
-    width: 5.5%
-    fill: $main-color
-    margin-right: 10px
-    min-width: 20px
   .panel__value
     display: flex
     justify-content: space-between

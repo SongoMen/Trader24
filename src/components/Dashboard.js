@@ -414,8 +414,41 @@ class Dashboard extends React.Component {
   isInArray(arr, val) {
     return arr.indexOf(val) > -1;
   }
-  componentDidMount() {
-    fetch(
+  checkCharts() {
+    if (
+      stockChanges[0] !== undefined &&
+      stockPrices[0] !== undefined &&
+      chartData1.length >= 2
+    ) {
+      this.setState({
+        loader1: true
+      });
+      document.getElementById("chartFirst").href = "/stocks/" + stockSymbols[0];
+    } else {
+      this.setState({
+        loader1: false
+      });
+      document.getElementById("chartFirst").href = "#";
+    }
+    if (
+      stockChanges[1] !== undefined &&
+      stockPrices[1] !== undefined &&
+      chartData2.length >= 2
+    ) {
+      this.setState({
+        loader2: true
+      });
+      document.getElementById("chartSecond").href =
+        "/stocks/" + stockSymbols[1];
+    } else {
+      this.setState({
+        loader2: false
+      });
+      document.getElementById("chartSecond").href = "#";
+    }
+  }
+  async componentDidMount() {
+    await fetch(
       "https://cloud.iexapis.com/stable/ref-data/symbols?token=pk_95c4a35c80274553987b93e74bb825d7"
     )
       .then((res) => res.json())
@@ -436,7 +469,7 @@ class Dashboard extends React.Component {
         }
       })
       .then(() => {
-        setTimeout(() => {
+       setTimeout(() => {
           if (stockSymbols.length > 0) {
             this.getStockInfo(
               stockSymbols[0],
@@ -445,7 +478,7 @@ class Dashboard extends React.Component {
               stockPrices,
               0
             );
-            this.getStockInfo(
+             this.getStockInfo(
               stockSymbols[1],
               chartData2,
               stockChanges,
@@ -483,43 +516,6 @@ class Dashboard extends React.Component {
     //setTimeout(() => {
     //console.clear()
     //}, 2500);
-  }
-  checkCharts() {
-    if (
-      stockChanges[0] !== undefined &&
-      stockPrices[0] !== undefined &&
-      chartData1.length >= 2
-    ) {
-      this.setState({
-        loader1: true
-      });
-      document.getElementById("chartFirst").href = "/stocks/" + stockSymbols[0];
-    } else {
-      this.setState({
-        loader1: false
-      });
-      document.getElementById("chartFirst").href = "#";
-    }
-    if (
-      stockChanges[1] !== undefined &&
-      stockPrices[1] !== undefined &&
-      chartData2.length >= 2
-    ) {
-      this.setState({
-        loader2: true
-      });
-      document.getElementById("chartSecond").href =
-        "/stocks/" + stockSymbols[1];
-    } else {
-      this.setState({
-        loader2: false
-      });
-      document.getElementById("chartSecond").href = "#";
-    }
-    console.log(stockChanges);
-    console.log(stockPrices);
-    console.log("data1: ", chartData1);
-    console.log("data2: ", chartData2);
   }
   render() {
     let user = firebase.auth().currentUser.displayName;
@@ -696,21 +692,38 @@ class Dashboard extends React.Component {
                       <svg
                         className="panel__popular"
                         xmlns="http://www.w3.org/2000/svg"
-                        xmlnsXlink="http://www.w3.org/1999/xlink"
-                        xmlSpace="preserve"
-                        version="1.1"
-                        viewBox="0 0 411 261.25"
-                        x="0px"
-                        y="0px"
-                        fillRule="evenodd"
-                        clipRule="evenodd"
+                        width="48"
+                        height="48"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#5eb5f8"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                       >
-                        <defs />
-                        <g>
-                          <path d="M314 0c-29,0 -29,44 0,44l23 0 -113 112 -92 -92c-9,-8 -22,-8 -31,0l-94 95c-21,20 10,51 30,31l79 -79 92 92c9,8 23,8 31,0l128 -129 0 23c0,29 44,29 44,0l0 -75c0,-12 -10,-22 -22,-22l-75 0z" />
-                        </g>
+                        <path d="M3 3v18h18" />
+                        <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3" />
                       </svg>
                       <h3>Gainers</h3>
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        width: "33%"
+                      }}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="panel__portfolio-title"
+                        viewBox="0 0 24 24"
+                      >
+                        <g>
+                          <path fill="none" d="M0 0h24v24H0z" />
+                          <path d="M4.873 3h14.254a1 1 0 0 1 .809.412l3.823 5.256a.5.5 0 0 1-.037.633L12.367 21.602a.5.5 0 0 1-.706.028c-.007-.006-3.8-4.115-11.383-12.329a.5.5 0 0 1-.037-.633l3.823-5.256A1 1 0 0 1 4.873 3zm.51 2l-2.8 3.85L12 19.05 21.417 8.85 18.617 5H5.383z" />
+                        </g>
+                      </svg>
+                      <h3>Portfolio</h3>
                     </div>
                   </div>
                   <div className="panel__topCharts" style={{display: "flex"}}>
@@ -796,25 +809,6 @@ class Dashboard extends React.Component {
                       </div>
                     </a>
                     <div className="panel__portfolio-section">
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          flexWrap: "wrap"
-                        }}
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="panel__portfolio-title"
-                          viewBox="0 0 24 24"
-                        >
-                          <g>
-                            <path fill="none" d="M0 0h24v24H0z" />
-                            <path d="M4.873 3h14.254a1 1 0 0 1 .809.412l3.823 5.256a.5.5 0 0 1-.037.633L12.367 21.602a.5.5 0 0 1-.706.028c-.007-.006-3.8-4.115-11.383-12.329a.5.5 0 0 1-.037-.633l3.823-5.256A1 1 0 0 1 4.873 3zm.51 2l-2.8 3.85L12 19.05 21.417 8.85 18.617 5H5.383z" />
-                          </g>
-                        </svg>
-                        <h3>Portfolio</h3>
-                      </div>
                       <div className="panel__portfolio" id="portfolio">
                         {this.state.portfolioLoader === "" && (
                           <ul className="loader">
