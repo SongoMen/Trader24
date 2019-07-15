@@ -1,8 +1,8 @@
 import React from "react";
-import {Line} from "react-chartjs-2";
+import { Line } from "react-chartjs-2";
 import firebase from "firebase/app";
 import "firebase/firestore";
-import {logout} from "./auth";
+import { logout } from "./auth";
 import $ from "jquery";
 
 const db = firebase.firestore();
@@ -23,8 +23,8 @@ var options = {
     },
     displayColors: false,
   },*/
-  tooltips: {enabled: false},
-  hover: {mode: null},
+  tooltips: { enabled: false },
+  hover: { mode: null },
   legend: {
     display: false
   },
@@ -92,6 +92,7 @@ class Dashboard extends React.Component {
     };
     this.componentDidMount = this.componentDidMount.bind(this);
     this.getAccountInfo = this.getAccountInfo.bind(this);
+
     function labelGen(length) {
       let result = 0;
       for (let i = 1; i < length; i++) {
@@ -99,7 +100,7 @@ class Dashboard extends React.Component {
       }
       return result.split(",");
     }
-    this.data1 = (canvas) => {
+    this.data1 = canvas => {
       const ctx = canvas.getContext("2d");
       const gradient = ctx.createLinearGradient(0, 0, 600, 10);
       gradient.addColorStop(0, "#7c83ff");
@@ -130,7 +131,7 @@ class Dashboard extends React.Component {
         ]
       };
     };
-    this.data2 = (canvas) => {
+    this.data2 = canvas => {
       const ctx = canvas.getContext("2d");
       const gradient = ctx.createLinearGradient(0, 0, 600, 10);
       gradient.addColorStop(0, "#7c83ff");
@@ -162,29 +163,29 @@ class Dashboard extends React.Component {
       };
     };
   }
-  getStockInfo(symbol, dataChart, changeStash, priceStash, num) {
+  getStockInfo(symbol, dataChart, changeStash, priceStash, num, callback) {
     const stockApi = `https://cloud.iexapis.com/beta/stock/${symbol}/batch?token=pk_95c4a35c80274553987b93e74bb825d7&types=chart,quote&range=1d`;
     const lastPrice = `https://cloud.iexapis.com/stable/stock/${symbol}/price?token=pk_95c4a35c80274553987b93e74bb825d7`;
     const percentageChange = `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_95c4a35c80274553987b93e74bb825d7`;
     let error;
     fetch(percentageChange)
-      .then((res) => res.json())
-      .then((result) => {
+      .then(res => res.json())
+      .then(result => {
         let change = parseFloat(result.changePercent).toFixed(2);
         changeStash[num] = change;
       });
     fetch(lastPrice)
-      .then((res) => res.json())
-      .then((result) => {
+      .then(res => res.json())
+      .then(result => {
         if (!error) {
           priceStash[num] = result.toFixed(2);
         }
       });
 
     fetch(stockApi)
-      .then((res) => res.json())
-      .then((result) => {
-        for (let i = 0; i < result.chart.length - 1; i++) {
+      .then(res => res.json())
+      .then(result => {
+        for (let i = 0; i < result.chart.length - 1 || callback(); i++) {
           if (result.chart[i].average !== null && dataChart.length < 60)
             dataChart.push(parseFloat(result.chart[i].average).toFixed(2));
         }
@@ -194,14 +195,14 @@ class Dashboard extends React.Component {
     const stocks =
       "https://cloud.iexapis.com/stable/stock/market/list/mostactive?token=pk_95c4a35c80274553987b93e74bb825d7";
     fetch(stocks)
-      .then((res) => res.json())
-      .then((result) => {
+      .then(res => res.json())
+      .then(result => {
         const gainers =
           "https://cloud.iexapis.com/stable/stock/market/list/gainers?token=pk_95c4a35c80274553987b93e74bb825d7";
         let counter = 0;
         fetch(gainers)
-          .then((res) => res.json())
-          .then((result) => {
+          .then(res => res.json())
+          .then(result => {
             for (let i = 0; i < result.length; i++) {
               tempStocksSymbols.push(result[i].symbol);
               tempStockName.push(result[i].companyName);
@@ -230,8 +231,8 @@ class Dashboard extends React.Component {
               stockListTickers[i]
             }/quote?displayPercent=true&token=pk_95c4a35c80274553987b93e74bb825d7`;
             fetch(percentageChange)
-              .then((res) => res.json())
-              .then((result) => {
+              .then(res => res.json())
+              .then(result => {
                 stockListChange[i] = parseFloat(result.changePercent).toFixed(
                   2
                 );
@@ -251,14 +252,14 @@ class Dashboard extends React.Component {
                 stockListChange[i] = stockListChange[i] + "%";
               });
           }
-        }, 2000);
+        }, 500);
       })
       .then(() => {
         setTimeout(() => {
           this.setState({
             loader3: true
           });
-        }, 3000);
+        }, 1500);
       });
   }
   routeChange(path) {
@@ -285,14 +286,14 @@ class Dashboard extends React.Component {
       .doc(user)
       .collection("stocks")
       .get()
-      .then((snapshot) => {
-        snapshot.forEach((doc) => {
+      .then(snapshot => {
+        snapshot.forEach(doc => {
           console.log(doc.id, "=>", doc.data());
           portfolioStocks.push(doc.id);
           portfolioShares.push(this.numberWithCommas(doc.data().shares));
         });
       })
-      .catch((error) => {
+      .catch(error => {
         console.log("Error getting document:", error);
         this.setState({
           portfolioLoader: false
@@ -304,17 +305,17 @@ class Dashboard extends React.Component {
       .doc(user)
       .collection("stocks")
       .get()
-      .then((snapshot) => {
-        snapshot.forEach((doc) => {
+      .then(snapshot => {
+        snapshot.forEach(doc => {
           (async () => {
             for (let i = 0; i < portfolioStocks.length; i++) {
               const lastPrice = `https://cloud.iexapis.com/stable/stock/${
                 portfolioStocks[i]
               }/price?token=pk_95c4a35c80274553987b93e74bb825d7`;
-              await new Promise((resolve) =>
+              await new Promise(resolve =>
                 fetch(lastPrice)
-                  .then((res) => res.json())
-                  .then((result) => {
+                  .then(res => res.json())
+                  .then(result => {
                     portfolioValue.push(doc.data().shares * result);
                   })
                   .then(() => {
@@ -335,7 +336,7 @@ class Dashboard extends React.Component {
                   .then(() => {
                     docRef
                       .get()
-                      .then((doc) => {
+                      .then(doc => {
                         this.setState({
                           funds:
                             "$" +
@@ -354,7 +355,7 @@ class Dashboard extends React.Component {
                         });
                         resolve();
                       })
-                      .catch((error) => {
+                      .catch(error => {
                         console.log("Error getting document:", error);
                         this.setState({
                           portfolioLoader: false
@@ -414,46 +415,14 @@ class Dashboard extends React.Component {
   isInArray(arr, val) {
     return arr.indexOf(val) > -1;
   }
-  checkCharts() {
-    if (
-      stockChanges[0] !== undefined &&
-      stockPrices[0] !== undefined &&
-      chartData1.length >= 2
-    ) {
-      this.setState({
-        loader1: true
-      });
-      document.getElementById("chartFirst").href = "/stocks/" + stockSymbols[0];
-    } else {
-      this.setState({
-        loader1: false
-      });
-      document.getElementById("chartFirst").href = "#";
-    }
-    if (
-      stockChanges[1] !== undefined &&
-      stockPrices[1] !== undefined &&
-      chartData2.length >= 2
-    ) {
-      this.setState({
-        loader2: true
-      });
-      document.getElementById("chartSecond").href =
-        "/stocks/" + stockSymbols[1];
-    } else {
-      this.setState({
-        loader2: false
-      });
-      document.getElementById("chartSecond").href = "#";
-    }
-  }
-  async componentDidMount() {
-    await fetch(
+
+  componentDidMount() {
+    fetch(
       "https://cloud.iexapis.com/stable/ref-data/symbols?token=pk_95c4a35c80274553987b93e74bb825d7"
     )
-      .then((res) => res.json())
-      .then((result) => {
-        allSymbols = result.map((val) => {
+      .then(res => res.json())
+      .then(result => {
+        allSymbols = result.map(val => {
           return val;
         });
       });
@@ -462,36 +431,69 @@ class Dashboard extends React.Component {
     const gainers =
       "https://cloud.iexapis.com/stable/stock/market/list/gainers?token=pk_95c4a35c80274553987b93e74bb825d7";
     fetch(gainers)
-      .then((res) => res.json())
-      .then((result) => {
-        for (let i = 0; i < 2; i++) {
+      .then(res => res.json())
+      .then(result => {
+        for (let i = 0; i < 4; i++) {
           stockSymbols.push(result[i].symbol);
         }
-      })
-      .then(() => {
-        setTimeout(() => {
-          if (stockSymbols.length > 0) {
-            this.getStockInfo(
-              stockSymbols[0],
-              chartData1,
-              stockChanges,
-              stockPrices,
-              0
-            );
-            this.getStockInfo(
-              stockSymbols[1],
-              chartData2,
-              stockChanges,
-              stockPrices,
-              1
-            );
+        this.getStockInfo(
+          stockSymbols[0],
+          chartData1,
+          stockChanges,
+          stockPrices,
+          0,
+          () => {
+            setTimeout(() => {
+              if (
+                stockChanges[0] !== undefined &&
+                stockPrices[0] !== undefined &&
+                chartData1.length >= 2
+              ) {
+                this.setState({
+                  loader1: true
+                });
+                document.getElementById("chartFirst").href =
+                  "/stocks/" + stockSymbols[0];
+              } else {
+                this.setState({
+                  loader1: false
+                });
+                document.getElementById("chartFirst").href = "#";
+              }
+            }, 500);
           }
-        }, 1500);
-      })
-      .then(() => {
-        setTimeout(() => {
-          this.checkCharts();
-        }, 2500);
+        );
+        this.getStockInfo(
+          stockSymbols[1],
+          chartData2,
+          stockChanges,
+          stockPrices,
+          1,
+          () => {
+            setTimeout(() => {
+              if (
+                stockChanges[1] !== undefined &&
+                stockPrices[1] !== undefined &&
+                chartData2.length >= 2
+              ) {
+                this.setState({
+                  loader2: true
+                });
+                document.getElementById("chartSecond").href =
+                  "/stocks/" + stockSymbols[1];
+              } else {
+                this.setState({
+                  loader2: false
+                });
+                document.getElementById("chartSecond").href = "#";
+              }
+              console.log(JSON.stringify(stockChanges));
+              console.log(JSON.stringify(stockPrices));
+              console.log(JSON.stringify(chartData1));
+              console.log(JSON.stringify(chartData2));
+            }, 500);
+          }
+        );
       });
     document.title = "Trader24 - Dashboard";
     // GET CHARTS
@@ -502,8 +504,8 @@ class Dashboard extends React.Component {
     //READ PORTFOLIO
     this.getAccountInfo();
     fetch("https://financialmodelingprep.com/api/v3/is-the-market-open")
-      .then((res) => res.json())
-      .then((result) => {
+      .then(res => res.json())
+      .then(result => {
         if (result.isTheStockMarketOpen)
           document.getElementById("panel__status").style.color = "#5efad7";
         else document.getElementById("panel__status").style.color = "#eb5887";
@@ -542,23 +544,25 @@ class Dashboard extends React.Component {
     }
     return (
       <div className="Dashboard">
-        <div style={{display: "flex", flexDirection: "column", width: "100%"}}>
-          <div style={{display: "flex", height: "100%"}}>
+        <div
+          style={{ display: "flex", flexDirection: "column", width: "100%" }}
+        >
+          <div style={{ display: "flex", height: "100%" }}>
             <div className="leftbar">
-            <svg
-              className="topbar__logo"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-            >
-              <g>
-                <path fill="none" d="M0 0h24v24H0z" />
-                <path d="M3.897 17.86l3.91-3.91 2.829 2.828 4.571-4.57L17 14V9h-5l1.793 1.793-3.157 3.157-2.828-2.829-4.946 4.946A9.965 9.965 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10a9.987 9.987 0 0 1-8.103-4.14z" />
-              </g>
-            </svg>
+              <svg
+                className="topbar__logo"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+              >
+                <g>
+                  <path fill="none" d="M0 0h24v24H0z" />
+                  <path d="M3.897 17.86l3.91-3.91 2.829 2.828 4.571-4.57L17 14V9h-5l1.793 1.793-3.157 3.157-2.828-2.829-4.946 4.946A9.965 9.965 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10a9.987 9.987 0 0 1-8.103-4.14z" />
+                </g>
+              </svg>
               <ul className="leftbar__menu">
                 <li>
                   <svg
-                    style={{fill: "#5eb5f8"}}
+                    style={{ fill: "#5eb5f8" }}
                     xmlns="http://www.w3.org/2000/svg"
                     xmlnsXlink="http://www.w3.org/1999/xlink"
                     version="1.1"
@@ -693,7 +697,7 @@ class Dashboard extends React.Component {
               <div className="panel__container">
                 <div className="panel__top">
                   <div className="panel__title">
-                    <div style={{display: "flex", alignItems: "center"}}>
+                    <div style={{ display: "flex", alignItems: "center" }}>
                       <svg
                         className="panel__popular"
                         xmlns="http://www.w3.org/2000/svg"
@@ -731,7 +735,7 @@ class Dashboard extends React.Component {
                       <h3>Portfolio</h3>
                     </div>
                   </div>
-                  <div className="panel__topCharts" style={{display: "flex"}}>
+                  <div className="panel__topCharts" style={{ display: "flex" }}>
                     <a id="chartFirst" href="/" className="chartLink">
                       <div className="stockChart">
                         {this.state.loader1 === "" && (
@@ -757,7 +761,7 @@ class Dashboard extends React.Component {
                             <div className="stockChart__price-info">
                               <h4
                                 className="stockChart__change"
-                                style={{color: changesColors[0]}}
+                                style={{ color: changesColors[0] }}
                               >
                                 {stockChanges[0]}%
                               </h4>
@@ -801,7 +805,7 @@ class Dashboard extends React.Component {
                             <div className="stockChart__price-info">
                               <h4
                                 className="stockChart__change"
-                                style={{color: changesColors[1]}}
+                                style={{ color: changesColors[1] }}
                               >
                                 {stockChanges[1]}%
                               </h4>
@@ -839,7 +843,9 @@ class Dashboard extends React.Component {
                                   <li key={index}>
                                     <h5>{value}</h5>
                                     <h5>{portfolioShares[index]}</h5>
-                                    <h5 style={{color: portfolioColor[index]}}>
+                                    <h5
+                                      style={{ color: portfolioColor[index] }}
+                                    >
                                       {portfolioDifference[index]}%
                                     </h5>
                                     <h5>

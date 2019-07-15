@@ -1,8 +1,8 @@
 import React from "react";
-import {logout} from "./auth";
+import { logout } from "./auth";
 import firebase from "firebase/app";
-import {Line} from "react-chartjs-2";
-import {defaults} from "react-chartjs-2";
+import { Line } from "react-chartjs-2";
+import { defaults } from "react-chartjs-2";
 import $ from "jquery";
 import "chartjs-plugin-annotation";
 
@@ -77,6 +77,20 @@ let stockData = {};
 let keyData = [];
 let keyDataLabel = [];
 
+let twoYears = [];
+let twoYearsLabels = [];
+
+let oneYear = [];
+let oneYearLabels = [];
+
+let ytdChart = [];
+let ytdLabels = [];
+
+let oneMonth = [];
+let oneMonthLabels = [];
+
+let oneDay = [];
+let oneDayLabels = [];
 export default class stockPage extends React.Component {
   constructor(props) {
     super(props);
@@ -96,11 +110,11 @@ export default class stockPage extends React.Component {
         this.props.symbol
       }/batch?token=pk_95c4a35c80274553987b93e74bb825d7&types=chart,quote&range=1d&changeFromClose=true`
     )
-      .then((res) => res.json())
-      .then((result) => {
+      .then(res => res.json())
+      .then(result => {
         closePrice = result.quote.previousClose;
       });
-    this.data1 = (canvas) => {
+    this.data1 = canvas => {
       const ctx = canvas.getContext("2d");
       const gradient = ctx.createLinearGradient(0, 0, 600, 10);
       gradient.addColorStop(0, "#7c83ff");
@@ -185,157 +199,181 @@ export default class stockPage extends React.Component {
     };
     labels = [];
     chartData1 = [];
-    const stockApi = `https://cloud.iexapis.com/beta/stock/${
-      this.props.symbol
-    }/batch?token=pk_95c4a35c80274553987b93e74bb825d7&types=chart,quote&range=1d&changeFromClose=true`;
-    fetch(stockApi)
-      .then((res) => res.json())
-      .then((result) => {
-        for (let i = 0; i < result.chart.length; i++) {
-          if (result.chart[i].average !== null) {
-            chartData1.push(result.chart[i].average.toFixed(2));
-            labels.push(result.chart[i].label);
+    if (oneDay.length === 0) {
+      const stockApi = `https://cloud.iexapis.com/beta/stock/${
+        this.props.symbol
+      }/batch?token=pk_95c4a35c80274553987b93e74bb825d7&types=chart,quote&range=1d&changeFromClose=true`;
+      fetch(stockApi)
+        .then(res => res.json())
+        .then(result => {
+          for (let i = 0; i < result.chart.length; i++) {
+            if (result.chart[i].average !== null) {
+              chartData1.push(result.chart[i].average.toFixed(2));
+              labels.push(result.chart[i].label);
+            }
           }
-        }
-      })
-      .then(() => {
-        setTimeout(() => {
+        })
+        .then(() => {
           this.setState({
             loaded: true
           });
-        }, 500);
+          chartData1.map(val => oneDay.push(val));
+          labels.map(val => oneDayLabels.push(val));
+        });
+    } else {
+      labels = oneDayLabels;
+      chartData1 = oneDay;
+      this.setState({
+        loaded: true
       });
+    }
     options.annotation = anno;
   }
   getYTDChart() {
     labels = [];
     chartData1 = [];
-    const stockApi = `https://cloud.iexapis.com/beta/stock/${
-      this.props.symbol
-    }/batch?token=pk_95c4a35c80274553987b93e74bb825d7&types=chart,quote&range=ytd`;
-    fetch(stockApi)
-      .then((res) => res.json())
-      .then((result) => {
-        for (let i = 0; i < result.chart.length; i++) {
-          if (result.chart[i].average !== null) {
-            chartData1.push(result.chart[i].close.toFixed(2));
-            labels.push(result.chart[i].label);
+    if (ytdChart.length === 0) {
+      const stockApi = `https://cloud.iexapis.com/beta/stock/${
+        this.props.symbol
+      }/batch?token=pk_95c4a35c80274553987b93e74bb825d7&types=chart,quote&range=ytd`;
+      fetch(stockApi)
+        .then(res => res.json())
+        .then(result => {
+          for (let i = 0; i < result.chart.length; i++) {
+            if (result.chart[i].average !== null) {
+              chartData1.push(result.chart[i].close.toFixed(2));
+              labels.push(result.chart[i].label);
+            }
           }
-        }
-      })
-      .then(() => {
-        setTimeout(() => {
+        })
+        .then(() => {
           this.setState({
             loaded: true
           });
-        }, 500);
+          chartData1.map(val => ytdChart.push(val));
+          labels.map(val => ytdLabels.push(val));
+        });
+    } else {
+      labels = ytdLabels;
+      chartData1 = ytdChart;
+      this.setState({
+        loaded: true
       });
+    }
+
     options.annotation = "";
   }
   getOneYearChart() {
     labels = [];
     chartData1 = [];
-    const stockApi = `https://cloud.iexapis.com/beta/stock/${
-      this.props.symbol
-    }/batch?token=pk_95c4a35c80274553987b93e74bb825d7&types=chart,quote&range=1y`;
-    fetch(stockApi)
-      .then((res) => res.json())
-      .then((result) => {
-        for (let i = 0; i < result.chart.length; i++) {
-          if (result.chart[i].average !== null) {
-            chartData1.push(result.chart[i].close.toFixed(2));
-            labels.push(result.chart[i].label);
+    if (oneYear.length === 0) {
+      const stockApi = `https://cloud.iexapis.com/beta/stock/${
+        this.props.symbol
+      }/batch?token=pk_95c4a35c80274553987b93e74bb825d7&types=chart,quote&range=1y`;
+      fetch(stockApi)
+        .then(res => res.json())
+        .then(result => {
+          for (let i = 0; i < result.chart.length; i++) {
+            if (result.chart[i].average !== null) {
+              chartData1.push(result.chart[i].close.toFixed(2));
+              labels.push(result.chart[i].label);
+            }
           }
-        }
-      })
-      .then(() => {
-        setTimeout(() => {
+        })
+        .then(() => {
           this.setState({
             loaded: true
           });
-        }, 500);
+          chartData1.map(val => oneYear.push(val));
+          labels.map(val => oneYearLabels.push(val));
+        });
+    } else {
+      labels = oneYearLabels;
+      chartData1 = oneYear;
+      this.setState({
+        loaded: true
       });
+    }
     options.annotation = "";
   }
   getTwoYearChart() {
     labels = [];
     chartData1 = [];
-    const stockApi = `https://cloud.iexapis.com/beta/stock/${
-      this.props.symbol
-    }/batch?token=pk_95c4a35c80274553987b93e74bb825d7&types=chart,quote&range=2y`;
-    fetch(stockApi)
-      .then((res) => res.json())
-      .then((result) => {
-        for (let i = 0; i < result.chart.length; i++) {
-          if (result.chart[i].average !== null) {
-            chartData1.push(result.chart[i].close.toFixed(2));
-            labels.push(result.chart[i].label);
+    if (twoYears.length === 0) {
+      const stockApi = `https://cloud.iexapis.com/beta/stock/${
+        this.props.symbol
+      }/batch?token=pk_95c4a35c80274553987b93e74bb825d7&types=chart,quote&range=2y`;
+      fetch(stockApi)
+        .then(res => res.json())
+        .then(result => {
+          for (let i = 0; i < result.chart.length; i++) {
+            if (result.chart[i].average !== null) {
+              chartData1.push(result.chart[i].close.toFixed(2));
+              labels.push(result.chart[i].label);
+            }
           }
-        }
-      })
-      .then(() => {
-        setTimeout(() => {
+        })
+        .then(() => {
           this.setState({
             loaded: true
           });
-        }, 500);
+          chartData1.map(val => twoYears.push(val));
+          labels.map(val => twoYearsLabels.push(val));
+        });
+    } else {
+      labels = twoYearsLabels;
+      chartData1 = twoYears;
+      this.setState({
+        loaded: true
       });
+    }
     options.annotation = "";
   }
   getOneMonthChart() {
     labels = [];
     chartData1 = [];
-    const stockApi = `https://cloud.iexapis.com/beta/stock/${
-      this.props.symbol
-    }/batch?token=pk_95c4a35c80274553987b93e74bb825d7&types=chart,quote&range=1m`;
-    fetch(stockApi)
-      .then((res) => res.json())
-      .then((result) => {
-        for (let i = 0; i < result.chart.length; i++) {
-          if (result.chart[i].average !== null) {
-            chartData1.push(result.chart[i].close.toFixed(2));
-            labels.push(result.chart[i].label);
+    if (oneMonth.length === 0) {
+      const stockApi = `https://cloud.iexapis.com/beta/stock/${
+        this.props.symbol
+      }/batch?token=pk_95c4a35c80274553987b93e74bb825d7&types=chart,quote&range=1m`;
+      fetch(stockApi)
+        .then(res => res.json())
+        .then(result => {
+          for (let i = 0; i < result.chart.length; i++) {
+            if (result.chart[i].average !== null) {
+              chartData1.push(result.chart[i].close.toFixed(2));
+              labels.push(result.chart[i].label);
+            }
           }
-        }
-        console.log(chartData1);
-      })
-      .then(() => {
-        setTimeout(() => {
+        })
+        .then(() => {
           this.setState({
             loaded: true
           });
-        }, 1000);
+          chartData1.map(val => oneMonth.push(val));
+          labels.map(val => oneMonthLabels.push(val));
+        });
+    } else {
+      labels = oneMonthLabels;
+      chartData1 = oneMonth;
+      this.setState({
+        loaded: true
       });
+    }
     options.annotation = "";
   }
   abbrNum(number, decPlaces) {
-    // 2 decimal places => 100, 3 => 1000, etc
     decPlaces = Math.pow(10, decPlaces);
-
-    // Enumerate number abbreviations
     var abbrev = ["k", "m", "b", "t"];
-
-    // Go through the array backwards, so we do the largest first
     for (var i = abbrev.length - 1; i >= 0; i--) {
-      // Convert array index to "1000", "1000000", etc
       var size = Math.pow(10, (i + 1) * 3);
-
-      // If the number is bigger or equal do the abbreviation
       if (size <= number) {
-        // Here, we multiply by decPlaces, round, and then divide by decPlaces.
-        // This gives us nice rounding to a particular decimal place.
         number = Math.round((number * decPlaces) / size) / decPlaces;
-
-        // Handle special case where we round up to the next abbreviation
         if (number === 1000 && i < abbrev.length - 1) {
           number = 1;
           i++;
         }
-
-        // Add the letter for the abbreviation
         number += abbrev[i];
-
-        // We are done... stop
         break;
       }
     }
@@ -392,17 +430,17 @@ export default class stockPage extends React.Component {
 
         document.getElementById("1y").className = "";
       }
-    }, 1000);
+    }, 200);
   }
   componentDidMount() {
-    if (this.isInArray(this.props.symbol)) this.setState({valid: true});
-    else this.setState({valid: false});
+    if (this.isInArray(this.props.symbol)) this.setState({ valid: true });
+    else this.setState({ valid: false });
     fetch(
       "https://cloud.iexapis.com/stable/ref-data/symbols?token=pk_95c4a35c80274553987b93e74bb825d7"
     )
-      .then((res) => res.json())
-      .then((result) => {
-        allSymbols = result.map((val) => {
+      .then(res => res.json())
+      .then(result => {
+        allSymbols = result.map(val => {
           return val;
         });
       });
@@ -411,8 +449,8 @@ export default class stockPage extends React.Component {
         this.props.symbol
       }/realtime-update?token=pk_95c4a35c80274553987b93e74bb825d7&last=3&changeFromClose=true`
     )
-      .then((res) => res.json())
-      .then((result) => {
+      .then(res => res.json())
+      .then(result => {
         stockData.name = result.quote.companyName;
         stockData.previousClose = result.quote.previousClose;
         stockData.latestTime = result.quote.latestTime;
@@ -442,16 +480,36 @@ export default class stockPage extends React.Component {
 
         keyData[5] = this.numberWithCommas(result.quote.latestVolume);
         keyDataLabel[5] = "Volume ";
+      })
+      .then(() => {
+        if (stockData.change > 0) {
+          this.setState({
+            changeColor: "#66F9DA"
+          });
+        } else {
+          this.setState({
+            changeColor: "#F45385"
+          });
+        }
+        if (stockData.extendedChange > 0) {
+          this.setState({
+            extendedColor: "#66F9DA"
+          });
+        } else {
+          this.setState({
+            extendedColor: "#F45385"
+          });
+        }
       });
     document.title = "Trader24 - " + this.props.symbol;
     fetch("https://financialmodelingprep.com/api/v3/is-the-market-open")
-      .then((res) => res.json())
-      .then((result) => {
+      .then(res => res.json())
+      .then(result => {
         if (result.isTheStockMarketOpen)
           document.getElementById("panel__status").style.color = "#5efad7";
         else document.getElementById("panel__status").style.color = "#eb5887";
-        if (result.isTheStockMarketOpen) this.setState({marketStatus: true});
-        else this.setState({marketStatus: false});
+        if (result.isTheStockMarketOpen) this.setState({ marketStatus: true });
+        else this.setState({ marketStatus: false });
         document.getElementById(
           "panel__status"
         ).innerHTML = result.isTheStockMarketOpen
@@ -463,7 +521,7 @@ export default class stockPage extends React.Component {
 
     docRef
       .get()
-      .then((doc) => {
+      .then(doc => {
         this.setState({
           funds: "$" + this.numberWithCommas(doc.data()["currentfunds"])
         });
@@ -475,26 +533,6 @@ export default class stockPage extends React.Component {
         console.log("Error getting document:", error);
       });
     this.getYTDChart();
-    setTimeout(() => {
-      if (stockData.change > 0) {
-        this.setState({
-          changeColor: "#66F9DA"
-        });
-      } else {
-        this.setState({
-          changeColor: "#F45385"
-        });
-      }
-      if (stockData.extendedChange > 0) {
-        this.setState({
-          extendedColor: "#66F9DA"
-        });
-      } else {
-        this.setState({
-          extendedColor: "#F45385"
-        });
-      }
-    }, 1500);
     if (this.state.marketStatus) {
       setInterval(() => {
         fetch(
@@ -502,8 +540,8 @@ export default class stockPage extends React.Component {
             this.props.symbol
           }/price?token=pk_95c4a35c80274553987b93e74bb825d7`
         )
-          .then((res) => res.json())
-          .then((result) => {
+          .then(res => res.json())
+          .then(result => {
             this.setState({
               latestPrice: result.toFixed(2)
             });
@@ -515,7 +553,7 @@ export default class stockPage extends React.Component {
     let user = firebase.auth().currentUser.displayName;
     return (
       <div className="stock">
-        <div style={{display: "flex", height: "100%"}}>
+        <div style={{ display: "flex", height: "100%" }}>
           <div className="leftbar">
             <svg
               className="topbar__logo"
@@ -721,14 +759,14 @@ export default class stockPage extends React.Component {
                   <h4>{stockData.name}</h4>
                   <div className="stockPage__trade-top">
                     <h2>${this.state.latestPrice}</h2>
-                    <h6 style={{color: this.state.changeColor}}>
+                    <h6 style={{ color: this.state.changeColor }}>
                       {stockData.change} ({stockData.changePercent}%)
                     </h6>
                   </div>
                   {!this.state.marketStatus && (
                     <h6>
                       Extended Hours:{" "}
-                      <span style={{color: this.state.extendedColor}}>
+                      <span style={{ color: this.state.extendedColor }}>
                         ${stockData.extendedPrice} ({stockData.extendedChange})
                       </span>
                     </h6>
