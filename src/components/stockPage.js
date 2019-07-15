@@ -760,7 +760,7 @@ export default class stockPage extends React.Component {
                   <div className="stockPage__trade-top">
                     <h2>${this.state.latestPrice}</h2>
                     <h6 style={{ color: this.state.changeColor }}>
-                      {stockData.change} ({stockData.changePercent}%)
+                      ${stockData.change} ({stockData.changePercent}%)
                     </h6>
                   </div>
                   {!this.state.marketStatus && (
