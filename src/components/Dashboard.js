@@ -251,17 +251,17 @@ class Dashboard extends React.Component {
                   stockListChangeColors[i] = "rgb(153,158,175";
                 }
                 stockListChange[i] = stockListChange[i] + "%";
+              })
+              .then(() => {
+                setTimeout(() => {
+                  this.setState({
+                    loader3: true
+                  });
+                }, 500);
               });
           }
         }, 1000);
       })
-      .then(() => {
-        setTimeout(() => {
-          this.setState({
-            loader3: true
-          });
-        }, 1500);
-      });
   }
   routeChange(path) {
     this.props.history.push(path);
@@ -516,9 +516,6 @@ class Dashboard extends React.Component {
           ? "Market status: Open"
           : "Market status: Closed";
       });
-    //setTimeout(() => {
-    //console.clear()
-    //}, 2500);
     setTimeout(() => {
       if(this.state.portfolioLoader !== true) this.getAccountInfo()
     }, 5000);
@@ -668,7 +665,7 @@ class Dashboard extends React.Component {
                         setTimeout(() => {
                           document.getElementById("results").style.display =
                             "none";
-                        }, 400);
+                        }, 300);
                         document.getElementById(
                           "topbar__searchbar"
                         ).style.boxShadow = "none";

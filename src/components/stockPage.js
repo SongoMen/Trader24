@@ -833,7 +833,7 @@ export default class stockPage extends React.Component {
             </div>
           </div>
         )}
-        {!this.state.valid && (
+        {this.state.valid === false && (
           <div className="wrongSymbol">
             <h1>Unknown Symbol</h1>
             <div className="topbar__searchbar" id="topbar__searchbar">
