@@ -4,6 +4,7 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import { logout } from "./auth";
 import $ from "jquery";
+import { Link } from 'react-router-dom'
 
 const db = firebase.firestore();
 
@@ -164,9 +165,9 @@ class Dashboard extends React.Component {
     };
   }
   getStockInfo(symbol, dataChart, changeStash, priceStash, num, callback) {
-    const stockApi = `https://cloud.iexapis.com/beta/stock/${symbol}/batch?token=pk_95c4a35c80274553987b93e74bb825d7&types=chart,quote&range=1d`;
-    const lastPrice = `https://cloud.iexapis.com/stable/stock/${symbol}/price?token=pk_95c4a35c80274553987b93e74bb825d7`;
-    const percentageChange = `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_95c4a35c80274553987b93e74bb825d7`;
+    const stockApi = `https://cloud.iexapis.com/beta/stock/${symbol}/batch?token=pk_e103471603a7468f8947eeb5bd9b6b77&types=chart,quote&range=1d`;
+    const lastPrice = `https://cloud.iexapis.com/stable/stock/${symbol}/price?token=pk_e103471603a7468f8947eeb5bd9b6b77`;
+    const percentageChange = `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_e103471603a7468f8947eeb5bd9b6b77`;
     let error;
     fetch(percentageChange)
       .then(res => res.json())
@@ -193,12 +194,12 @@ class Dashboard extends React.Component {
   }
   getStocksList() {
     const stocks =
-      "https://cloud.iexapis.com/stable/stock/market/list/mostactive?token=pk_95c4a35c80274553987b93e74bb825d7";
+      "https://cloud.iexapis.com/stable/stock/market/list/mostactive?token=pk_e103471603a7468f8947eeb5bd9b6b77";
     fetch(stocks)
       .then(res => res.json())
       .then(result => {
         const gainers =
-          "https://cloud.iexapis.com/stable/stock/market/list/gainers?token=pk_95c4a35c80274553987b93e74bb825d7";
+          "https://cloud.iexapis.com/stable/stock/market/list/gainers?token=pk_e103471603a7468f8947eeb5bd9b6b77";
         let counter = 0;
         fetch(gainers)
           .then(res => res.json())
@@ -229,7 +230,7 @@ class Dashboard extends React.Component {
           for (let i = 0; i < 9; i++) {
             const percentageChange = `https://cloud.iexapis.com/stable/stock/${
               stockListTickers[i]
-            }/quote?displayPercent=true&token=pk_95c4a35c80274553987b93e74bb825d7`;
+            }/quote?displayPercent=true&token=pk_e103471603a7468f8947eeb5bd9b6b77`;
             fetch(percentageChange)
               .then(res => res.json())
               .then(result => {
@@ -252,7 +253,7 @@ class Dashboard extends React.Component {
                 stockListChange[i] = stockListChange[i] + "%";
               });
           }
-        }, 500);
+        }, 1000);
       })
       .then(() => {
         setTimeout(() => {
@@ -311,7 +312,7 @@ class Dashboard extends React.Component {
             for (let i = 0; i < portfolioStocks.length; i++) {
               const lastPrice = `https://cloud.iexapis.com/stable/stock/${
                 portfolioStocks[i]
-              }/price?token=pk_95c4a35c80274553987b93e74bb825d7`;
+              }/price?token=pk_e103471603a7468f8947eeb5bd9b6b77`;
               await new Promise(resolve =>
                 fetch(lastPrice)
                   .then(res => res.json())
@@ -375,7 +376,7 @@ class Dashboard extends React.Component {
                 });
                 document.getElementById("portfolio").style.display = "block";
               }
-            }, 200);
+            }, 300);
           })();
         });
       });
@@ -400,7 +401,7 @@ class Dashboard extends React.Component {
             if (a === 0) {
               document.getElementById("results").style.display = "flex";
               $("#results").append(
-                `<li><a href="/stocks/"${allSymbols[i].symbol}><h4>${
+                `<li><a href="/stocks/${allSymbols[i].symbol}"><h4>${
                   allSymbols[i].symbol
                 }</h4><h6>${allSymbols[i].name}</h6></a></li>`
               );
@@ -418,7 +419,7 @@ class Dashboard extends React.Component {
 
   componentDidMount() {
     fetch(
-      "https://cloud.iexapis.com/stable/ref-data/symbols?token=pk_95c4a35c80274553987b93e74bb825d7"
+      "https://cloud.iexapis.com/stable/ref-data/symbols?token=pk_e103471603a7468f8947eeb5bd9b6b77"
     )
       .then(res => res.json())
       .then(result => {
@@ -429,7 +430,7 @@ class Dashboard extends React.Component {
     chartData1 = [];
     chartData2 = [];
     const gainers =
-      "https://cloud.iexapis.com/stable/stock/market/list/gainers?token=pk_95c4a35c80274553987b93e74bb825d7";
+      "https://cloud.iexapis.com/stable/stock/market/list/gainers?token=pk_e103471603a7468f8947eeb5bd9b6b77";
     fetch(gainers)
       .then(res => res.json())
       .then(result => {
@@ -460,7 +461,7 @@ class Dashboard extends React.Component {
                 });
                 document.getElementById("chartFirst").href = "#";
               }
-            }, 500);
+            }, 800);
           }
         );
         this.getStockInfo(
@@ -491,7 +492,7 @@ class Dashboard extends React.Component {
               console.log(JSON.stringify(stockPrices));
               console.log(JSON.stringify(chartData1));
               console.log(JSON.stringify(chartData2));
-            }, 500);
+            }, 800);
           }
         );
       });
@@ -518,6 +519,9 @@ class Dashboard extends React.Component {
     //setTimeout(() => {
     //console.clear()
     //}, 2500);
+    setTimeout(() => {
+      if(this.state.portfolioLoader !== true) this.getAccountInfo()
+    }, 5000);
   }
   render() {
     let user = firebase.auth().currentUser.displayName;
@@ -890,7 +894,7 @@ class Dashboard extends React.Component {
                           if (index < 3)
                             return (
                               <li key={index}>
-                                <a href={"stocks/" + stockListTickers[index]}>
+                                <Link to={"stocks/" + stockListTickers[index]}>
                                   <span className="panel__fullname">
                                     <h4>{stockListTickers[index]}</h4>
                                     <h6 className="panel__name">{value}</h6>
@@ -911,7 +915,7 @@ class Dashboard extends React.Component {
                                       {stockListChange[index]}
                                     </h5>
                                   </div>
-                                </a>
+                                </Link>
                               </li>
                             );
                           else return "";
@@ -932,7 +936,7 @@ class Dashboard extends React.Component {
                           if (index >= 3 && index < 6)
                             return (
                               <li key={index}>
-                                <a href={"stocks/" + stockListTickers[index]}>
+                                <Link to={"stocks/" + stockListTickers[index]}>
                                   <span className="panel__fullname">
                                     <h4>{stockListTickers[index]}</h4>
                                     <h6 className="panel__name">{value}</h6>
@@ -953,7 +957,7 @@ class Dashboard extends React.Component {
                                       {stockListChange[index]}
                                     </h5>
                                   </div>
-                                </a>
+                                </Link>
                               </li>
                             );
                           else return "";
@@ -974,7 +978,7 @@ class Dashboard extends React.Component {
                           if (index >= 6)
                             return (
                               <li key={index}>
-                                <a href={"stocks/" + stockListTickers[index]}>
+                                <Link to={"stocks/" + stockListTickers[index]}>
                                   <span className="panel__fullname">
                                     <h4>{stockListTickers[index]}</h4>
                                     <h6 className="panel__name">{value}</h6>
@@ -995,7 +999,7 @@ class Dashboard extends React.Component {
                                       {stockListChange[index]}
                                     </h5>
                                   </div>
-                                </a>
+                                </Link>
                               </li>
                             );
                           else return "";

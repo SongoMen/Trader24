@@ -10,6 +10,7 @@
   height: 60px
   list-style: none
   box-sizing: content-box
+  position: absolute
 
 @-webkit-keyframes 'loadbars'
   0%
@@ -66,69 +67,69 @@ a
   .topbar__container
     display: flex
     align-items: center
-  .topbar__searchbar
-    display: flex
+.topbar__searchbar
+  display: flex
+  flex-direction: column
+  border-radius: 50px
+  margin-right: 80px
+  display: flex
+  align-items: flex-start
+  padding: 0 20px
+  position: relative
+  z-index: 10
+  height: 45px
+  justify-content: center
+  transition: .5s all
+  width: 40%
+  @media only screen and (max-width: 900px) 
+    width: 100%
+  .topbar__results
+    position: absolute
+    left: 0
+    width: 100%
     flex-direction: column
-    border-radius: 50px
-    margin-right: 80px
-    display: flex
-    align-items: flex-start
-    padding: 0 20px
-    position: relative
-    z-index: 10
-    height: 45px
-    justify-content: center
-    transition: .5s all
-    width: 30%
-    @media only screen and (max-width: 900px) 
+    background-color: $panel-color
+    z-index: -1
+    padding: 0
+    top: 0
+    border-top: 40px solid $panel-color!important
+    border: 15px solid $panel-color
+    border-radius: 5px 
+    border-bottom-left-radius: 20px
+    border-bottom-right-radius: 20px
+    display: none
+    li
+      display: flex
+      justify-content: space-between
       width: 100%
-    .topbar__results
-      position: absolute
-      left: 0
-      width: 100%
-      flex-direction: column
-      background-color: $panel-color
-      z-index: -1
-      padding: 0
-      top: 0
-      border-top: 40px solid $panel-color!important
-      border: 15px solid $panel-color
-      border-radius: 5px 
-      border-bottom-left-radius: 20px
-      border-bottom-right-radius: 20px
-      display: none
-      li
-        display: flex
-        justify-content: space-between
+      padding: 0 15px
+      border-radius: 10px
+      transition: all .5s
+
+      a
+        color: white
         width: 100%
-        padding: 0 15px
-        border-radius: 10px
-        transition: all .5s
+      h4,h6
+        margin: 5px 0
+      h6
+        color: $inactive-color
+        text-align: left
+      &:hover
+        color: $main-color
+        background-color: $elements-color
+        cursor: pointer
 
-        a
-          color: white
-          width: 100%
-        h4,h6
-          margin: 5px 0
-        h6
-          color: $inactive-color
-          text-align: left
-        &:hover
-          color: $main-color
-          background-color: $elements-color
-          cursor: pointer
-
-    svg
-      height: 15px
-      fill: $searchbarText-color
-    input
-      height: 30px
-      background-color: $panel-color
-      color: $searchbarText-color
-      padding: 10px
-      font-weight: bold
-      font-size: 16px
-      width: 100%
+  svg
+    height: 15px
+    fill: $searchbarText-color
+  input
+    height: 30px
+    background-color: $panel-color
+    color: $searchbarText-color
+    padding: 10px
+    font-weight: bold
+    font-size: 16px
+    width: 100%
 
 .leftbar
   position: relative
@@ -187,7 +188,7 @@ a
       display: flex
       align-items: center
       flex-wrap: wrap
-      height: 42%
+      height: 40%
       margin-bottom: 50px
     .panel__topCharts
       height: 90%
@@ -381,8 +382,9 @@ a
 .panel__low
   display: flex
   flex-direction: column
-  height: 51%
+  height: 45%
   width: 100%
+  position: relative
 
 .panel__bottom
   display: flex
