@@ -15,7 +15,7 @@ const db = firebase.firestore();
 var options = {
   layout: {
     padding: {
-      right: 25 //set that fits the best
+      right: 25
     }
   },
   tooltips: {
@@ -221,7 +221,9 @@ export default class stockPage extends React.Component {
                 ).toFixed(2)
               );
               labels.push(
-                Object.keys(result["Time Series (1min)"])[i].split(" ")[1].slice(0, -3)
+                Object.keys(result["Time Series (1min)"])
+                  [i].split(" ")[1]
+                  .slice(0, -3)
               );
             }
           } else {
@@ -248,7 +250,9 @@ export default class stockPage extends React.Component {
                       ).toFixed(2)
                     );
                     labels.push(
-                      Object.keys(result["Time Series (1min)"])[i].split(" ")[1].slice(0, -3)
+                      Object.keys(result["Time Series (1min)"])
+                        [i].split(" ")[1]
+                        .slice(0, -3)
                     );
                   }
                 });
@@ -493,6 +497,10 @@ export default class stockPage extends React.Component {
         stockData.previousClose = result.previousClose;
         stockData.latestTime = result.latestTime;
         stockData.extendedPrice = result.extendedPrice;
+        if (result.extendedPrice === null) {
+          stockData.extendedPrice = "";
+          stockData.extendedChange = ""
+        }
         stockData.extendedChange = result.extendedChange;
         this.setState({
           latestPrice: result.latestPrice.toFixed(2)
@@ -599,10 +607,12 @@ export default class stockPage extends React.Component {
         }
       })
       .then(() => {
-        if (this.isInArray(symbolsOnly, this.props.symbol)) {
-          this.setState({ valid: true });
-          this.rendering();
-        } else this.setState({ valid: false });
+        setTimeout(() => {
+          if (this.isInArray(symbolsOnly, this.props.symbol)) {
+            this.setState({ valid: true });
+            this.rendering();
+          } else this.setState({ valid: false });
+        }, 500);
       });
 
     let user = firebase.auth().currentUser.uid;
@@ -837,7 +847,7 @@ export default class stockPage extends React.Component {
                         {stockData.change} ({stockData.changePercent}%)
                       </h6>
                     </div>
-                    {!this.state.marketStatus && (
+                    {!this.state.marketStatus & stockData.extendedChange !== null ? (
                       <h6>
                         Extended Hours:{" "}
                         <span style={{ color: this.state.extendedColor }}>
@@ -845,7 +855,7 @@ export default class stockPage extends React.Component {
                           )
                         </span>
                       </h6>
-                    )}
+                    ):<div></div>}
                     <h5>Buy {this.props.symbol}</h5>
                   </div>
                 </div>
