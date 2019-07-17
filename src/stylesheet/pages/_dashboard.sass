@@ -243,6 +243,9 @@ a
     cursor: pointer
     h5
       color: $inactive-color
+    svg
+      fill: $inactive-color
+      width: 20%
 .chartLink
   margin-right: 4.5%
   width: 33%
@@ -277,6 +280,9 @@ a
     margin-bottom: 20px
     position: relative
     padding: 10px 20px
+    svg
+      fill: $inactive-color
+      width: 20%
     .panel__portfolio-list
       width: 100%
       padding: 0
@@ -425,7 +431,10 @@ a
     display: flex
     flex-direction: column
     align-items: flex-start
-    h4,h6
+    h4
+      margin: 0
+      margin-bottom: 5px
+    h6
       margin: 0
   .panel__name
     color: $inactive-color

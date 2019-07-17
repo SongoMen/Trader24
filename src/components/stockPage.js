@@ -70,6 +70,13 @@ var options = {
   }
 };
 
+const apiKeys = [
+  "SAOS0Y8B63XM4DPK",
+  "4LPH6E70R1XQR2L5",
+  "NOBPQ2OPX7E1XRT3",
+  "7V0Q0N46CBIPHA2K"
+];
+
 let chartData1 = [];
 let labels = [];
 let allSymbols = [];
@@ -192,26 +199,70 @@ export default class stockPage extends React.Component {
     };
     labels = [];
     chartData1 = [];
+    let b = 0;
     if (oneDay.length === 0) {
-      const stockApi = `https://cloud.iexapis.com/beta/stock/${
+      const stockApi = `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${
         this.props.symbol
-      }/batch?token=pk_e103471603a7468f8947eeb5bd9b6b77&types=chart,quote&range=1d&changeFromClose=true`;
+      }&interval=1min&apikey=${apiKeys[0]}`;
       fetch(stockApi)
         .then(res => res.json())
         .then(result => {
-          for (let i = 0; i < result.chart.length; i++) {
-            if (result.chart[i].average !== null) {
-              chartData1.push(result.chart[i].average.toFixed(2));
-              labels.push(result.chart[i].label);
+          if (result["Note"] === undefined) {
+            for (
+              let i = Object.keys(result["Time Series (1min)"]).length - 1;
+              i > 0;
+              i--
+            ) {
+              chartData1.push(
+                parseFloat(
+                  result["Time Series (1min)"][
+                    Object.keys(result["Time Series (1min)"])[i]
+                  ]["4. close"]
+                ).toFixed(2)
+              );
+              labels.push(
+                Object.keys(result["Time Series (1min)"])[i].split(" ")[1].slice(0, -3)
+              );
             }
+          } else {
+            setTimeout(() => {
+              b++;
+              const stockApi = `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${
+                this.props.symbol
+              }&interval=1min&apikey=${apiKeys[b]}`;
+              fetch(stockApi)
+                .then(res => res.json())
+                .then(result => {
+                  console.log(Object.keys(result["Time Series (1min)"]));
+                  for (
+                    let i =
+                      Object.keys(result["Time Series (1min)"]).length - 1;
+                    i > 0;
+                    i--
+                  ) {
+                    chartData1.push(
+                      parseFloat(
+                        result["Time Series (1min)"][
+                          Object.keys(result["Time Series (1min)"])[i]
+                        ]["4. close"]
+                      ).toFixed(2)
+                    );
+                    labels.push(
+                      Object.keys(result["Time Series (1min)"])[i].split(" ")[1].slice(0, -3)
+                    );
+                  }
+                });
+            }, 500);
           }
         })
         .then(() => {
-          this.setState({
-            loaded: true
-          });
-          chartData1.map(val => oneDay.push(val));
-          labels.map(val => oneDayLabels.push(val));
+          setTimeout(() => {
+            this.setState({
+              loaded: true
+            });
+            chartData1.map(val => oneDay.push(val));
+            labels.map(val => oneDayLabels.push(val));
+          }, 1000);
         });
     } else {
       labels = oneDayLabels;
@@ -427,49 +478,42 @@ export default class stockPage extends React.Component {
   }
   rendering() {
     fetch(
-      `https://cloud.iexapis.com/beta/stock/${
+      `https://cloud.iexapis.com/stable/stock/${
         this.props.symbol
-      }/batch?token=pk_e103471603a7468f8947eeb5bd9b6b77&types=chart,quote&range=1d&changeFromClose=true`
+      }/quote?displayPercent=true&token=pk_e103471603a7468f8947eeb5bd9b6b77`
     )
       .then(res => res.json())
       .then(result => {
-        closePrice = result.quote.previousClose;
-      });
-    fetch(
-      `https://cloud.iexapis.com/beta/stock/${
-        this.props.symbol
-      }/realtime-update?token=pk_e103471603a7468f8947eeb5bd9b6b77&last=3&changeFromClose=true`
-    )
-      .then(res => res.json())
-      .then(result => {
-        stockData.name = result.quote.companyName;
-        stockData.previousClose = result.quote.previousClose;
-        stockData.latestTime = result.quote.latestTime;
-        stockData.extendedPrice = result.quote.extendedPrice;
-        stockData.extendedChange = result.quote.extendedChange.toFixed(2);
+        stockData.changePercent = result.changePercent.toFixed(2);
+        stockData.change = result.change.toFixed(2);
+
+        closePrice = result.previousClose;
+
+        stockData.name = result.companyName;
+        stockData.previousClose = result.previousClose;
+        stockData.latestTime = result.latestTime;
+        stockData.extendedPrice = result.extendedPrice;
+        stockData.extendedChange = result.extendedChange;
         this.setState({
-          latestPrice: result.quote.latestPrice.toFixed(2)
+          latestPrice: result.latestPrice.toFixed(2)
         });
-        stockData.change = result.quote.change.toFixed(2);
-        stockData.changePercent = (
-          result.quote.changePercent / Math.pow(10, -2)
-        ).toFixed(2);
-        keyData[0] = this.abbrNum(result.quote.marketCap, 2);
+        keyData[0] = this.abbrNum(result.marketCap, 2);
         keyDataLabel[0] = "Market Cap ";
-        keyData[1] = result.quote.peRatio;
+        keyData[1] = result.peRatio;
         keyDataLabel[1] = "PE Ratio (TTM) ";
 
-        keyData[2] = "$" + result.quote.week52High;
+        keyData[2] = "$" + result.week52High;
         keyDataLabel[2] = "52 week High";
 
-        keyData[3] = "$" + result.quote.week52Low;
+        keyData[3] = "$" + result.week52Low;
         keyDataLabel[3] = "52 Week Low ";
 
-        keyData[4] =
-          (result.quote.ytdChange / Math.pow(10, -2)).toFixed(2) + "%";
+        keyData[4] = result.ytdChange.toFixed(2) + "%";
         keyDataLabel[4] = "YTD Change ";
 
-        keyData[5] = this.numberWithCommas(result.quote.latestVolume);
+        keyData[5] = result.latestVolume;
+        if (keyData[5] !== null) keyData[5] = this.numberWithCommas(keyData[5]);
+        else keyData[5] = "---";
         keyDataLabel[5] = "Volume ";
       })
       .then(() => {
@@ -506,24 +550,40 @@ export default class stockPage extends React.Component {
         ).innerHTML = result.isTheStockMarketOpen
           ? "Market status: Open"
           : "Market status: Closed";
-      });
-    this.getYTDChart();
-
-    if (this.state.marketStatus) {
-      setInterval(() => {
+      })
+      .then(() => {
         fetch(
           `https://cloud.iexapis.com/stable/stock/${
             this.props.symbol
-          }/price?token=pk_e103471603a7468f8947eeb5bd9b6b77`
+          }/quote?displayPercent=true&token=pk_e103471603a7468f8947eeb5bd9b6b77`
         )
           .then(res => res.json())
           .then(result => {
+            console.log(result.latestPrice);
             this.setState({
-              latestPrice: result.toFixed(2)
+              latestPrice: result.latestPrice.toFixed(2)
             });
           });
-      }, 1000);
-    }
+      })
+      .then(() => {
+        if (this.state.marketStatus) {
+          setInterval(() => {
+            fetch(
+              `https://cloud.iexapis.com/stable/stock/${
+                this.props.symbol
+              }/quote?displayPercent=true&token=pk_e103471603a7468f8947eeb5bd9b6b77`
+            )
+              .then(res => res.json())
+              .then(result => {
+                console.log(result.latestPrice);
+                this.setState({
+                  latestPrice: result.latestPrice.toFixed(2)
+                });
+              });
+          }, 5000);
+        }
+      });
+    this.getYTDChart();
   }
   componentDidMount() {
     fetch(

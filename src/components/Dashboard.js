@@ -4,7 +4,7 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import { logout } from "./auth";
 import $ from "jquery";
-import { Link } from 'react-router-dom'
+import { Link } from "react-router-dom";
 
 const db = firebase.firestore();
 
@@ -52,6 +52,13 @@ var options = {
     }
   }
 };
+
+const apiKeys = [
+  "OYMIDLPTGY6CAMP0",
+  "TVARN7J9F191IFLB",
+  "NOBPQ2OPX7E1XRT3",
+  "7V0Q0N46CBIPHA2K"
+];
 
 let chartData1 = [];
 let chartData2 = [];
@@ -164,33 +171,64 @@ class Dashboard extends React.Component {
       };
     };
   }
-  getStockInfo(symbol, dataChart, changeStash, priceStash, num, callback) {
-    const stockApi = `https://cloud.iexapis.com/beta/stock/${symbol}/batch?token=pk_e103471603a7468f8947eeb5bd9b6b77&types=chart,quote&range=1d`;
-    const lastPrice = `https://cloud.iexapis.com/stable/stock/${symbol}/price?token=pk_e103471603a7468f8947eeb5bd9b6b77`;
-    const percentageChange = `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_e103471603a7468f8947eeb5bd9b6b77`;
-    let error;
-    fetch(percentageChange)
-      .then(res => res.json())
-      .then(result => {
-        let change = parseFloat(result.changePercent).toFixed(2);
-        changeStash[num] = change;
-      });
-    fetch(lastPrice)
-      .then(res => res.json())
-      .then(result => {
-        if (!error) {
-          priceStash[num] = result.toFixed(2);
-        }
-      });
-
+  getChart(dataChart, symbol, callback) {
+    let b = 0;
+    const stockApi = `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=1min&apikey=${
+      apiKeys[0]
+    }`;
     fetch(stockApi)
       .then(res => res.json())
       .then(result => {
-        for (let i = 0; i < result.chart.length - 1 || callback(); i++) {
-          if (result.chart[i].average !== null && dataChart.length < 60)
-            dataChart.push(parseFloat(result.chart[i].average).toFixed(2));
+        if (result["Note"] === undefined) {
+        for (
+          let i = Object.keys(result["Time Series (1min)"]).length - 1;
+          i > 0 || callback();
+          i--
+        ) {
+          dataChart.push(
+            parseFloat(
+              result["Time Series (1min)"][
+                Object.keys(result["Time Series (1min)"])[i]
+              ]["4. close"]
+            ).toFixed(2)
+          );
         }
+      }
+      else{
+            b++;
+            const stockApi = `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=1min&apikey=${
+              apiKeys[b]
+            }`;
+            fetch(stockApi)
+              .then(res => res.json())
+              .then(result => {
+                for (
+                  let i = Object.keys(result["Time Series (1min)"]).length - 1;
+                  i > 0 || callback();
+                  i--
+                ) {
+                  dataChart.push(
+                    parseFloat(
+                      result["Time Series (1min)"][
+                        Object.keys(result["Time Series (1min)"])[i]
+                      ]["4. close"]
+                    ).toFixed(2)
+                  );
+                }
+              });
+            }
       });
+  }
+  getStockInfo(symbol, dataChart, changeStash, priceStash, num, callback) {
+    const percentageChange = `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_e103471603a7468f8947eeb5bd9b6b77`;
+    fetch(percentageChange)
+      .then(res => res.json())
+      .then(result => {
+        priceStash[num] = result.latestPrice.toFixed(2);
+        let change = parseFloat(result.changePercent).toFixed(2);
+        changeStash[num] = change;
+      });
+    this.getChart(dataChart, symbol, callback);
   }
   getStocksList() {
     const stocks =
@@ -205,9 +243,11 @@ class Dashboard extends React.Component {
           .then(res => res.json())
           .then(result => {
             for (let i = 0; i < result.length; i++) {
-              tempStocksSymbols.push(result[i].symbol);
-              tempStockName.push(result[i].companyName);
-              tempStockPrice.push("$" + result[i].latestPrice.toFixed(2));
+              if (result[i].latestPrice !== null) {
+                tempStocksSymbols.push(result[i].symbol);
+                tempStockName.push(result[i].companyName);
+                tempStockPrice.push("$" + result[i].latestPrice.toFixed(2));
+              }
             }
           })
           .then(() => {
@@ -257,11 +297,11 @@ class Dashboard extends React.Component {
                   this.setState({
                     loader3: true
                   });
-                }, 500);
+                }, 900);
               });
           }
         }, 1000);
-      })
+      });
   }
   routeChange(path) {
     this.props.history.push(path);
@@ -312,12 +352,12 @@ class Dashboard extends React.Component {
             for (let i = 0; i < portfolioStocks.length; i++) {
               const lastPrice = `https://cloud.iexapis.com/stable/stock/${
                 portfolioStocks[i]
-              }/price?token=pk_e103471603a7468f8947eeb5bd9b6b77`;
+              }/quote?displayPercent=true&token=pk_e103471603a7468f8947eeb5bd9b6b77`;
               await new Promise(resolve =>
                 fetch(lastPrice)
                   .then(res => res.json())
                   .then(result => {
-                    portfolioValue.push(doc.data().shares * result);
+                    portfolioValue.push(doc.data().shares * result.latestPrice);
                   })
                   .then(() => {
                     portfolioDifference[i] = this.relDiff(
@@ -488,10 +528,6 @@ class Dashboard extends React.Component {
                 });
                 document.getElementById("chartSecond").href = "#";
               }
-              console.log(JSON.stringify(stockChanges));
-              console.log(JSON.stringify(stockPrices));
-              console.log(JSON.stringify(chartData1));
-              console.log(JSON.stringify(chartData2));
             }, 800);
           }
         );
@@ -517,7 +553,41 @@ class Dashboard extends React.Component {
           : "Market status: Closed";
       });
     setTimeout(() => {
-      if(this.state.portfolioLoader !== true) this.getAccountInfo()
+      if (this.state.portfolioLoader !== true) this.getAccountInfo();
+    }, 5000);
+    setTimeout(() => {
+      if (
+        stockChanges[1] !== undefined &&
+        stockPrices[1] !== undefined &&
+        chartData2.length >= 2
+      ) {
+        this.setState({
+          loader2: true
+        });
+        document.getElementById("chartSecond").href =
+          "/stocks/" + stockSymbols[1];
+      } else {
+        this.setState({
+          loader2: false
+        });
+        document.getElementById("chartSecond").href = "#";
+      }
+      if (
+        stockChanges[0] !== undefined &&
+        stockPrices[0] !== undefined &&
+        chartData1.length >= 2
+      ) {
+        this.setState({
+          loader1: true
+        });
+        document.getElementById("chartFirst").href =
+          "/stocks/" + stockSymbols[0];
+      } else {
+        this.setState({
+          loader1: false
+        });
+        document.getElementById("chartFirst").href = "#";
+      }
     }, 5000);
   }
   render() {
@@ -747,7 +817,27 @@ class Dashboard extends React.Component {
                           </ul>
                         )}
                         {this.state.loader1 === false && (
-                          <h5>Couldn't load chart try again in few minutes</h5>
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              flexDirection: "column"
+                            }}
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 24 24"
+                            >
+                              <g>
+                                <path fill="none" d="M0 0h24v24H0z" />
+                                <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm-1-5h2v2h-2v-2zm0-8h2v6h-2V7z" />
+                              </g>
+                            </svg>
+                            <h5>
+                              Couldn't load chart try again in few minutes
+                            </h5>
+                          </div>
                         )}
                         {this.state.loader1 === true && (
                           <div className="stockChart__chart">
@@ -788,7 +878,27 @@ class Dashboard extends React.Component {
                           <div />
                         )}
                         {this.state.loader2 === false && (
-                          <h5>Couldn't load chart try again in few minutes</h5>
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              flexDirection: "column"
+                            }}
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 24 24"
+                            >
+                              <g>
+                                <path fill="none" d="M0 0h24v24H0z" />
+                                <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm-1-5h2v2h-2v-2zm0-8h2v6h-2V7z" />
+                              </g>
+                            </svg>
+                            <h5>
+                              Couldn't load chart try again in few minutes
+                            </h5>
+                          </div>
                         )}
                         {this.state.loader2 === true && (
                           <div
@@ -828,7 +938,28 @@ class Dashboard extends React.Component {
                           </ul>
                         )}
                         {this.state.portfolioLoader === false && (
-                          <h5>Couldn't load chart try again in few minutes</h5>
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              flexDirection: "column"
+                            }}
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 24 24"
+                            >
+                              <g>
+                                <path fill="none" d="M0 0h24v24H0z" />
+                                <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm-1-5h2v2h-2v-2zm0-8h2v6h-2V7z" />
+                              </g>
+                            </svg>
+                            <h5>
+                              Couldn't load your portfolio try again in few
+                              minutes
+                            </h5>
+                          </div>
                         )}
                         {this.state.portfolioLoader && (
                           <div>
