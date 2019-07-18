@@ -354,12 +354,19 @@ class Dashboard extends React.Component {
       .collection("stocks")
       .get()
       .then(snapshot => {
-        snapshot.forEach(doc => {
-          console.log(doc.id, "=>", doc.data());
-          portfolioStocks.push(doc.id);
-          portfolioShares.push(this.numberWithCommas(doc.data().shares));
-        });
+        if (snapshot.docs.length !== 0) {
+          snapshot.forEach(doc => {
+            console.log(doc.id, "=>", doc.data());
+            portfolioStocks.push(doc.id);
+            portfolioShares.push(this.numberWithCommas(doc.data().shares));
+          });
+        } else {
+          this.setState({
+            portfolioLoader: "nothing"
+          });
+        }
       })
+
       .catch(error => {
         console.log("Error getting document:", error);
         this.setState({
@@ -373,78 +380,91 @@ class Dashboard extends React.Component {
       .collection("stocks")
       .get()
       .then(snapshot => {
-        snapshot.forEach(doc => {
-          (async () => {
-            for (let i = 0; i < portfolioStocks.length; i++) {
-              const lastPrice = `https://cloud.iexapis.com/stable/stock/${
-                portfolioStocks[i]
-              }/quote?displayPercent=true&token=pk_e103471603a7468f8947eeb5bd9b6b77`;
-              await new Promise(resolve =>
-                fetch(lastPrice)
-                  .then(res => res.json())
-                  .then(result => {
-                    portfolioValue.push(doc.data().shares * result.latestPrice);
-                  })
-                  .then(() => {
-                    portfolioDifference[i] = this.relDiff(
-                      portfolioValue[i],
-                      parseFloat(doc.data().moneyPaid)
-                    ).toFixed(2);
-                    if (portfolioValue[i] > doc.data().moneyPaid) {
-                      portfolioDifference[i] = "+" + portfolioDifference[i];
-                      portfolioColor.push("#66F9DA");
-                    } else if (portfolioValue[i] === doc.data().moneyPaid)
-                      portfolioColor.push("#999EAF");
-                    else {
-                      portfolioDifference[i] = "-" + portfolioDifference[i];
-                      portfolioColor.push("#F45385");
-                    }
-                  })
-                  .then(() => {
-                    docRef
-                      .get()
-                      .then(doc => {
-                        this.setState({
-                          funds:
-                            "$" +
-                            this.numberWithCommas(doc.data()["currentfunds"])
+        if (snapshot.docs.length !== 0) {
+          snapshot.forEach(doc => {
+            (async () => {
+              for (let i = 0; i < portfolioStocks.length; i++) {
+                const lastPrice = `https://cloud.iexapis.com/stable/stock/${
+                  portfolioStocks[i]
+                }/quote?displayPercent=true&token=pk_e103471603a7468f8947eeb5bd9b6b77`;
+                await new Promise(resolve =>
+                  fetch(lastPrice)
+                    .then(res => res.json())
+                    .then(result => {
+                      portfolioValue.push(
+                        doc.data().shares * result.latestPrice
+                      );
+                    })
+                    .then(() => {
+                      portfolioDifference[i] = this.relDiff(
+                        portfolioValue[i],
+                        parseFloat(doc.data().moneyPaid)
+                      ).toFixed(2);
+                      if (portfolioValue[i] > doc.data().moneyPaid) {
+                        portfolioDifference[i] = "+" + portfolioDifference[i];
+                        portfolioColor.push("#66F9DA");
+                      } else if (portfolioValue[i] === doc.data().moneyPaid)
+                        portfolioColor.push("#999EAF");
+                      else {
+                        portfolioDifference[i] = "-" + portfolioDifference[i];
+                        portfolioColor.push("#F45385");
+                      }
+                    })
+                    .then(() => {
+                      docRef
+                        .get()
+                        .then(doc => {
+                          this.setState({
+                            funds:
+                              "$" +
+                              this.numberWithCommas(doc.data()["currentfunds"])
+                          });
+                          this.setState({
+                            accountValue:
+                              "$" +
+                              this.numberWithCommas(
+                                parseFloat(doc.data()["currentfunds"]) +
+                                  parseFloat(portfolioValue.reduce(add, 0))
+                              )
+                          });
+                          this.setState({
+                            fundsLoader: true
+                          });
+                          resolve();
+                        })
+                        .catch(error => {
+                          console.log("Error getting document:", error);
+                          this.setState({
+                            portfolioLoader: false
+                          });
                         });
-                        this.setState({
-                          accountValue:
-                            "$" +
-                            this.numberWithCommas(
-                              parseFloat(doc.data()["currentfunds"]) +
-                                parseFloat(portfolioValue.reduce(add, 0))
-                            )
-                        });
-                        this.setState({
-                          fundsLoader: true
-                        });
-                        resolve();
-                      })
-                      .catch(error => {
-                        console.log("Error getting document:", error);
-                        this.setState({
-                          portfolioLoader: false
-                        });
-                      });
-                  })
-              );
-            }
-            setTimeout(() => {
-              if (
-                portfolioStocks.length === portfolioValue.length &&
-                portfolioDifference.length === portfolioStocks.length &&
-                portfolioShares.length === portfolioStocks.length
-              ) {
-                this.setState({
-                  portfolioLoader: true
-                });
-                document.getElementById("portfolio").style.display = "block";
+                    })
+                );
               }
-            }, 300);
-          })();
-        });
+              setTimeout(() => {
+                if (
+                  portfolioStocks.length === portfolioValue.length &&
+                  portfolioDifference.length === portfolioStocks.length &&
+                  portfolioShares.length === portfolioStocks.length
+                ) {
+                  this.setState({
+                    portfolioLoader: true
+                  });
+                  document.getElementById("portfolio").style.display = "block";
+                }
+              }, 300);
+            })();
+          });
+        } else {
+          docRef.get().then(doc => {
+            this.setState({
+              funds: "$" + this.numberWithCommas(doc.data()["currentfunds"])
+            });
+            this.setState({
+              fundsLoader: true
+            });
+          });
+        }
       });
   }
   searchStocks(e) {
@@ -620,9 +640,9 @@ class Dashboard extends React.Component {
         });
       }
     }, 5000);
-    document.querySelector('.hamburger').addEventListener('click', (e) => {
-	    e.currentTarget.classList.toggle('is-active');
-    })
+    document.querySelector(".hamburger").addEventListener("click", e => {
+      e.currentTarget.classList.toggle("is-active");
+    });
   }
   render() {
     let user = firebase.auth().currentUser.displayName;
@@ -646,7 +666,6 @@ class Dashboard extends React.Component {
         document.getElementById("results").style.boxShadow =
           "0px 30px 20px 0px rgba(0,0,0,0.10)";
       }
-      
     }
     return (
       <div className="Dashboard">
@@ -978,6 +997,9 @@ class Dashboard extends React.Component {
                             <li />
                           </ul>
                         )}
+                        {this.state.portfolioLoader === "nothing" && (
+                          <p>You didn't buy any stocks yet</p>
+                        )}
                         {this.state.portfolioLoader === false && (
                           <div
                             style={{
@@ -1002,7 +1024,7 @@ class Dashboard extends React.Component {
                             </h5>
                           </div>
                         )}
-                        {this.state.portfolioLoader && (
+                        {this.state.portfolioLoader === true && (
                           <div>
                             <ul className="panel__portfolio-list">
                               <li>
