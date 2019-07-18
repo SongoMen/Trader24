@@ -250,9 +250,10 @@ class Dashboard extends React.Component {
     fetch(percentageChange)
       .then(res => res.json())
       .then(result => {
-        priceStash[num] = result.latestPrice.toFixed(2);
-        let change = parseFloat(result.changePercent).toFixed(2);
-        changeStash[num] = change;
+        if (result.latestPrice !== null)
+          priceStash[num] = result.latestPrice.toFixed(2);
+        if (result.changePercent !== null)
+          changeStash[num] = parseFloat(result.changePercent).toFixed(2);
       });
     this.getChart(dataChart, symbol, callback);
   }
