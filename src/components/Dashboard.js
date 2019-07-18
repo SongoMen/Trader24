@@ -180,21 +180,21 @@ class Dashboard extends React.Component {
       .then(res => res.json())
       .then(result => {
         if (result["Note"] === undefined) {
-        for (
-          let i = Object.keys(result["Time Series (1min)"]).length - 1;
-          i > 0 || callback();
-          i--
-        ) {
-          dataChart.push(
-            parseFloat(
-              result["Time Series (1min)"][
-                Object.keys(result["Time Series (1min)"])[i]
-              ]["4. close"]
-            ).toFixed(2)
-          );
-        }
-      }
-      else{
+          for (
+            let i = Object.keys(result["Time Series (1min)"]).length - 1;
+            i > 0 || callback();
+            i--
+          ) {
+            dataChart.push(
+              parseFloat(
+                result["Time Series (1min)"][
+                  Object.keys(result["Time Series (1min)"])[i]
+                ]["4. close"]
+              ).toFixed(2)
+            );
+          }
+        } else {
+          if (result["Note"] === undefined) {
             b++;
             const stockApi = `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=1min&apikey=${
               apiKeys[b]
@@ -216,7 +216,33 @@ class Dashboard extends React.Component {
                   );
                 }
               });
+          } else {
+            if (result["Note"] === undefined) {
+              b++;
+              const stockApi = `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=1min&apikey=${
+                apiKeys[b]
+              }`;
+              fetch(stockApi)
+                .then(res => res.json())
+                .then(result => {
+                  for (
+                    let i =
+                      Object.keys(result["Time Series (1min)"]).length - 1;
+                    i > 0 || callback();
+                    i--
+                  ) {
+                    dataChart.push(
+                      parseFloat(
+                        result["Time Series (1min)"][
+                          Object.keys(result["Time Series (1min)"])[i]
+                        ]["4. close"]
+                      ).toFixed(2)
+                    );
+                  }
+                });
             }
+          }
+        }
       });
   }
   getStockInfo(symbol, dataChart, changeStash, priceStash, num, callback) {
@@ -588,7 +614,15 @@ class Dashboard extends React.Component {
         });
         document.getElementById("chartFirst").href = "#";
       }
+      if (stockListChange.length < 1) {
+        this.setState({
+          loader3: false
+        });
+      }
     }, 5000);
+    document.querySelector('.hamburger').addEventListener('click', (e) => {
+	    e.currentTarget.classList.toggle('is-active');
+    })
   }
   render() {
     let user = firebase.auth().currentUser.displayName;
@@ -612,6 +646,7 @@ class Dashboard extends React.Component {
         document.getElementById("results").style.boxShadow =
           "0px 30px 20px 0px rgba(0,0,0,0.10)";
       }
+      
     }
     return (
       <div className="Dashboard">
@@ -692,6 +727,12 @@ class Dashboard extends React.Component {
             </div>
             <div className="panel">
               <div className="topbar">
+                <div className="hamburger">
+                  <div className="hamburger__container">
+                    <div className="hamburger__inner" />
+                    <div className="hamburger__hidden" />
+                  </div>
+                </div>
                 <div className="topbar__searchbar" id="topbar__searchbar">
                   <div
                     style={{

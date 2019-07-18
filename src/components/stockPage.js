@@ -433,15 +433,18 @@ export default class stockPage extends React.Component {
   }
   changeFocus(option) {
     setTimeout(() => {
-      if (option === 1) {
-        document.getElementById("1d").classList.add("active");
-        document.getElementById("1m").className = "";
-        document.getElementById("ytd").className = "";
+      setTimeout(() => {
+        if (option === 1) {
+          document.getElementById("1d").classList.add("active");
+          document.getElementById("1m").className = "";
+          document.getElementById("ytd").className = "";
 
-        document.getElementById("1y").className = "";
+          document.getElementById("1y").className = "";
 
-        document.getElementById("2y").className = "";
-      }
+          document.getElementById("2y").className = "";
+        }
+      }, 800);
+
       if (option === 2) {
         document.getElementById("1m").classList.add("active");
         document.getElementById("1d").className = "";
@@ -499,7 +502,7 @@ export default class stockPage extends React.Component {
         stockData.extendedPrice = result.extendedPrice;
         if (result.extendedPrice === null) {
           stockData.extendedPrice = "";
-          stockData.extendedChange = ""
+          stockData.extendedChange = "";
         }
         stockData.extendedChange = result.extendedChange;
         this.setState({
@@ -847,7 +850,8 @@ export default class stockPage extends React.Component {
                         {stockData.change} ({stockData.changePercent}%)
                       </h6>
                     </div>
-                    {!this.state.marketStatus & stockData.extendedChange !== null ? (
+                    {!this.state.marketStatus &
+                    (stockData.extendedChange !== null) ? (
                       <h6>
                         Extended Hours:{" "}
                         <span style={{ color: this.state.extendedColor }}>
@@ -855,7 +859,9 @@ export default class stockPage extends React.Component {
                           )
                         </span>
                       </h6>
-                    ):<div></div>}
+                    ) : (
+                      <div />
+                    )}
                     <h5>Buy {this.props.symbol}</h5>
                   </div>
                 </div>
