@@ -150,8 +150,8 @@ class Dashboard extends React.Component {
       gradient.addColorStop(0, "#7c83ff");
       gradient.addColorStop(1, "#7cf4ff");
       let gradientFill = ctx.createLinearGradient(0, 0, 0, 100);
-      gradientFill.addColorStop(0, "rgba(124, 131, 255,.3)");
-      gradientFill.addColorStop(1, "rgba(55, 58, 70, 0)");
+      gradientFill.addColorStop(0.1, "rgba(124, 131, 255,.3)");
+      gradientFill.addColorStop(0.8, "rgba(55, 58, 70, 0)");
       ctx.shadowColor = "rgba(124, 131, 255,.3)";
       ctx.shadowBlur = 5;
       ctx.shadowOffsetX = 0;
@@ -180,8 +180,8 @@ class Dashboard extends React.Component {
       gradient.addColorStop(0, "#7c83ff");
       gradient.addColorStop(1, "#7cf4ff");
       let gradientFill = ctx.createLinearGradient(0, 0, 0, 100);
-      gradientFill.addColorStop(0, "rgba(124, 131, 255,.3)");
-      gradientFill.addColorStop(1, "rgba(55, 58, 70, 0)");
+      gradientFill.addColorStop(0.1, "rgba(124, 131, 255,.3)");
+      gradientFill.addColorStop(0.8, "rgba(55, 58, 70, 0)");
       ctx.shadowColor = "rgba(124, 131, 255,.3)";
       ctx.shadowBlur = 5;
       ctx.shadowOffsetX = 0;
@@ -361,7 +361,7 @@ class Dashboard extends React.Component {
                 }, 900);
               });
           }
-        }, 1000);
+        }, 1500);
       });
   }
   relDiff(a, b) {
@@ -663,6 +663,7 @@ class Dashboard extends React.Component {
             loader3: false
           });
         }
+        console.log(this.state.loader3);
       }, 5000);
     };
     document.querySelector(".hamburger").addEventListener("click", (e) => {
@@ -856,9 +857,9 @@ class Dashboard extends React.Component {
                                 <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm-1-5h2v2h-2v-2zm0-8h2v6h-2V7z" />
                               </g>
                             </svg>
-                            <h5>
+                            <p>
                               Couldn't load chart try again in few minutes
-                            </h5>
+                            </p>
                           </div>
                         )}
                         {this.state.loader1 === true && (
@@ -910,9 +911,9 @@ class Dashboard extends React.Component {
                                 <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm-1-5h2v2h-2v-2zm0-8h2v6h-2V7z" />
                               </g>
                             </svg>
-                            <h5>
+                            <p>
                               Couldn't load chart try again in few minutes
-                            </h5>
+                            </p>
                           </div>
                         )}
                         {this.state.loader2 === true && (
@@ -984,29 +985,31 @@ class Dashboard extends React.Component {
                           <div>
                             <table className="panel__portfolio-list">
                               <tbody>
-                              <tr>
-                                <th>SYMBOL</th>
-                                <th>QUANTITY</th>
-                                <th>GAIN/LOSS (%)</th>
-                                <th>CURRENT VALUE</th>
-                              </tr>
-                              {portfolioStocks.map((value, index) => {
-                                return (
-                                  <tr key={index}>
-                                    <td>{value}</td>
-                                    <td>{portfolioShares[index]}</td>
-                                    <td style={{color: portfolioColor[index]}}>
-                                      {portfolioDifference[index]}%
-                                    </td>
-                                    <td>
-                                      $
-                                      {this.numberWithCommas(
-                                        portfolioValue[index]
-                                      )}
-                                    </td>
-                                  </tr>
-                                );
-                              })}
+                                <tr>
+                                  <th>SYMBOL</th>
+                                  <th>QUANTITY</th>
+                                  <th>GAIN/LOSS (%)</th>
+                                  <th>CURRENT VALUE</th>
+                                </tr>
+                                {portfolioStocks.map((value, index) => {
+                                  return (
+                                    <tr key={index}>
+                                      <td>{value}</td>
+                                      <td>{portfolioShares[index]}</td>
+                                      <td
+                                        style={{color: portfolioColor[index]}}
+                                      >
+                                        {portfolioDifference[index]}%
+                                      </td>
+                                      <td>
+                                        $
+                                        {this.numberWithCommas(
+                                          portfolioValue[index]
+                                        )}
+                                      </td>
+                                    </tr>
+                                  );
+                                })}
                               </tbody>
                             </table>
                             <div className="panel__value">
@@ -1033,9 +1036,9 @@ class Dashboard extends React.Component {
                   </svg>
                   <h3>Most Active</h3>
                 </div>
-                <div className="panel__bottom">
-                  <div className="panel__stockList">
-                    {this.state.loader3 ? (
+                {this.state.loader3 === true ? (
+                  <div className="panel__bottom">
+                    <div className="panel__stockList">
                       <ul className="panel__list">
                         {stockList.map((value, index) => {
                           if (index < 3)
@@ -1068,16 +1071,8 @@ class Dashboard extends React.Component {
                           else return "";
                         })}
                       </ul>
-                    ) : (
-                      <ul className="loader">
-                        <li />
-                        <li />
-                        <li />
-                      </ul>
-                    )}
-                  </div>
-                  <div className="panel__stockList">
-                    {this.state.loader3 ? (
+                    </div>
+                    <div className="panel__stockList">
                       <ul className="panel__list">
                         {stockList.map((value, index) => {
                           if (index >= 3 && index < 6)
@@ -1110,16 +1105,8 @@ class Dashboard extends React.Component {
                           else return "";
                         })}
                       </ul>
-                    ) : (
-                      <ul className="loader">
-                        <li />
-                        <li />
-                        <li />
-                      </ul>
-                    )}
-                  </div>
-                  <div className="panel__stockList">
-                    {this.state.loader3 ? (
+                    </div>
+                    <div className="panel__stockList">
                       <ul className="panel__list">
                         {stockList.map((value, index) => {
                           if (index >= 6)
@@ -1152,15 +1139,15 @@ class Dashboard extends React.Component {
                           else return "";
                         })}
                       </ul>
-                    ) : (
-                      <ul className="loader">
-                        <li />
-                        <li />
-                        <li />
-                      </ul>
-                    )}
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <ul className="loader">
+                    <li />
+                    <li />
+                    <li />
+                  </ul>
+                )}
               </div>
             </div>
           </div>

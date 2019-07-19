@@ -78,9 +78,7 @@ const apiKeys = [
   "7V0Q0N46CBIPHA2K"
 ];
 
-let symbol = window.location.href.split("/")[
-  window.location.href.split("/").length - 1
-];
+let symbol
 
 let chartData1 = [];
 let labels = [];
@@ -597,12 +595,15 @@ export default class stockPage extends React.Component {
         }
       })
       .then(() => {
+        symbol = window.location.href.split("/")[
+          window.location.href.split("/").length - 1
+        ];
         setTimeout(() => {
           if (this.isInArray(symbolsOnly, symbol)) {
             this.setState({ valid: true });
             this.rendering();
           } else this.setState({ valid: false });
-        }, 900);
+        }, 500);
       });
 
     let user = firebase.auth().currentUser.uid;
