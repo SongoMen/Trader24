@@ -1,9 +1,9 @@
 import React from "react";
-import { Line } from "react-chartjs-2";
+import {Line} from "react-chartjs-2";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import $ from "jquery";
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 import Leftbar from "./leftbar";
 
 const db = firebase.firestore();
@@ -24,8 +24,13 @@ var options = {
     },
     displayColors: false,
   },*/
-  tooltips: { enabled: false },
-  hover: { mode: null },
+  tooltips: {enabled: false},
+  hover: {mode: null},
+  layout: {
+    padding: {
+      bottom: 15
+    }
+  },
   legend: {
     display: false
   },
@@ -139,16 +144,15 @@ class Dashboard extends React.Component {
       }
       return result.split(",");
     }
-    this.data1 = canvas => {
+    this.data1 = (canvas) => {
       const ctx = canvas.getContext("2d");
       const gradient = ctx.createLinearGradient(0, 0, 600, 10);
       gradient.addColorStop(0, "#7c83ff");
       gradient.addColorStop(1, "#7cf4ff");
       let gradientFill = ctx.createLinearGradient(0, 0, 0, 100);
       gradientFill.addColorStop(0, "rgba(124, 131, 255,.3)");
-      gradientFill.addColorStop(0.2, "rgba(124, 244, 255,.15)");
-      gradientFill.addColorStop(1, "rgba(255, 255, 255, 0)");
-      ctx.shadowColor = "rgba(124, 244, 255,.3)";
+      gradientFill.addColorStop(1, "rgba(55, 58, 70, 0)");
+      ctx.shadowColor = "rgba(124, 131, 255,.3)";
       ctx.shadowBlur = 5;
       ctx.shadowOffsetX = 0;
       ctx.shadowOffsetY = 4;
@@ -170,16 +174,15 @@ class Dashboard extends React.Component {
         ]
       };
     };
-    this.data2 = canvas => {
+    this.data2 = (canvas) => {
       const ctx = canvas.getContext("2d");
       const gradient = ctx.createLinearGradient(0, 0, 600, 10);
       gradient.addColorStop(0, "#7c83ff");
       gradient.addColorStop(1, "#7cf4ff");
       let gradientFill = ctx.createLinearGradient(0, 0, 0, 100);
       gradientFill.addColorStop(0, "rgba(124, 131, 255,.3)");
-      gradientFill.addColorStop(0.2, "rgba(124, 244, 255,.15)");
-      gradientFill.addColorStop(1, "rgba(255, 255, 255, 0)");
-      ctx.shadowColor = "rgba(124, 244, 255,.3)";
+      gradientFill.addColorStop(1, "rgba(55, 58, 70, 0)");
+      ctx.shadowColor = "rgba(124, 131, 255,.3)";
       ctx.shadowBlur = 5;
       ctx.shadowOffsetX = 0;
       ctx.shadowOffsetY = 4;
@@ -208,8 +211,8 @@ class Dashboard extends React.Component {
       apiKeys[0]
     }`;
     fetch(stockApi)
-      .then(res => res.json())
-      .then(result => {
+      .then((res) => res.json())
+      .then((result) => {
         if (result["Note"] === undefined) {
           for (
             let i = Object.keys(result["Time Series (1min)"]).length - 1;
@@ -231,8 +234,8 @@ class Dashboard extends React.Component {
               apiKeys[b]
             }`;
             fetch(stockApi)
-              .then(res => res.json())
-              .then(result => {
+              .then((res) => res.json())
+              .then((result) => {
                 for (
                   let i = Object.keys(result["Time Series (1min)"]).length - 1;
                   i > 0 || callback();
@@ -254,8 +257,8 @@ class Dashboard extends React.Component {
                 apiKeys[b]
               }`;
               fetch(stockApi)
-                .then(res => res.json())
-                .then(result => {
+                .then((res) => res.json())
+                .then((result) => {
                   for (
                     let i =
                       Object.keys(result["Time Series (1min)"]).length - 1;
@@ -279,8 +282,8 @@ class Dashboard extends React.Component {
   getStockInfo(symbol, dataChart, changeStash, priceStash, num, callback) {
     const percentageChange = `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_e103471603a7468f8947eeb5bd9b6b77`;
     fetch(percentageChange)
-      .then(res => res.json())
-      .then(result => {
+      .then((res) => res.json())
+      .then((result) => {
         if (result.latestPrice !== null)
           priceStash[num] = result.latestPrice.toFixed(2);
         if (result.changePercent !== null)
@@ -292,14 +295,14 @@ class Dashboard extends React.Component {
     const stocks =
       "https://cloud.iexapis.com/stable/stock/market/list/mostactive?token=pk_e103471603a7468f8947eeb5bd9b6b77";
     fetch(stocks)
-      .then(res => res.json())
-      .then(result => {
+      .then((res) => res.json())
+      .then((result) => {
         const gainers =
           "https://cloud.iexapis.com/stable/stock/market/list/gainers?token=pk_e103471603a7468f8947eeb5bd9b6b77";
         let counter = 0;
         fetch(gainers)
-          .then(res => res.json())
-          .then(result => {
+          .then((res) => res.json())
+          .then((result) => {
             for (let i = 0; i < result.length; i++) {
               if (result[i].latestPrice !== null) {
                 tempStocksSymbols.push(result[i].symbol);
@@ -330,8 +333,8 @@ class Dashboard extends React.Component {
               stockListTickers[i]
             }/quote?displayPercent=true&token=pk_e103471603a7468f8947eeb5bd9b6b77`;
             fetch(percentageChange)
-              .then(res => res.json())
-              .then(result => {
+              .then((res) => res.json())
+              .then((result) => {
                 stockListChange[i] = parseFloat(result.changePercent).toFixed(
                   2
                 );
@@ -382,9 +385,9 @@ class Dashboard extends React.Component {
       .doc(user)
       .collection("stocks")
       .get()
-      .then(snapshot => {
+      .then((snapshot) => {
         if (snapshot.docs.length !== 0) {
-          snapshot.forEach(doc => {
+          snapshot.forEach((doc) => {
             console.log(doc.id, "=>", doc.data());
             portfolioStocks.push(doc.id);
             portfolioShares.push(this.numberWithCommas(doc.data().shares));
@@ -396,7 +399,7 @@ class Dashboard extends React.Component {
         }
       })
 
-      .catch(error => {
+      .catch((error) => {
         console.log("Error getting document:", error);
         this.setState({
           portfolioLoader: false
@@ -408,18 +411,18 @@ class Dashboard extends React.Component {
       .doc(user)
       .collection("stocks")
       .get()
-      .then(snapshot => {
+      .then((snapshot) => {
         if (snapshot.docs.length !== 0) {
-          snapshot.forEach(doc => {
+          snapshot.forEach((doc) => {
             (async () => {
               for (let i = 0; i < portfolioStocks.length; i++) {
                 const lastPrice = `https://cloud.iexapis.com/stable/stock/${
                   portfolioStocks[i]
                 }/quote?displayPercent=true&token=pk_e103471603a7468f8947eeb5bd9b6b77`;
-                await new Promise(resolve =>
+                await new Promise((resolve) =>
                   fetch(lastPrice)
-                    .then(res => res.json())
-                    .then(result => {
+                    .then((res) => res.json())
+                    .then((result) => {
                       portfolioValue.push(
                         doc.data().shares * result.latestPrice
                       );
@@ -442,7 +445,7 @@ class Dashboard extends React.Component {
                     .then(() => {
                       docRef
                         .get()
-                        .then(doc => {
+                        .then((doc) => {
                           this.setState({
                             funds:
                               "$" +
@@ -461,7 +464,7 @@ class Dashboard extends React.Component {
                           });
                           resolve();
                         })
-                        .catch(error => {
+                        .catch((error) => {
                           console.log("Error getting document:", error);
                           this.setState({
                             portfolioLoader: false
@@ -485,7 +488,7 @@ class Dashboard extends React.Component {
             })();
           });
         } else {
-          docRef.get().then(doc => {
+          docRef.get().then((doc) => {
             this.setState({
               funds: "$" + this.numberWithCommas(doc.data()["currentfunds"])
             });
@@ -536,9 +539,9 @@ class Dashboard extends React.Component {
     fetch(
       "https://cloud.iexapis.com/stable/ref-data/symbols?token=pk_e103471603a7468f8947eeb5bd9b6b77"
     )
-      .then(res => res.json())
-      .then(result => {
-        allSymbols = result.map(val => {
+      .then((res) => res.json())
+      .then((result) => {
+        allSymbols = result.map((val) => {
           return val;
         });
       });
@@ -547,8 +550,8 @@ class Dashboard extends React.Component {
     const gainers =
       "https://cloud.iexapis.com/stable/stock/market/list/gainers?token=pk_e103471603a7468f8947eeb5bd9b6b77";
     fetch(gainers)
-      .then(res => res.json())
-      .then(result => {
+      .then((res) => res.json())
+      .then((result) => {
         for (let i = 0; i < 4; i++) {
           stockSymbols.push(result[i].symbol);
         }
@@ -662,19 +665,19 @@ class Dashboard extends React.Component {
         }
       }, 5000);
     };
-    document.querySelector(".hamburger").addEventListener("click", e => {
+    document.querySelector(".hamburger").addEventListener("click", (e) => {
       e.currentTarget.classList.toggle("is-active");
     });
     setTimeout(() => {
-      if(this.state.loader1 === ""){
+      if (this.state.loader1 === "") {
         this.setState({
           loader1: false
-        })
+        });
       }
-      if(this.state.loader2 === ""){
+      if (this.state.loader2 === "") {
         this.setState({
           loader2: false
-        })
+        });
       }
     }, 7000);
   }
@@ -707,10 +710,8 @@ class Dashboard extends React.Component {
     return (
       <div className="Dashboard">
         <Alert />
-        <div
-          style={{ display: "flex", flexDirection: "column", width: "100%" }}
-        >
-          <div style={{ display: "flex", height: "100%" }}>
+        <div style={{display: "flex", flexDirection: "column", width: "100%"}}>
+          <div style={{display: "flex", height: "100%"}}>
             <Leftbar />
             <div className="panel">
               <div className="topbar">
@@ -796,7 +797,7 @@ class Dashboard extends React.Component {
               <div className="panel__container">
                 <div className="panel__top">
                   <div className="panel__title">
-                    <div style={{ display: "flex", alignItems: "center" }}>
+                    <div style={{display: "flex", alignItems: "center"}}>
                       <svg
                         className="panel__popular"
                         xmlns="http://www.w3.org/2000/svg"
@@ -834,7 +835,7 @@ class Dashboard extends React.Component {
                       <h3>Portfolio</h3>
                     </div>
                   </div>
-                  <div className="panel__topCharts" style={{ display: "flex" }}>
+                  <div className="panel__topCharts" style={{display: "flex"}}>
                     <a id="chartFirst" href="/" className="chartLink">
                       <div className="stockChart">
                         {this.state.loader1 === "" && (
@@ -855,7 +856,9 @@ class Dashboard extends React.Component {
                                 <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm-1-5h2v2h-2v-2zm0-8h2v6h-2V7z" />
                               </g>
                             </svg>
-                            <p>Couldn't load chart try again in few minutes</p>
+                            <h5>
+                              Couldn't load chart try again in few minutes
+                            </h5>
                           </div>
                         )}
                         {this.state.loader1 === true && (
@@ -871,7 +874,7 @@ class Dashboard extends React.Component {
                             <div className="stockChart__price-info">
                               <h4
                                 className="stockChart__change"
-                                style={{ color: changesColors[0] }}
+                                style={{color: changesColors[0]}}
                               >
                                 {stockChanges[0]}%
                               </h4>
@@ -925,7 +928,7 @@ class Dashboard extends React.Component {
                             <div className="stockChart__price-info">
                               <h4
                                 className="stockChart__change"
-                                style={{ color: changesColors[1] }}
+                                style={{color: changesColors[1]}}
                               >
                                 {stockChanges[1]}%
                               </h4>
@@ -961,14 +964,7 @@ class Dashboard extends React.Component {
                           </div>
                         )}
                         {this.state.portfolioLoader === false && (
-                          <div
-                            style={{
-                              display: "flex",
-                              justifyContent: "center",
-                              alignItems: "center",
-                              flexDirection: "column"
-                            }}
-                          >
+                          <div className="errorMsg">
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               viewBox="0 0 24 24"
@@ -978,41 +974,41 @@ class Dashboard extends React.Component {
                                 <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm-1-5h2v2h-2v-2zm0-8h2v6h-2V7z" />
                               </g>
                             </svg>
-                            <p>
+                            <h5>
                               Couldn't load your portfolio try again in few
                               minutes
-                            </p>
+                            </h5>
                           </div>
                         )}
                         {this.state.portfolioLoader === true && (
                           <div>
-                            <ul className="panel__portfolio-list">
-                              <li>
-                                <h6>SYMBOL</h6>
-                                <h6>QUANTITY</h6>
-                                <h6>TOTAL GAIN/LOSS (%)</h6>
-                                <h6>CURRENT VALUE</h6>
-                              </li>
+                            <table className="panel__portfolio-list">
+                              <tbody>
+                              <tr>
+                                <th>SYMBOL</th>
+                                <th>QUANTITY</th>
+                                <th>GAIN/LOSS (%)</th>
+                                <th>CURRENT VALUE</th>
+                              </tr>
                               {portfolioStocks.map((value, index) => {
                                 return (
-                                  <li key={index}>
-                                    <h5>{value}</h5>
-                                    <h5>{portfolioShares[index]}</h5>
-                                    <h5
-                                      style={{ color: portfolioColor[index] }}
-                                    >
+                                  <tr key={index}>
+                                    <td>{value}</td>
+                                    <td>{portfolioShares[index]}</td>
+                                    <td style={{color: portfolioColor[index]}}>
                                       {portfolioDifference[index]}%
-                                    </h5>
-                                    <h5>
+                                    </td>
+                                    <td>
                                       $
                                       {this.numberWithCommas(
                                         portfolioValue[index]
                                       )}
-                                    </h5>
-                                  </li>
+                                    </td>
+                                  </tr>
                                 );
                               })}
-                            </ul>
+                              </tbody>
+                            </table>
                             <div className="panel__value">
                               <h5>NET WORTH</h5>
                               <h5>{this.state.accountValue}</h5>
