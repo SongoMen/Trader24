@@ -88,6 +88,35 @@ let portfolioColor = [];
 
 let timeout;
 
+function Alert() {
+  if (
+    sessionStorage.getItem("alert") === "true" ||
+    sessionStorage.getItem("alert") === null
+  ) {
+    return (
+      <div className="alertMessage" id="alertMessage">
+        <h2>HELLO !</h2>
+        <p>
+          This application is in pre-alpha. It means you might have problem with
+          responsiveness, buing/selling stocks and due to my api provider, there
+          is a limit in loading charts.
+        </p>
+        <button
+          onClick={() => {
+            document.getElementById("alertMessage").outerHTML = "";
+            sessionStorage.setItem("alert", "false");
+          }}
+          className="alertMessage__button"
+        >
+          OK
+        </button>
+      </div>
+    );
+  } else {
+    return <div />;
+  }
+}
+
 class Dashboard extends React.Component {
   constructor(props) {
     super(props);
@@ -626,6 +655,11 @@ class Dashboard extends React.Component {
             loader3: false
           });
         }
+        if (this.state.loader3 !== true) {
+          this.setState({
+            loader3: false
+          });
+        }
       }, 5000);
     };
     document.querySelector(".hamburger").addEventListener("click", e => {
@@ -660,6 +694,7 @@ class Dashboard extends React.Component {
     }
     return (
       <div className="Dashboard">
+        <Alert />
         <div
           style={{ display: "flex", flexDirection: "column", width: "100%" }}
         >
@@ -910,7 +945,7 @@ class Dashboard extends React.Component {
                                 <path d="M5.373 4.51A9.962 9.962 0 0 1 12 2c5.523 0 10 4.477 10 10a9.954 9.954 0 0 1-1.793 5.715L17.5 12H20A8 8 0 0 0 6.274 6.413l-.9-1.902zm13.254 14.98A9.962 9.962 0 0 1 12 22C6.477 22 2 17.523 2 12c0-2.125.663-4.095 1.793-5.715L6.5 12H4a8 8 0 0 0 13.726 5.587l.9 1.902zm-5.213-4.662L10.586 12l-2.829 2.828-1.414-1.414 4.243-4.242L13.414 12l2.829-2.828 1.414 1.414-4.243 4.242z" />
                               </g>
                             </svg>
-                            <p>You didn't buy any stocks yet</p>
+                            <p>You didn't buy any stocks yet.</p>
                           </div>
                         )}
                         {this.state.portfolioLoader === false && (
