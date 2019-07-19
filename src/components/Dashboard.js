@@ -103,7 +103,7 @@ function Alert() {
         <h2>HELLO !</h2>
         <p>
           This application is in pre-alpha. It means you might have problem with
-          responsiveness, buing/selling stocks and due to my api provider, there
+          responsiveness, buyng/selling stocks and due to my api provider, there
           is a limit in loading charts.
         </p>
         <button
