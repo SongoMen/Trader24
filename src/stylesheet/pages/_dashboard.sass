@@ -233,7 +233,6 @@ a
     font-weight: bold
     font-size: 16px
     width: 100%
-
 .leftbar
   position: relative
   background-color: $bar-color
@@ -389,6 +388,7 @@ a
     border-radius: 5px
     background-color: $elements-color
     box-shadow: 0px 0px 30px 0px rgba(0,0,0,0.07)
+    color: $inactive-color
     height: 100%
     margin-bottom: 20px
     position: relative
@@ -426,6 +426,14 @@ a
       border-bottom: 1px solid $main-color
       box-shadow: 0px 0px 30px 0px rgba(94,181,248,.3)
 
+.errorMsg
+  display: flex
+  justify-content: center
+  align-items: center
+  flex-direction: column
+  font-weight: bold
+  svg
+    fill: $main-color!important
   
 .stockChart__chart
     width: 100%
