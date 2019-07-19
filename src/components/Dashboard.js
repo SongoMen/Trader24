@@ -665,6 +665,18 @@ class Dashboard extends React.Component {
     document.querySelector(".hamburger").addEventListener("click", e => {
       e.currentTarget.classList.toggle("is-active");
     });
+    setTimeout(() => {
+      if(this.state.loader1 === ""){
+        this.setState({
+          loader1: false
+        })
+      }
+      if(this.state.loader2 === ""){
+        this.setState({
+          loader2: false
+        })
+      }
+    }, 7000);
   }
   componentWillUnmount() {
     clearTimeout(timeout);
