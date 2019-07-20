@@ -571,7 +571,6 @@ export default class stockPage extends React.Component {
   }
   handleBuyStock(num) {
     let user = firebase.auth().currentUser.uid;
-    let docRef = db.collection("users").doc(user);
     let positionsNumber;
     firebase
       .firestore()
@@ -591,9 +590,11 @@ export default class stockPage extends React.Component {
           .doc("Position" + (Number(positionsNumber) + 2))
           .set({
             symbol: symbol,
-            moneyPaid: Number(num) * Number(this.state.latestPrice),
+            moneyPaid: (Number(num) * Number(this.state.latestPrice)).toFixed(
+              2
+            ),
             shares: num,
-            value: Number(num) * Number(this.state.latestPrice)
+            value: (Number(num) * Number(this.state.latestPrice)).toFixed(2)
           })
           .catch((error) => {
             console.log("Error getting document:", error);
@@ -693,9 +694,17 @@ export default class stockPage extends React.Component {
               <button
                 className="stockPage__buy-button"
                 onClick={() => {
-                  this.handleBuyStock(
-                    document.getElementById("buy-input").value
-                  );
+                  if (
+                    document.getElementById("buy-input") *
+                      this.state.latestPrice >=
+                    this.state.funds
+                  )
+                    this.handleBuyStock(
+                      document.getElementById("buy-input").value
+                    );
+                  else this.setState({
+                    buyConfirmation: false
+                  })
                 }}
               >
                 CONFIRM
@@ -880,13 +889,20 @@ export default class stockPage extends React.Component {
 
                       <button
                         onClick={function() {
+                          let value = document.getElementById("buy-input")
+                            .value;
                           if (
-                            document.getElementById("buy-input").value.length >
-                            0
+                            value.length > 0 &&
+                            value > 0 &&
+                            value * this.state.latestPrice >= this.state.funds
                           )
                             this.setState({
                               buyConfirmation: true
                             });
+                          else {
+                            document.getElementById("buy-input").style.border =
+                              "solid 1px #f45485";
+                          }
                         }.bind(this)}
                         className="stockPage__buy-button"
                       >

@@ -371,7 +371,7 @@ class Dashboard extends React.Component {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
   }
 
-  getLatestPrice(symbol,i) {
+  getLatestPrice(symbol, i) {
     const lastPrice = `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_d0e99ea2ee134a4f99d0a3ceb700336c`;
 
     fetch(lastPrice)
@@ -416,10 +416,10 @@ class Dashboard extends React.Component {
         if (snapshot.docs.length !== 0) {
           snapshot.forEach((doc) => {
             console.log(doc.id, "=>", doc.data());
-            if(portfolioStocks.length < 5){
-            portfolioStocks.push(doc.data().symbol);
-            portfolioShares.push(this.numberWithCommas(doc.data().shares));
-            portfolioMoneyPaid.push(doc.data().moneyPaid)
+            if (portfolioStocks.length < 5) {
+              portfolioStocks.push(doc.data().symbol);
+              portfolioShares.push(this.numberWithCommas(doc.data().shares));
+              portfolioMoneyPaid.push(doc.data().moneyPaid);
             }
           });
         } else {
@@ -455,12 +455,9 @@ class Dashboard extends React.Component {
                     fundsLoader: true
                   });
                 });
-                this.getLatestPrice(portfolioStocks[i],i)
-                i++
+                this.getLatestPrice(portfolioStocks[i], i);
+                i++;
                 document.getElementById("portfolio").style.display = "block";
-              });
-              this.setState({
-                portfolioLoader: true
               });
             } else {
               docRef.get().then((doc) => {
@@ -472,6 +469,13 @@ class Dashboard extends React.Component {
                 });
               });
             }
+          })
+          .then(() => {
+            setTimeout(() => {
+              this.setState({
+                portfolioLoader: true
+              });
+            }, 700);
           });
       })
       .catch((error) => {
