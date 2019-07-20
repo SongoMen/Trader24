@@ -5,6 +5,24 @@ input::-webkit-inner-spin-button
 
 input[type=number] 
     -moz-appearance: textfield
+@keyframes show-popup
+  0%
+    -webkit-transform: translate(-50%, -50%) scale(0.7)
+    transform: translate(-50%, -50%) scale(0.7)
+    opacity: 0
+
+  45%
+    -webkit-transform: translate(-50%, -50%) scale(1.05)
+    transform: translate(-50%, -50%) scale(1.05)
+    opacity: 1
+
+  80%
+    -webkit-transform: translate(-50%, -50%) scale(0.95)
+    transform: translate(-50%, -50%) scale(0.95)
+
+  100%
+    -webkit-transform: translate(-50%, -50%) scale(1)
+    transform: translate(-50%, -50%) scale(1)
 
 .stock
     width: 100%
@@ -99,9 +117,12 @@ input[type=number]
     border-radius: 5px
     &:hover
         box-shadow: 0px 0px 10px 0px $main-color
-    .cancel
-        background: $elements-color
-
+    &:nth-child(1)
+        margin-right: 20px
+.cancel
+    background: $elements-color
+    &:hover
+        box-shadow: 0px 0px 20px 0px rgba(0,0,0,.3)
 
 
 .stockPage__keyStats
@@ -173,6 +194,7 @@ input[type=number]
     align-items: center
     flex-direction: column
     background-color: $panel-color
+    animation: show-popup .3s
 
 .black-bg
     position: absolute

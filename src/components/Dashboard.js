@@ -95,8 +95,8 @@ let timeout;
 
 function Alert() {
   if (
-    sessionStorage.getItem("alert") === "true" ||
-    sessionStorage.getItem("alert") === null
+    sessionStorage.getItem("dsa") === "true" ||
+    sessionStorage.getItem("dsads") === null
   ) {
     return (
       <div className="alertMessage" id="alertMessage">

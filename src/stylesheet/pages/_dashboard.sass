@@ -143,6 +143,24 @@ a
   &::after
     top: 13px  
 
+@keyframes show-popup
+  0%
+    -webkit-transform: translate(-50%, -50%) scale(0.7)
+    transform: translate(-50%, -50%) scale(0.7)
+    opacity: 0
+
+  45%
+    -webkit-transform: translate(-50%, -50%) scale(1.05)
+    transform: translate(-50%, -50%) scale(1.05)
+    opacity: 1
+
+  80%
+    -webkit-transform: translate(-50%, -50%) scale(0.95)
+    transform: translate(-50%, -50%) scale(0.95)
+
+  100%
+    -webkit-transform: translate(-50%, -50%) scale(1)
+    transform: translate(-50%, -50%) scale(1)
 
 .alertMessage
   position: absolute
@@ -161,6 +179,7 @@ a
   flex-direction: column
   text-align: center
   padding: 50px
+  animation: show-popup .3s
   h2
     margin-bottom: 10px
   p

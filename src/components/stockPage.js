@@ -108,7 +108,7 @@ export default class stockPage extends React.Component {
     this.state = {
       loaded: "",
       funds: "",
-      fundsWithoutCommas:"",
+      fundsWithoutCommas: "",
       accountValue: "",
       fundsLoader: "",
       changeColor: "",
@@ -606,9 +606,11 @@ export default class stockPage extends React.Component {
         firebase
           .firestore()
           .collection("users")
-          .doc(user)  
+          .doc(user)
           .update({
-            currentfunds: Number(this.state.fundsWithoutCommas) - (Number(num) * Number(this.state.latestPrice))
+            currentfunds:
+              Number(this.state.fundsWithoutCommas) -
+              Number(num) * Number(this.state.latestPrice)
           })
           .catch((error) => {
             console.log("Error getting document:", error);
@@ -616,17 +618,20 @@ export default class stockPage extends React.Component {
               portfolioLoader: false
             });
           });
-          console.log(this.state.funds)
-          console.log((Number(num) * Number(this.state.latestPrice)))
+        console.log(this.state.funds);
+        console.log(Number(num) * Number(this.state.latestPrice));
       })
       .then(() => {
-        this.getFunds()
+        this.getFunds();
         this.setState({
           buyConfirmation: false
         });
       });
   }
   getFunds() {
+    this.setState({
+      funds: ""
+    });
     let user = firebase.auth().currentUser.uid;
     let docRef = db.collection("users").doc(user);
 
@@ -684,22 +689,28 @@ export default class stockPage extends React.Component {
               Are you sure you want to buy{" "}
               {document.getElementById("buy-input").value} shares of {symbol}
             </h3>
-            <button
-              className="stockPage__buy-button"
-              onClick={() => {
-                this.handleBuyStock(document.getElementById("buy-input").value);
-              }}
-            >
-              CONFIRM
-            </button>
-            <button
-              className="stockPage__buy-button cancel"
-              onClick={() => {
-                this.handleBuyStock(document.getElementById("buy-input").value);
-              }}
-            >
-              CANCEL
-            </button>
+            <div>
+              <button
+                className="stockPage__buy-button"
+                onClick={() => {
+                  this.handleBuyStock(
+                    document.getElementById("buy-input").value
+                  );
+                }}
+              >
+                CONFIRM
+              </button>
+              <button
+                className="stockPage__buy-button cancel"
+                onClick={() => {
+                  this.setState({
+                    buyConfirmation: false
+                  });
+                }}
+              >
+                CANCEL
+              </button>
+            </div>
           </div>
         )}
         {this.state.valid && (
