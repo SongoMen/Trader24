@@ -95,8 +95,8 @@ let timeout;
 
 function Alert() {
   if (
-    sessionStorage.getItem("dsa") === "true" ||
-    sessionStorage.getItem("dsads") === null
+    sessionStorage.getItem("alert") === "true" ||
+    sessionStorage.getItem("alert") === null
   ) {
     return (
       <div className="alertMessage" id="alertMessage">
@@ -457,10 +457,10 @@ class Dashboard extends React.Component {
                 });
                 this.getLatestPrice(portfolioStocks[i],i)
                 i++
-                this.setState({
-                  portfolioLoader: true
-                });
                 document.getElementById("portfolio").style.display = "block";
+              });
+              this.setState({
+                portfolioLoader: true
               });
             } else {
               docRef.get().then((doc) => {
