@@ -108,6 +108,7 @@ export default class stockPage extends React.Component {
     this.state = {
       loaded: "",
       funds: "",
+      fundsWithoutCommas:"",
       accountValue: "",
       fundsLoader: "",
       changeColor: "",
@@ -115,7 +116,7 @@ export default class stockPage extends React.Component {
       marketStatus: "",
       valid: "",
       latestPrice: "",
-      buyConfirmation: "",
+      buyConfirmation: ""
     };
     this.data1 = (canvas) => {
       const ctx = canvas.getContext("2d");
@@ -587,7 +588,7 @@ export default class stockPage extends React.Component {
           .collection("users")
           .doc(user)
           .collection("stocks")
-          .doc("Position" + (Number(positionsNumber) + 1))
+          .doc("Position" + (Number(positionsNumber) + 2))
           .set({
             symbol: symbol,
             moneyPaid: Number(num) * Number(this.state.latestPrice),
@@ -602,9 +603,48 @@ export default class stockPage extends React.Component {
           });
       })
       .then(() => {
+        firebase
+          .firestore()
+          .collection("users")
+          .doc(user)  
+          .update({
+            currentfunds: Number(this.state.fundsWithoutCommas) - (Number(num) * Number(this.state.latestPrice))
+          })
+          .catch((error) => {
+            console.log("Error getting document:", error);
+            this.setState({
+              portfolioLoader: false
+            });
+          });
+          console.log(this.state.funds)
+          console.log((Number(num) * Number(this.state.latestPrice)))
+      })
+      .then(() => {
+        this.getFunds()
         this.setState({
           buyConfirmation: false
         });
+      });
+  }
+  getFunds() {
+    let user = firebase.auth().currentUser.uid;
+    let docRef = db.collection("users").doc(user);
+
+    docRef
+      .get()
+      .then((doc) => {
+        this.setState({
+          funds: "$" + this.numberWithCommas(doc.data()["currentfunds"])
+        });
+        this.setState({
+          fundsWithoutCommas: doc.data()["currentfunds"]
+        });
+        this.setState({
+          fundsLoader: true
+        });
+      })
+      .catch(function(error) {
+        console.log("Error getting document:", error);
       });
   }
   componentDidMount() {
@@ -631,23 +671,7 @@ export default class stockPage extends React.Component {
           } else this.setState({valid: false});
         }, 500);
       });
-
-    let user = firebase.auth().currentUser.uid;
-    let docRef = db.collection("users").doc(user);
-
-    docRef
-      .get()
-      .then((doc) => {
-        this.setState({
-          funds: "$" + this.numberWithCommas(doc.data()["currentfunds"])
-        });
-        this.setState({
-          fundsLoader: true
-        });
-      })
-      .catch(function(error) {
-        console.log("Error getting document:", error);
-      });
+    this.getFunds();
   }
   render() {
     let user = firebase.auth().currentUser.displayName;

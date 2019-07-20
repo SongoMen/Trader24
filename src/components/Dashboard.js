@@ -416,9 +416,11 @@ class Dashboard extends React.Component {
         if (snapshot.docs.length !== 0) {
           snapshot.forEach((doc) => {
             console.log(doc.id, "=>", doc.data());
+            if(portfolioStocks.length < 5){
             portfolioStocks.push(doc.data().symbol);
             portfolioShares.push(this.numberWithCommas(doc.data().shares));
             portfolioMoneyPaid.push(doc.data().moneyPaid)
+            }
           });
         } else {
           this.setState({
