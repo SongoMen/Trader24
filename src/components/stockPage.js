@@ -116,7 +116,6 @@ export default class stockPage extends React.Component {
       valid: "",
       latestPrice: "",
       buyConfirmation: "",
-      value: ""
     };
     this.data1 = (canvas) => {
       const ctx = canvas.getContext("2d");
@@ -608,15 +607,6 @@ export default class stockPage extends React.Component {
         });
       });
   }
-  onChange(e){
-    const re = /^[0-9\b]+$/;
-
-    // if value is not blank, then test the regex
-
-    if (e.target.value === '' || re.test(e.target.value)) {
-       this.setState({value: e.target.value})
-    }
-}
   componentDidMount() {
     fetch(
       "https://cloud.iexapis.com/stable/ref-data/symbols?token=pk_d0e99ea2ee134a4f99d0a3ceb700336c"
@@ -850,8 +840,7 @@ export default class stockPage extends React.Component {
                         spellCheck="false"
                         className="stockPage__buy-input"
                         id="buy-input"
-                        type="text"
-                        onChange={this.onChange}
+                        type="number"
                       />
 
                       <button
