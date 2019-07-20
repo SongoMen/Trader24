@@ -663,24 +663,22 @@ class Dashboard extends React.Component {
             loader3: false
           });
         }
-        console.log(this.state.loader3);
+        if (this.state.loader1 === "") {
+          this.setState({
+            loader1: false
+          });
+        }
+        if (this.state.loader2 === "") {
+          this.setState({
+            loader2: false
+          });
+        }
       }, 5000);
-    };
+    }.bind(this)
+    timeout()
     document.querySelector(".hamburger").addEventListener("click", (e) => {
       e.currentTarget.classList.toggle("is-active");
     });
-    setTimeout(() => {
-      if (this.state.loader1 === "") {
-        this.setState({
-          loader1: false
-        });
-      }
-      if (this.state.loader2 === "") {
-        this.setState({
-          loader2: false
-        });
-      }
-    }, 7000);
   }
   componentWillUnmount() {
     clearTimeout(timeout);
@@ -857,9 +855,7 @@ class Dashboard extends React.Component {
                                 <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm-1-5h2v2h-2v-2zm0-8h2v6h-2V7z" />
                               </g>
                             </svg>
-                            <p>
-                              Couldn't load chart try again in few minutes
-                            </p>
+                            <p>Couldn't load chart try again in few minutes</p>
                           </div>
                         )}
                         {this.state.loader1 === true && (
@@ -911,9 +907,7 @@ class Dashboard extends React.Component {
                                 <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm-1-5h2v2h-2v-2zm0-8h2v6h-2V7z" />
                               </g>
                             </svg>
-                            <p>
-                              Couldn't load chart try again in few minutes
-                            </p>
+                            <p>Couldn't load chart try again in few minutes</p>
                           </div>
                         )}
                         {this.state.loader2 === true && (
