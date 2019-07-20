@@ -1,12 +1,11 @@
 import React from "react";
 import firebase from "firebase/app";
-import { Line } from "react-chartjs-2";
-import { defaults } from "react-chartjs-2";
+import {Line} from "react-chartjs-2";
+import {defaults} from "react-chartjs-2";
 import $ from "jquery";
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 import "chartjs-plugin-annotation";
-import Leftbar from "./leftbar"
-
+import Leftbar from "./leftbar";
 
 defaults.global.defaultFontStyle = "Bold";
 defaults.global.defaultFontFamily = "Quicksand";
@@ -78,7 +77,7 @@ const apiKeys = [
   "7V0Q0N46CBIPHA2K"
 ];
 
-let symbol
+let symbol;
 
 let chartData1 = [];
 let labels = [];
@@ -115,9 +114,11 @@ export default class stockPage extends React.Component {
       extendedColor: "",
       marketStatus: "",
       valid: "",
-      latestPrice: ""
+      latestPrice: "",
+      buyConfirmation: "",
+      value: ""
     };
-    this.data1 = canvas => {
+    this.data1 = (canvas) => {
       const ctx = canvas.getContext("2d");
       const gradient = ctx.createLinearGradient(0, 0, 600, 10);
       gradient.addColorStop(0, "#7c83ff");
@@ -139,6 +140,7 @@ export default class stockPage extends React.Component {
             pointHoverRadius: 0,
             borderColor: gradient,
             backgroundColor: gradientFill,
+            pointBackgroundColor: gradient,
             fill: true,
             borderWidth: 1,
             data: chartData1
@@ -201,12 +203,12 @@ export default class stockPage extends React.Component {
     chartData1 = [];
     let b = 0;
     if (oneDay.length === 0) {
-      const stockApi = `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${
-        symbol
-      }&interval=1min&apikey=${apiKeys[0]}`;
+      const stockApi = `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=1min&apikey=${
+        apiKeys[0]
+      }`;
       fetch(stockApi)
-        .then(res => res.json())
-        .then(result => {
+        .then((res) => res.json())
+        .then((result) => {
           if (result["Note"] === undefined) {
             for (
               let i = Object.keys(result["Time Series (1min)"]).length - 1;
@@ -229,12 +231,12 @@ export default class stockPage extends React.Component {
           } else {
             setTimeout(() => {
               b++;
-              const stockApi = `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${
-                symbol
-              }&interval=1min&apikey=${apiKeys[b]}`;
+              const stockApi = `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=1min&apikey=${
+                apiKeys[b]
+              }`;
               fetch(stockApi)
-                .then(res => res.json())
-                .then(result => {
+                .then((res) => res.json())
+                .then((result) => {
                   console.log(Object.keys(result["Time Series (1min)"]));
                   for (
                     let i =
@@ -264,8 +266,8 @@ export default class stockPage extends React.Component {
             this.setState({
               loaded: true
             });
-            chartData1.map(val => oneDay.push(val));
-            labels.map(val => oneDayLabels.push(val));
+            chartData1.map((val) => oneDay.push(val));
+            labels.map((val) => oneDayLabels.push(val));
           }, 1000);
         });
     } else {
@@ -281,12 +283,10 @@ export default class stockPage extends React.Component {
     labels = [];
     chartData1 = [];
     if (ytdChart.length === 0) {
-      const stockApi = `https://cloud.iexapis.com/beta/stock/${
-        symbol
-      }/batch?token=pk_e103471603a7468f8947eeb5bd9b6b77&types=chart,quote&range=ytd`;
+      const stockApi = `https://cloud.iexapis.com/beta/stock/${symbol}/batch?token=pk_d0e99ea2ee134a4f99d0a3ceb700336c&types=chart,quote&range=ytd`;
       fetch(stockApi)
-        .then(res => res.json())
-        .then(result => {
+        .then((res) => res.json())
+        .then((result) => {
           for (let i = 0; i < result.chart.length; i++) {
             if (result.chart[i].average !== null) {
               chartData1.push(result.chart[i].close.toFixed(2));
@@ -298,8 +298,8 @@ export default class stockPage extends React.Component {
           this.setState({
             loaded: true
           });
-          chartData1.map(val => ytdChart.push(val));
-          labels.map(val => ytdLabels.push(val));
+          chartData1.map((val) => ytdChart.push(val));
+          labels.map((val) => ytdLabels.push(val));
         });
     } else {
       labels = ytdLabels;
@@ -315,12 +315,10 @@ export default class stockPage extends React.Component {
     labels = [];
     chartData1 = [];
     if (oneYear.length === 0) {
-      const stockApi = `https://cloud.iexapis.com/beta/stock/${
-        symbol
-      }/batch?token=pk_e103471603a7468f8947eeb5bd9b6b77&types=chart,quote&range=1y`;
+      const stockApi = `https://cloud.iexapis.com/beta/stock/${symbol}/batch?token=pk_d0e99ea2ee134a4f99d0a3ceb700336c&types=chart,quote&range=1y`;
       fetch(stockApi)
-        .then(res => res.json())
-        .then(result => {
+        .then((res) => res.json())
+        .then((result) => {
           for (let i = 0; i < result.chart.length; i++) {
             if (result.chart[i].average !== null) {
               chartData1.push(result.chart[i].close.toFixed(2));
@@ -332,8 +330,8 @@ export default class stockPage extends React.Component {
           this.setState({
             loaded: true
           });
-          chartData1.map(val => oneYear.push(val));
-          labels.map(val => oneYearLabels.push(val));
+          chartData1.map((val) => oneYear.push(val));
+          labels.map((val) => oneYearLabels.push(val));
         });
     } else {
       labels = oneYearLabels;
@@ -348,12 +346,10 @@ export default class stockPage extends React.Component {
     labels = [];
     chartData1 = [];
     if (twoYears.length === 0) {
-      const stockApi = `https://cloud.iexapis.com/beta/stock/${
-        symbol
-      }/batch?token=pk_e103471603a7468f8947eeb5bd9b6b77&types=chart,quote&range=2y`;
+      const stockApi = `https://cloud.iexapis.com/beta/stock/${symbol}/batch?token=pk_d0e99ea2ee134a4f99d0a3ceb700336c&types=chart,quote&range=2y`;
       fetch(stockApi)
-        .then(res => res.json())
-        .then(result => {
+        .then((res) => res.json())
+        .then((result) => {
           for (let i = 0; i < result.chart.length; i++) {
             if (result.chart[i].average !== null) {
               chartData1.push(result.chart[i].close.toFixed(2));
@@ -365,8 +361,8 @@ export default class stockPage extends React.Component {
           this.setState({
             loaded: true
           });
-          chartData1.map(val => twoYears.push(val));
-          labels.map(val => twoYearsLabels.push(val));
+          chartData1.map((val) => twoYears.push(val));
+          labels.map((val) => twoYearsLabels.push(val));
         });
     } else {
       labels = twoYearsLabels;
@@ -381,12 +377,10 @@ export default class stockPage extends React.Component {
     labels = [];
     chartData1 = [];
     if (oneMonth.length === 0) {
-      const stockApi = `https://cloud.iexapis.com/beta/stock/${
-        symbol
-      }/batch?token=pk_e103471603a7468f8947eeb5bd9b6b77&types=chart,quote&range=1m`;
+      const stockApi = `https://cloud.iexapis.com/beta/stock/${symbol}/batch?token=pk_d0e99ea2ee134a4f99d0a3ceb700336c&types=chart,quote&range=1m`;
       fetch(stockApi)
-        .then(res => res.json())
-        .then(result => {
+        .then((res) => res.json())
+        .then((result) => {
           for (let i = 0; i < result.chart.length; i++) {
             if (result.chart[i].average !== null) {
               chartData1.push(result.chart[i].close.toFixed(2));
@@ -398,8 +392,8 @@ export default class stockPage extends React.Component {
           this.setState({
             loaded: true
           });
-          chartData1.map(val => oneMonth.push(val));
-          labels.map(val => oneMonthLabels.push(val));
+          chartData1.map((val) => oneMonth.push(val));
+          labels.map((val) => oneMonthLabels.push(val));
         });
     } else {
       labels = oneMonthLabels;
@@ -485,12 +479,10 @@ export default class stockPage extends React.Component {
   }
   rendering() {
     fetch(
-      `https://cloud.iexapis.com/stable/stock/${
-        symbol
-      }/quote?displayPercent=true&token=pk_e103471603a7468f8947eeb5bd9b6b77`
+      `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_d0e99ea2ee134a4f99d0a3ceb700336c`
     )
-      .then(res => res.json())
-      .then(result => {
+      .then((res) => res.json())
+      .then((result) => {
         stockData.changePercent = result.changePercent.toFixed(2);
         stockData.change = result.change.toFixed(2);
 
@@ -548,46 +540,90 @@ export default class stockPage extends React.Component {
         }
       });
     document.title = "Trader24 - " + symbol;
-        fetch(
-          `https://cloud.iexapis.com/stable/stock/${
-            symbol
-          }/quote?displayPercent=true&token=pk_e103471603a7468f8947eeb5bd9b6b77`
-        )
-          .then(res => res.json())
-          .then(result => {
-            console.log(result.latestPrice);
-            this.setState({
-              latestPrice: result.latestPrice.toFixed(2)
-            });
-          })
-          .then(() => {
-            if (this.state.marketStatus) {
-              setInterval(() => {
-                fetch(
-                  `https://cloud.iexapis.com/stable/stock/${
-                    symbol
-                  }/quote?displayPercent=true&token=pk_e103471603a7468f8947eeb5bd9b6b77`
-                )
-                  .then(res => res.json())
-                  .then(result => {
-                    console.log(result.latestPrice);
-                    this.setState({
-                      latestPrice: result.latestPrice.toFixed(2)
-                    });
-                  });
-              }, 5000);
-            }
-          });
+    fetch(
+      `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_d0e99ea2ee134a4f99d0a3ceb700336c`
+    )
+      .then((res) => res.json())
+      .then((result) => {
+        console.log(result.latestPrice);
+        this.setState({
+          latestPrice: result.latestPrice.toFixed(2)
+        });
+      })
+      .then(() => {
+        if (this.state.marketStatus) {
+          setInterval(() => {
+            fetch(
+              `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_d0e99ea2ee134a4f99d0a3ceb700336c`
+            )
+              .then((res) => res.json())
+              .then((result) => {
+                console.log(result.latestPrice);
+                this.setState({
+                  latestPrice: result.latestPrice.toFixed(2)
+                });
+              });
+          }, 5000);
+        }
+      });
 
     this.getYTDChart();
   }
+  handleBuyStock(num) {
+    let user = firebase.auth().currentUser.uid;
+    let docRef = db.collection("users").doc(user);
+    let positionsNumber;
+    firebase
+      .firestore()
+      .collection("users")
+      .doc(user)
+      .collection("stocks")
+      .get()
+      .then((snapshot) => {
+        positionsNumber = snapshot.docs.length;
+      })
+      .then(() => {
+        firebase
+          .firestore()
+          .collection("users")
+          .doc(user)
+          .collection("stocks")
+          .doc("Position" + (Number(positionsNumber) + 1))
+          .set({
+            symbol: symbol,
+            moneyPaid: Number(num) * Number(this.state.latestPrice),
+            shares: num,
+            value: Number(num) * Number(this.state.latestPrice)
+          })
+          .catch((error) => {
+            console.log("Error getting document:", error);
+            this.setState({
+              portfolioLoader: false
+            });
+          });
+      })
+      .then(() => {
+        this.setState({
+          buyConfirmation: false
+        });
+      });
+  }
+  onChange(e){
+    const re = /^[0-9\b]+$/;
+
+    // if value is not blank, then test the regex
+
+    if (e.target.value === '' || re.test(e.target.value)) {
+       this.setState({value: e.target.value})
+    }
+}
   componentDidMount() {
     fetch(
-      "https://cloud.iexapis.com/stable/ref-data/symbols?token=pk_e103471603a7468f8947eeb5bd9b6b77"
+      "https://cloud.iexapis.com/stable/ref-data/symbols?token=pk_d0e99ea2ee134a4f99d0a3ceb700336c"
     )
-      .then(res => res.json())
-      .then(result => {
-        allSymbols = result.map(val => {
+      .then((res) => res.json())
+      .then((result) => {
+        allSymbols = result.map((val) => {
           return val;
         });
         for (let i = 0; i < result.length; i++) {
@@ -600,9 +636,9 @@ export default class stockPage extends React.Component {
         ];
         setTimeout(() => {
           if (this.isInArray(symbolsOnly, symbol)) {
-            this.setState({ valid: true });
+            this.setState({valid: true});
             this.rendering();
-          } else this.setState({ valid: false });
+          } else this.setState({valid: false});
         }, 500);
       });
 
@@ -611,7 +647,7 @@ export default class stockPage extends React.Component {
 
     docRef
       .get()
-      .then(doc => {
+      .then((doc) => {
         this.setState({
           funds: "$" + this.numberWithCommas(doc.data()["currentfunds"])
         });
@@ -627,9 +663,34 @@ export default class stockPage extends React.Component {
     let user = firebase.auth().currentUser.displayName;
     return (
       <div className="stock">
+        {this.state.buyConfirmation === true && <div className="black-bg" />}
+        {this.state.buyConfirmation === true && (
+          <div className="buyConfirmation">
+            <h3>
+              Are you sure you want to buy{" "}
+              {document.getElementById("buy-input").value} shares of {symbol}
+            </h3>
+            <button
+              className="stockPage__buy-button"
+              onClick={() => {
+                this.handleBuyStock(document.getElementById("buy-input").value);
+              }}
+            >
+              CONFIRM
+            </button>
+            <button
+              className="stockPage__buy-button cancel"
+              onClick={() => {
+                this.handleBuyStock(document.getElementById("buy-input").value);
+              }}
+            >
+              CANCEL
+            </button>
+          </div>
+        )}
         {this.state.valid && (
-          <div style={{ display: "flex", height: "100%" }}>
-            <Leftbar/>
+          <div style={{display: "flex", height: "100%"}}>
+            <Leftbar />
             <div className="stockPage">
               <div className="topbar">
                 <div className="topbar__searchbar" id="topbar__searchbar">
@@ -765,7 +826,7 @@ export default class stockPage extends React.Component {
                     <h4>{stockData.name}</h4>
                     <div className="stockPage__trade-top">
                       <h2>${this.state.latestPrice}</h2>
-                      <h6 style={{ color: this.state.changeColor }}>
+                      <h6 style={{color: this.state.changeColor}}>
                         {stockData.change} ({stockData.changePercent}%)
                       </h6>
                     </div>
@@ -773,7 +834,7 @@ export default class stockPage extends React.Component {
                     (stockData.extendedChange !== null) ? (
                       <h6>
                         Extended Hours:{" "}
-                        <span style={{ color: this.state.extendedColor }}>
+                        <span style={{color: this.state.extendedColor}}>
                           ${stockData.extendedPrice} ({stockData.extendedChange}
                           )
                         </span>
@@ -782,6 +843,32 @@ export default class stockPage extends React.Component {
                       <div />
                     )}
                     <h5>Buy {symbol}</h5>
+                    <div>
+                      <input
+                        autoCorrect="off"
+                        autoCapitalize="off"
+                        spellCheck="false"
+                        className="stockPage__buy-input"
+                        id="buy-input"
+                        type="text"
+                        onChange={this.onChange}
+                      />
+
+                      <button
+                        onClick={function() {
+                          if (
+                            document.getElementById("buy-input").value.length >
+                            0
+                          )
+                            this.setState({
+                              buyConfirmation: true
+                            });
+                        }.bind(this)}
+                        className="stockPage__buy-button"
+                      >
+                        BUY
+                      </button>
+                    </div>
                   </div>
                 </div>
               ) : (

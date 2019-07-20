@@ -90,7 +90,7 @@ let portfolioShares = [];
 let portfolioValue = [];
 let portfolioDifference = [];
 let portfolioColor = [];
-
+let portfolioMoneyPaid = [];
 let timeout;
 
 function Alert() {
@@ -280,7 +280,7 @@ class Dashboard extends React.Component {
       });
   }
   getStockInfo(symbol, dataChart, changeStash, priceStash, num, callback) {
-    const percentageChange = `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_e103471603a7468f8947eeb5bd9b6b77`;
+    const percentageChange = `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_d0e99ea2ee134a4f99d0a3ceb700336c`;
     fetch(percentageChange)
       .then((res) => res.json())
       .then((result) => {
@@ -293,12 +293,12 @@ class Dashboard extends React.Component {
   }
   getStocksList() {
     const stocks =
-      "https://cloud.iexapis.com/stable/stock/market/list/mostactive?token=pk_e103471603a7468f8947eeb5bd9b6b77";
+      "https://cloud.iexapis.com/stable/stock/market/list/mostactive?token=pk_d0e99ea2ee134a4f99d0a3ceb700336c";
     fetch(stocks)
       .then((res) => res.json())
       .then((result) => {
         const gainers =
-          "https://cloud.iexapis.com/stable/stock/market/list/gainers?token=pk_e103471603a7468f8947eeb5bd9b6b77";
+          "https://cloud.iexapis.com/stable/stock/market/list/gainers?token=pk_d0e99ea2ee134a4f99d0a3ceb700336c";
         let counter = 0;
         fetch(gainers)
           .then((res) => res.json())
@@ -331,7 +331,7 @@ class Dashboard extends React.Component {
           for (let i = 0; i < 9; i++) {
             const percentageChange = `https://cloud.iexapis.com/stable/stock/${
               stockListTickers[i]
-            }/quote?displayPercent=true&token=pk_e103471603a7468f8947eeb5bd9b6b77`;
+            }/quote?displayPercent=true&token=pk_d0e99ea2ee134a4f99d0a3ceb700336c`;
             fetch(percentageChange)
               .then((res) => res.json())
               .then((result) => {
@@ -368,7 +368,32 @@ class Dashboard extends React.Component {
     return 100 * Math.abs((a - b) / ((a + b) / 2));
   }
   numberWithCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  }
+
+  getLatestPrice(symbol,i) {
+    const lastPrice = `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_d0e99ea2ee134a4f99d0a3ceb700336c`;
+
+    fetch(lastPrice)
+      .then((res) => res.json())
+      .then((result) => {
+        portfolioValue.push(portfolioShares[i] * result.latestPrice);
+      })
+      .then(() => {
+        portfolioDifference[i] = this.relDiff(
+          portfolioValue[i],
+          parseFloat(portfolioMoneyPaid[i])
+        ).toFixed(2);
+        if (portfolioValue[i] > portfolioMoneyPaid[i]) {
+          portfolioDifference[i] = "+" + portfolioDifference[i];
+          portfolioColor.push("#66F9DA");
+        } else if (portfolioValue[i] === portfolioMoneyPaid[i])
+          portfolioColor.push("#999EAF");
+        else {
+          portfolioDifference[i] = "-" + portfolioDifference[i];
+          portfolioColor.push("#F45385");
+        }
+      });
   }
 
   getAccountInfo() {
@@ -379,6 +404,8 @@ class Dashboard extends React.Component {
     portfolioDifference = [];
     let user = firebase.auth().currentUser.uid;
     let docRef = db.collection("users").doc(user);
+    let i = 0;
+
     firebase
       .firestore()
       .collection("users")
@@ -389,8 +416,9 @@ class Dashboard extends React.Component {
         if (snapshot.docs.length !== 0) {
           snapshot.forEach((doc) => {
             console.log(doc.id, "=>", doc.data());
-            portfolioStocks.push(doc.id);
+            portfolioStocks.push(doc.data().symbol);
             portfolioShares.push(this.numberWithCommas(doc.data().shares));
+            portfolioMoneyPaid.push(doc.data().moneyPaid)
           });
         } else {
           this.setState({
@@ -398,106 +426,59 @@ class Dashboard extends React.Component {
           });
         }
       })
-
+      .then(() => {
+        firebase
+          .firestore()
+          .collection("users")
+          .doc(user)
+          .collection("stocks")
+          .get()
+          .then((snapshot) => {
+            if (snapshot.docs.length !== 0) {
+              snapshot.forEach((doc) => {
+                docRef.get().then((doc) => {
+                  this.setState({
+                    funds:
+                      "$" + this.numberWithCommas(doc.data()["currentfunds"])
+                  });
+                  this.setState({
+                    accountValue:
+                      "$" +
+                      this.numberWithCommas(
+                        parseFloat(doc.data()["currentfunds"]) +
+                          parseFloat(portfolioValue.reduce(add, 0))
+                      )
+                  });
+                  this.setState({
+                    fundsLoader: true
+                  });
+                });
+                this.getLatestPrice(portfolioStocks[i],i)
+                i++
+                this.setState({
+                  portfolioLoader: true
+                });
+                document.getElementById("portfolio").style.display = "block";
+              });
+            } else {
+              docRef.get().then((doc) => {
+                this.setState({
+                  funds: "$" + this.numberWithCommas(doc.data()["currentfunds"])
+                });
+                this.setState({
+                  fundsLoader: true
+                });
+              });
+            }
+          });
+      })
       .catch((error) => {
         console.log("Error getting document:", error);
         this.setState({
           portfolioLoader: false
         });
       });
-    firebase
-      .firestore()
-      .collection("users")
-      .doc(user)
-      .collection("stocks")
-      .get()
-      .then((snapshot) => {
-        if (snapshot.docs.length !== 0) {
-          snapshot.forEach((doc) => {
-            (async () => {
-              for (let i = 0; i < portfolioStocks.length; i++) {
-                const lastPrice = `https://cloud.iexapis.com/stable/stock/${
-                  portfolioStocks[i]
-                }/quote?displayPercent=true&token=pk_e103471603a7468f8947eeb5bd9b6b77`;
-                await new Promise((resolve) =>
-                  fetch(lastPrice)
-                    .then((res) => res.json())
-                    .then((result) => {
-                      portfolioValue.push(
-                        doc.data().shares * result.latestPrice
-                      );
-                    })
-                    .then(() => {
-                      portfolioDifference[i] = this.relDiff(
-                        portfolioValue[i],
-                        parseFloat(doc.data().moneyPaid)
-                      ).toFixed(2);
-                      if (portfolioValue[i] > doc.data().moneyPaid) {
-                        portfolioDifference[i] = "+" + portfolioDifference[i];
-                        portfolioColor.push("#66F9DA");
-                      } else if (portfolioValue[i] === doc.data().moneyPaid)
-                        portfolioColor.push("#999EAF");
-                      else {
-                        portfolioDifference[i] = "-" + portfolioDifference[i];
-                        portfolioColor.push("#F45385");
-                      }
-                    })
-                    .then(() => {
-                      docRef
-                        .get()
-                        .then((doc) => {
-                          this.setState({
-                            funds:
-                              "$" +
-                              this.numberWithCommas(doc.data()["currentfunds"])
-                          });
-                          this.setState({
-                            accountValue:
-                              "$" +
-                              this.numberWithCommas(
-                                parseFloat(doc.data()["currentfunds"]) +
-                                  parseFloat(portfolioValue.reduce(add, 0))
-                              )
-                          });
-                          this.setState({
-                            fundsLoader: true
-                          });
-                          resolve();
-                        })
-                        .catch((error) => {
-                          console.log("Error getting document:", error);
-                          this.setState({
-                            portfolioLoader: false
-                          });
-                        });
-                    })
-                );
-              }
-              setTimeout(() => {
-                if (
-                  portfolioStocks.length === portfolioValue.length &&
-                  portfolioDifference.length === portfolioStocks.length &&
-                  portfolioShares.length === portfolioStocks.length
-                ) {
-                  this.setState({
-                    portfolioLoader: true
-                  });
-                  document.getElementById("portfolio").style.display = "block";
-                }
-              }, 300);
-            })();
-          });
-        } else {
-          docRef.get().then((doc) => {
-            this.setState({
-              funds: "$" + this.numberWithCommas(doc.data()["currentfunds"])
-            });
-            this.setState({
-              fundsLoader: true
-            });
-          });
-        }
-      });
+    console.log(portfolioDifference);
   }
   searchStocks(e) {
     document.getElementById("results").innerHTML = "";
@@ -537,7 +518,7 @@ class Dashboard extends React.Component {
 
   componentDidMount() {
     fetch(
-      "https://cloud.iexapis.com/stable/ref-data/symbols?token=pk_e103471603a7468f8947eeb5bd9b6b77"
+      "https://cloud.iexapis.com/stable/ref-data/symbols?token=pk_d0e99ea2ee134a4f99d0a3ceb700336c"
     )
       .then((res) => res.json())
       .then((result) => {
@@ -548,7 +529,7 @@ class Dashboard extends React.Component {
     chartData1 = [];
     chartData2 = [];
     const gainers =
-      "https://cloud.iexapis.com/stable/stock/market/list/gainers?token=pk_e103471603a7468f8947eeb5bd9b6b77";
+      "https://cloud.iexapis.com/stable/stock/market/list/gainers?token=pk_d0e99ea2ee134a4f99d0a3ceb700336c";
     fetch(gainers)
       .then((res) => res.json())
       .then((result) => {
@@ -674,8 +655,8 @@ class Dashboard extends React.Component {
           });
         }
       }, 5000);
-    }.bind(this)
-    timeout()
+    }.bind(this);
+    timeout();
     document.querySelector(".hamburger").addEventListener("click", (e) => {
       e.currentTarget.classList.toggle("is-active");
     });
@@ -995,12 +976,7 @@ class Dashboard extends React.Component {
                                       >
                                         {portfolioDifference[index]}%
                                       </td>
-                                      <td>
-                                        $
-                                        {this.numberWithCommas(
-                                          portfolioValue[index]
-                                        )}
-                                      </td>
+                                      <td>${portfolioValue[index]}</td>
                                     </tr>
                                   );
                                 })}
