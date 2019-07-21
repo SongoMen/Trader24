@@ -380,10 +380,11 @@ class Dashboard extends React.Component {
         portfolioValue.push(portfolioShares[i] * result.latestPrice);
       })
       .then(() => {
-        portfolioDifference[i] = this.relDiff(
-          portfolioValue[i],
-          parseFloat(portfolioMoneyPaid[i])
-        ).toFixed(2);
+        portfolioDifference[i] =
+          this.relDiff(
+            portfolioValue[i],
+            parseFloat(portfolioMoneyPaid[i])
+          ).toFixed(2) + "%";
         if (portfolioValue[i] > portfolioMoneyPaid[i]) {
           portfolioDifference[i] = "+" + portfolioDifference[i];
           portfolioColor.push("#66F9DA");
@@ -392,6 +393,10 @@ class Dashboard extends React.Component {
         else {
           portfolioDifference[i] = "-" + portfolioDifference[i];
           portfolioColor.push("#F45385");
+        }
+        if (portfolioDifference.includes("NaN")) {
+          portfolioDifference[i] = "---";
+          console.log("x");
         }
       });
   }
@@ -443,14 +448,7 @@ class Dashboard extends React.Component {
                     funds:
                       "$" + this.numberWithCommas(doc.data()["currentfunds"])
                   });
-                  this.setState({
-                    accountValue:
-                      "$" +
-                      this.numberWithCommas(
-                        parseFloat(doc.data()["currentfunds"]) +
-                          parseFloat(portfolioValue.reduce(add, 0))
-                      )
-                  });
+
                   this.setState({
                     fundsLoader: true
                   });
@@ -476,6 +474,18 @@ class Dashboard extends React.Component {
                 portfolioLoader: true
               });
             }, 700);
+          })
+          .then(() => {
+            setTimeout(() => {
+              let val = portfolioValue.reduce(add, 0).toFixed(2);
+              this.setState({
+                accountValue:
+                  "$" +
+                  this.numberWithCommas(
+                    Number(val) + Number(this.state.funds.substr(1))
+                  )
+              });
+            }, 1000);
           });
       })
       .catch((error) => {
@@ -980,7 +990,7 @@ class Dashboard extends React.Component {
                                       <td
                                         style={{color: portfolioColor[index]}}
                                       >
-                                        {portfolioDifference[index]}%
+                                        {portfolioDifference[index]}
                                       </td>
                                       <td>${portfolioValue[index]}</td>
                                     </tr>
