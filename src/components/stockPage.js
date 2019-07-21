@@ -223,9 +223,7 @@ export default class stockPage extends React.Component {
                 ).toFixed(2)
               );
               labels.push(
-                Object.keys(result["Time Series (1min)"])
-                  [i].split(" ")[1]
-                  .slice(0, -3)
+                Object.keys(result["Time Series (1min)"])[i].split(" ")[1].slice(0, -3)
               );
             }
           } else {
@@ -252,9 +250,7 @@ export default class stockPage extends React.Component {
                       ).toFixed(2)
                     );
                     labels.push(
-                      Object.keys(result["Time Series (1min)"])
-                        [i].split(" ")[1]
-                        .slice(0, -3)
+                      Object.keys(result["Time Series (1min)"])[i].split(" ")[1].slice(0, -3)
                     );
                   }
                 });
