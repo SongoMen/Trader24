@@ -469,11 +469,13 @@ class Dashboard extends React.Component {
             }
           })
           .then(() => {
+            if(portfolioStocks.length>0){
             setTimeout(() => {
               this.setState({
                 portfolioLoader: true
               });
             }, 700);
+            }
           })
           .then(() => {
             setTimeout(() => {
