@@ -13,6 +13,7 @@ import Register from "./Register";
 import Login from "./Login";
 import Stocks from "./Stocks";
 import stockPage from "./stockPage";
+import portfolio from "./portfolio";
 import page404 from "./404";
 
 function PrivateRoute({ component: Component, authed, ...rest }) {
@@ -108,6 +109,11 @@ class App extends Component {
               authed={this.state.authed}
               path="/allstocks"
               component={Stocks}
+            />
+            <PrivateRoute
+              authed={this.state.authed}
+              path="/portfolio"
+              component={portfolio}
             />
             <PrivateRoute
               name="stocks"
