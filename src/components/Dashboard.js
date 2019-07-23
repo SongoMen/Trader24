@@ -70,8 +70,6 @@ const apiKeys = [
 let chartData1 = [];
 let chartData2 = [];
 
-let allSymbols = [];
-
 let stockSymbols = [];
 let stockPrices = [];
 let stockChanges = [];
@@ -132,8 +130,8 @@ class Dashboard extends React.Component {
       loader3: "",
       portfolioLoader: "",
       funds: "",
-      accountValue: "",
-      fundsLoader: ""
+      fundsWithoutCommas: "",
+      accountValue: ""
     };
     this.componentDidMount = this.componentDidMount.bind(this);
     this.getAccountInfo = this.getAccountInfo.bind(this);
@@ -379,8 +377,10 @@ class Dashboard extends React.Component {
       .then(res => res.json())
       .then(result => {
         portfolioValue.push(
-          (portfolioShares[i] * result.latestPrice).toFixed(2)
+          Number(portfolioShares[i] * result.latestPrice).toFixed(2)
         );
+        console.log(portfolioShares[i]);
+        console.log(result.latestPrice);
       })
       .then(() => {
         portfolioDifference[i] =
@@ -429,7 +429,7 @@ class Dashboard extends React.Component {
             console.log(doc.id, "=>", doc.data());
             if (portfolioStocks.length < 5) {
               portfolioStocks.push(doc.data().symbol);
-              portfolioShares.push(this.numberWithCommas(doc.data().shares));
+              portfolioShares.push(doc.data().shares);
               portfolioMoneyPaid.push(doc.data().moneyPaid);
             }
           });
@@ -452,11 +452,8 @@ class Dashboard extends React.Component {
                 docRef.get().then(doc => {
                   this.setState({
                     funds:
-                      "$" + this.numberWithCommas(doc.data()["currentfunds"])
-                  });
-
-                  this.setState({
-                    fundsLoader: true
+                      "$" + this.numberWithCommas(doc.data()["currentfunds"]),
+                    fundsWithoutCommas: doc.data()["currentfunds"]
                   });
                 });
                 this.getLatestPrice(portfolioStocks[i], i);
@@ -468,9 +465,6 @@ class Dashboard extends React.Component {
               docRef.get().then(doc => {
                 this.setState({
                   funds: "$" + this.numberWithCommas(doc.data()["currentfunds"])
-                });
-                this.setState({
-                  fundsLoader: true
                 });
               });
             }
@@ -486,12 +480,15 @@ class Dashboard extends React.Component {
           })
           .then(() => {
             setTimeout(() => {
-              let val = portfolioValue.reduce(add, 0);
+              let val = portfolioValue.reduce(
+                (a, b) => Number(a) + Number(b),
+                0
+              );
               this.setState({
                 accountValue:
                   "$" +
                   this.numberWithCommas(
-                    Number(val) + Number(this.state.funds.substr(1))
+                    Number(val) + Number(this.state.fundsWithoutCommas)
                   )
               });
             }, 1000);
@@ -503,7 +500,11 @@ class Dashboard extends React.Component {
           portfolioLoader: false
         });
       });
+    /*
     console.log(portfolioDifference);
+    console.log(portfolioMoneyPaid);
+    console.log(portfolioStocks);
+    console.log(portfolioValue);*/
   }
 
   isInArray(arr, val) {
@@ -650,7 +651,6 @@ class Dashboard extends React.Component {
     });
   }
   render() {
-    let user = firebase.auth().currentUser.displayName;
     for (let i = 0; i < stockSymbols.length; i++) {
       if (Math.sign(stockChanges[i]) === -1) {
         changesColors[i] = "#f45485";

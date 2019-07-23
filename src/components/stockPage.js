@@ -1,9 +1,8 @@
 import React from "react";
 import firebase from "firebase/app";
-import {Line} from "react-chartjs-2";
-import {defaults} from "react-chartjs-2";
-import $ from "jquery";
-import {Link} from "react-router-dom";
+import { Line } from "react-chartjs-2";
+import { defaults } from "react-chartjs-2";
+import { Link } from "react-router-dom";
 import "chartjs-plugin-annotation";
 
 import Leftbar from "./leftbar";
@@ -83,7 +82,6 @@ let symbol;
 
 let chartData1 = [];
 let labels = [];
-let allSymbols = [];
 let symbolsOnly = [];
 let closePrice;
 let stockData = {};
@@ -112,7 +110,6 @@ export default class stockPage extends React.Component {
       funds: "",
       fundsWithoutCommas: "",
       accountValue: "",
-      fundsLoader: "",
       changeColor: "",
       extendedColor: "",
       marketStatus: "",
@@ -120,7 +117,7 @@ export default class stockPage extends React.Component {
       latestPrice: "",
       buyConfirmation: ""
     };
-    this.data1 = (canvas) => {
+    this.data1 = canvas => {
       const ctx = canvas.getContext("2d");
       const gradient = ctx.createLinearGradient(0, 0, 600, 10);
       gradient.addColorStop(0, "#7c83ff");
@@ -154,38 +151,6 @@ export default class stockPage extends React.Component {
   numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
-  searchStocks(e) {
-    document.getElementById("results").innerHTML = "";
-    let b = 0;
-    let filter = document.getElementById("searchBar").value.toUpperCase();
-    if (e.key === "Enter") window.location = filter;
-    if (filter.length === 0) {
-      document.getElementById("results").innerHTML = "";
-      document.getElementById("results").style.display = "none";
-    } else {
-      for (let i = 0; i < allSymbols.length; i++) {
-        let splitSymbol = allSymbols[i].symbol.split("");
-        let splitFilter = filter.split("");
-        for (let a = 0; a < splitFilter.length; a++) {
-          if (
-            allSymbols[i].symbol.indexOf(filter) > -1 &&
-            splitSymbol[a] === splitFilter[a]
-          ) {
-            if (a === 0) {
-              document.getElementById("results").style.display = "flex";
-              $("#results").append(
-                `<li><a href=${allSymbols[i].symbol}><h4>${
-                  allSymbols[i].symbol
-                }</h4><h6>${allSymbols[i].name}</h6></a></li>`
-              );
-              b++;
-            }
-          }
-        }
-        if (b === 10) break;
-      }
-    }
-  }
   getOneDayChart() {
     const anno = {
       annotations: [
@@ -209,8 +174,8 @@ export default class stockPage extends React.Component {
         apiKeys[0]
       }`;
       fetch(stockApi)
-        .then((res) => res.json())
-        .then((result) => {
+        .then(res => res.json())
+        .then(result => {
           if (result["Note"] === undefined) {
             for (
               let i = Object.keys(result["Time Series (1min)"]).length - 1;
@@ -225,7 +190,9 @@ export default class stockPage extends React.Component {
                 ).toFixed(2)
               );
               labels.push(
-                Object.keys(result["Time Series (1min)"])[i].split(" ")[1].slice(0, -3)
+                Object.keys(result["Time Series (1min)"])
+                  [i].split(" ")[1]
+                  .slice(0, -3)
               );
             }
           } else {
@@ -235,8 +202,8 @@ export default class stockPage extends React.Component {
                 apiKeys[b]
               }`;
               fetch(stockApi)
-                .then((res) => res.json())
-                .then((result) => {
+                .then(res => res.json())
+                .then(result => {
                   console.log(Object.keys(result["Time Series (1min)"]));
                   for (
                     let i =
@@ -252,7 +219,9 @@ export default class stockPage extends React.Component {
                       ).toFixed(2)
                     );
                     labels.push(
-                      Object.keys(result["Time Series (1min)"])[i].split(" ")[1].slice(0, -3)
+                      Object.keys(result["Time Series (1min)"])
+                        [i].split(" ")[1]
+                        .slice(0, -3)
                     );
                   }
                 });
@@ -264,8 +233,8 @@ export default class stockPage extends React.Component {
             this.setState({
               loaded: true
             });
-            chartData1.map((val) => oneDay.push(val));
-            labels.map((val) => oneDayLabels.push(val));
+            chartData1.map(val => oneDay.push(val));
+            labels.map(val => oneDayLabels.push(val));
           }, 1000);
         });
     } else {
@@ -283,8 +252,8 @@ export default class stockPage extends React.Component {
     if (ytdChart.length === 0) {
       const stockApi = `https://cloud.iexapis.com/beta/stock/${symbol}/batch?token=pk_d0e99ea2ee134a4f99d0a3ceb700336c&types=chart,quote&range=ytd`;
       fetch(stockApi)
-        .then((res) => res.json())
-        .then((result) => {
+        .then(res => res.json())
+        .then(result => {
           for (let i = 0; i < result.chart.length; i++) {
             if (result.chart[i].average !== null) {
               chartData1.push(result.chart[i].close.toFixed(2));
@@ -296,8 +265,8 @@ export default class stockPage extends React.Component {
           this.setState({
             loaded: true
           });
-          chartData1.map((val) => ytdChart.push(val));
-          labels.map((val) => ytdLabels.push(val));
+          chartData1.map(val => ytdChart.push(val));
+          labels.map(val => ytdLabels.push(val));
         });
     } else {
       labels = ytdLabels;
@@ -315,8 +284,8 @@ export default class stockPage extends React.Component {
     if (oneYear.length === 0) {
       const stockApi = `https://cloud.iexapis.com/beta/stock/${symbol}/batch?token=pk_d0e99ea2ee134a4f99d0a3ceb700336c&types=chart,quote&range=1y`;
       fetch(stockApi)
-        .then((res) => res.json())
-        .then((result) => {
+        .then(res => res.json())
+        .then(result => {
           for (let i = 0; i < result.chart.length; i++) {
             if (result.chart[i].average !== null) {
               chartData1.push(result.chart[i].close.toFixed(2));
@@ -328,8 +297,8 @@ export default class stockPage extends React.Component {
           this.setState({
             loaded: true
           });
-          chartData1.map((val) => oneYear.push(val));
-          labels.map((val) => oneYearLabels.push(val));
+          chartData1.map(val => oneYear.push(val));
+          labels.map(val => oneYearLabels.push(val));
         });
     } else {
       labels = oneYearLabels;
@@ -346,8 +315,8 @@ export default class stockPage extends React.Component {
     if (twoYears.length === 0) {
       const stockApi = `https://cloud.iexapis.com/beta/stock/${symbol}/batch?token=pk_d0e99ea2ee134a4f99d0a3ceb700336c&types=chart,quote&range=2y`;
       fetch(stockApi)
-        .then((res) => res.json())
-        .then((result) => {
+        .then(res => res.json())
+        .then(result => {
           for (let i = 0; i < result.chart.length; i++) {
             if (result.chart[i].average !== null) {
               chartData1.push(result.chart[i].close.toFixed(2));
@@ -359,8 +328,8 @@ export default class stockPage extends React.Component {
           this.setState({
             loaded: true
           });
-          chartData1.map((val) => twoYears.push(val));
-          labels.map((val) => twoYearsLabels.push(val));
+          chartData1.map(val => twoYears.push(val));
+          labels.map(val => twoYearsLabels.push(val));
         });
     } else {
       labels = twoYearsLabels;
@@ -377,8 +346,8 @@ export default class stockPage extends React.Component {
     if (oneMonth.length === 0) {
       const stockApi = `https://cloud.iexapis.com/beta/stock/${symbol}/batch?token=pk_d0e99ea2ee134a4f99d0a3ceb700336c&types=chart,quote&range=1m`;
       fetch(stockApi)
-        .then((res) => res.json())
-        .then((result) => {
+        .then(res => res.json())
+        .then(result => {
           for (let i = 0; i < result.chart.length; i++) {
             if (result.chart[i].average !== null) {
               chartData1.push(result.chart[i].close.toFixed(2));
@@ -390,8 +359,8 @@ export default class stockPage extends React.Component {
           this.setState({
             loaded: true
           });
-          chartData1.map((val) => oneMonth.push(val));
-          labels.map((val) => oneMonthLabels.push(val));
+          chartData1.map(val => oneMonth.push(val));
+          labels.map(val => oneMonthLabels.push(val));
         });
     } else {
       labels = oneMonthLabels;
@@ -479,8 +448,8 @@ export default class stockPage extends React.Component {
     fetch(
       `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_d0e99ea2ee134a4f99d0a3ceb700336c`
     )
-      .then((res) => res.json())
-      .then((result) => {
+      .then(res => res.json())
+      .then(result => {
         stockData.changePercent = result.changePercent.toFixed(2);
         stockData.change = result.change.toFixed(2);
 
@@ -541,8 +510,8 @@ export default class stockPage extends React.Component {
     fetch(
       `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_d0e99ea2ee134a4f99d0a3ceb700336c`
     )
-      .then((res) => res.json())
-      .then((result) => {
+      .then(res => res.json())
+      .then(result => {
         console.log(result.latestPrice);
         this.setState({
           latestPrice: result.latestPrice.toFixed(2)
@@ -554,8 +523,8 @@ export default class stockPage extends React.Component {
             fetch(
               `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_d0e99ea2ee134a4f99d0a3ceb700336c`
             )
-              .then((res) => res.json())
-              .then((result) => {
+              .then(res => res.json())
+              .then(result => {
                 console.log(result.latestPrice);
                 this.setState({
                   latestPrice: result.latestPrice.toFixed(2)
@@ -576,7 +545,7 @@ export default class stockPage extends React.Component {
       .doc(user)
       .collection("stocks")
       .get()
-      .then((snapshot) => {
+      .then(snapshot => {
         positionsNumber = snapshot.docs.length;
       })
       .then(() => {
@@ -594,7 +563,7 @@ export default class stockPage extends React.Component {
             shares: num,
             value: (Number(num) * Number(this.state.latestPrice)).toFixed(2)
           })
-          .catch((error) => {
+          .catch(error => {
             console.log("Error getting document:", error);
             this.setState({
               portfolioLoader: false
@@ -608,15 +577,20 @@ export default class stockPage extends React.Component {
           .doc(user)
           .update({
             currentfunds:
-              Number(this.state.fundsWithoutCommas) -
-              Number(num) * Number(this.state.latestPrice)
+              (Number(this.state.fundsWithoutCommas) -
+              Number(num) * Number(this.state.latestPrice)).toFixed(2)
           })
-          .catch((error) => {
+          .catch(error => {
             console.log("Error getting document:", error);
             this.setState({
               portfolioLoader: false
             });
           });
+          console
+          .log(
+            Number(this.state.fundsWithoutCommas)," ",
+              Number(num), " ", Number(this.state.latestPrice)
+          )
         console.log(this.state.funds);
         console.log(Number(num) * Number(this.state.latestPrice));
       })
@@ -629,23 +603,22 @@ export default class stockPage extends React.Component {
   }
   getFunds() {
     this.setState({
-      funds: ""
+      funds: "",
+      fundsWithoutCommas: ""
     });
     let user = firebase.auth().currentUser.uid;
     let docRef = db.collection("users").doc(user);
 
     docRef
       .get()
-      .then((doc) => {
+      .then(doc => {
         this.setState({
           funds: "$" + this.numberWithCommas(doc.data()["currentfunds"])
         });
         this.setState({
           fundsWithoutCommas: doc.data()["currentfunds"]
         });
-        this.setState({
-          fundsLoader: true
-        });
+
       })
       .catch(function(error) {
         console.log("Error getting document:", error);
@@ -655,11 +628,8 @@ export default class stockPage extends React.Component {
     fetch(
       "https://cloud.iexapis.com/stable/ref-data/symbols?token=pk_d0e99ea2ee134a4f99d0a3ceb700336c"
     )
-      .then((res) => res.json())
-      .then((result) => {
-        allSymbols = result.map((val) => {
-          return val;
-        });
+      .then(res => res.json())
+      .then(result => {
         for (let i = 0; i < result.length; i++) {
           symbolsOnly.push(result[i].symbol);
         }
@@ -670,15 +640,14 @@ export default class stockPage extends React.Component {
         ];
         setTimeout(() => {
           if (this.isInArray(symbolsOnly, symbol)) {
-            this.setState({valid: true});
+            this.setState({ valid: true });
             this.rendering();
-          } else this.setState({valid: false});
+          } else this.setState({ valid: false });
         }, 500);
       });
     this.getFunds();
   }
   render() {
-    let user = firebase.auth().currentUser.displayName;
     return (
       <div className="stock">
         {this.state.buyConfirmation === true && <div className="black-bg" />}
@@ -693,16 +662,17 @@ export default class stockPage extends React.Component {
                 className="stockPage__buy-button"
                 onClick={() => {
                   if (
-                    document.getElementById("buy-input") *
-                      this.state.latestPrice >=
-                    this.state.funds
+                    document.getElementById("buy-input").value *
+                      this.state.latestPrice <=
+                    this.state.fundsWithoutCommas
                   )
                     this.handleBuyStock(
                       document.getElementById("buy-input").value
                     );
-                  else this.setState({
-                    buyConfirmation: false
-                  })
+                  else
+                    this.setState({
+                      buyConfirmation: false
+                    });
                 }}
               >
                 CONFIRM
@@ -721,10 +691,10 @@ export default class stockPage extends React.Component {
           </div>
         )}
         {this.state.valid && (
-          <div style={{display: "flex", height: "100%"}}>
+          <div style={{ display: "flex", height: "100%" }}>
             <Leftbar />
             <div className="stockPage">
-              <Topbar/>
+              <Topbar />
               {this.state.loaded ? (
                 <div className="stockPage__top">
                   <div className="stock__chart">
@@ -785,7 +755,7 @@ export default class stockPage extends React.Component {
                     <h4>{stockData.name}</h4>
                     <div className="stockPage__trade-top">
                       <h2>${this.state.latestPrice}</h2>
-                      <h6 style={{color: this.state.changeColor}}>
+                      <h6 style={{ color: this.state.changeColor }}>
                         {stockData.change} ({stockData.changePercent}%)
                       </h6>
                     </div>
@@ -793,7 +763,7 @@ export default class stockPage extends React.Component {
                     (stockData.extendedChange !== null) ? (
                       <h6>
                         Extended Hours:{" "}
-                        <span style={{color: this.state.extendedColor}}>
+                        <span style={{ color: this.state.extendedColor }}>
                           ${stockData.extendedPrice} ({stockData.extendedChange}
                           )
                         </span>
@@ -819,7 +789,8 @@ export default class stockPage extends React.Component {
                           if (
                             value.length > 0 &&
                             value > 0 &&
-                            value * this.state.latestPrice >= this.state.funds
+                            value * this.state.latestPrice <=
+                              this.state.fundsWithoutCommas
                           )
                             this.setState({
                               buyConfirmation: true
