@@ -410,9 +410,7 @@ class Dashboard extends React.Component {
     portfolioShares = [];
     portfolioStocks = [];
     portfolioValue = [];
-    function add(a, b) {
-      return a + b;
-    }
+
     let user = firebase.auth().currentUser.uid;
     let docRef = db.collection("users").doc(user);
     let i = 0;
