@@ -367,20 +367,17 @@ class Dashboard extends React.Component {
     return 100 * Math.abs((a - b) / ((a + b) / 2));
   }
   numberWithCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    return x.toLocaleString();
   }
 
   getLatestPrice(symbol, i) {
     const lastPrice = `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_d0e99ea2ee134a4f99d0a3ceb700336c`;
-
     fetch(lastPrice)
       .then(res => res.json())
       .then(result => {
-        portfolioValue.push(
-          Number(portfolioShares[i] * result.latestPrice).toFixed(2)
-        );
-        console.log(portfolioShares[i]);
-        console.log(result.latestPrice);
+        portfolioValue[i] = Number(
+          portfolioShares[i] * result.latestPrice
+        ).toFixed(2);
       })
       .then(() => {
         portfolioDifference[i] =
@@ -390,15 +387,16 @@ class Dashboard extends React.Component {
           ).toFixed(2) + "%";
         if (portfolioValue[i] > portfolioMoneyPaid[i]) {
           portfolioDifference[i] = "+" + portfolioDifference[i];
-          portfolioColor.push("#66F9DA");
+          portfolioColor[i] = "#66F9DA";
         } else if (portfolioValue[i] === portfolioMoneyPaid[i])
-          portfolioColor.push("#999EAF");
+          portfolioColor[i] = "#999EAF";
         else {
           portfolioDifference[i] = "-" + portfolioDifference[i];
-          portfolioColor.push("#F45385");
+          portfolioColor[i] = "#F45385";
         }
         if (portfolioDifference[i].includes("NaN")) {
           portfolioDifference[i] = "---";
+          portfolioColor[i] = "#999EAF";
         }
       });
   }
@@ -412,7 +410,6 @@ class Dashboard extends React.Component {
     portfolioValue = [];
 
     let user = firebase.auth().currentUser.uid;
-    let docRef = db.collection("users").doc(user);
     let i = 0;
 
     firebase
@@ -429,6 +426,8 @@ class Dashboard extends React.Component {
               portfolioStocks.push(doc.data().symbol);
               portfolioShares.push(doc.data().shares);
               portfolioMoneyPaid.push(doc.data().moneyPaid);
+              this.getLatestPrice(portfolioStocks[i], i);
+              i++;
             }
           });
         } else {
@@ -438,59 +437,30 @@ class Dashboard extends React.Component {
         }
       })
       .then(() => {
-        firebase
-          .firestore()
-          .collection("users")
-          .doc(user)
-          .collection("stocks")
-          .get()
-          .then(snapshot => {
-            if (snapshot.docs.length !== 0) {
-              snapshot.forEach(doc => {
-                docRef.get().then(doc => {
-                  this.setState({
-                    funds:
-                      "$" + this.numberWithCommas(doc.data()["currentfunds"]),
-                    fundsWithoutCommas: doc.data()["currentfunds"]
-                  });
-                });
-                this.getLatestPrice(portfolioStocks[i], i);
-                i++;
-                if ($("#portfolio").length)
-                  document.getElementById("portfolio").style.display = "block";
-              });
-            } else {
-              docRef.get().then(doc => {
-                this.setState({
-                  funds: "$" + this.numberWithCommas(doc.data()["currentfunds"])
-                });
-              });
-            }
-          })
-          .then(() => {
-            if (portfolioStocks.length > 0) {
-              setTimeout(() => {
-                this.setState({
-                  portfolioLoader: true
-                });
-              }, 700);
-            }
-          })
-          .then(() => {
-            setTimeout(() => {
-              let val = portfolioValue.reduce(
-                (a, b) => Number(a) + Number(b),
-                0
-              );
-              this.setState({
-                accountValue:
-                  "$" +
-                  this.numberWithCommas(
-                    Number(val) + Number(this.state.fundsWithoutCommas)
-                  )
-              });
-            }, 1000);
+        if ($("#portfolio").length)
+          document.getElementById("portfolio").style.display = "block";
+      })
+
+      .then(() => {
+        setTimeout(() => {
+          let val = portfolioValue.reduce((a, b) => Number(a) + Number(b), 0);
+          this.setState({
+            accountValue:
+              "$" +
+              this.numberWithCommas(
+                Number(val) + Number(this.state.fundsWithoutCommas)
+              )
           });
+        }, 1300);
+      })
+      .then(() => {
+        if (portfolioStocks.length > 0) {
+          setTimeout(() => {
+            this.setState({
+              portfolioLoader: true
+            });
+          }, 1200);
+        }
       })
       .catch(error => {
         console.log("Error getting document:", error);
@@ -498,11 +468,6 @@ class Dashboard extends React.Component {
           portfolioLoader: false
         });
       });
-    /*
-    console.log(portfolioDifference);
-    console.log(portfolioMoneyPaid);
-    console.log(portfolioStocks);
-    console.log(portfolioValue);*/
   }
 
   isInArray(arr, val) {

@@ -48,24 +48,11 @@ export default class Topbar extends React.Component {
     }
   }
   numberWithCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  }
-  getAccInfo() {
-    let user = firebase.auth().currentUser.uid;
-    let docRef = db.collection("users").doc(user);
-
-    docRef.get().then(doc => {
-      this.setState({
-        funds: "$" + this.numberWithCommas(doc.data()["currentfunds"])
-      });
-
-      this.setState({
-        fundsLoader: true
-      });
-    });
+    return x.toLocaleString();
   }
 
   componentDidMount() {
+    let user = firebase.auth().currentUser.uid;
     fetch(
       "https://cloud.iexapis.com/stable/ref-data/symbols?token=pk_d0e99ea2ee134a4f99d0a3ceb700336c"
     )
@@ -75,7 +62,14 @@ export default class Topbar extends React.Component {
           return val;
         });
       });
-    this.getAccInfo();
+    db.collection("users")
+      .doc(user)
+      .onSnapshot(function(doc) {
+        this.setState({
+          funds: "$" + this.numberWithCommas(Number(doc.data()["currentfunds"])),
+          fundsLoader: true
+        });
+      }.bind(this));
   }
 
   render() {
