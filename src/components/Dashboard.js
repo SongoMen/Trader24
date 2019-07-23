@@ -129,7 +129,6 @@ class Dashboard extends React.Component {
       loader2: "",
       loader3: "",
       portfolioLoader: "",
-      funds: "",
       fundsWithoutCommas: "",
       accountValue: ""
     };
@@ -475,6 +474,17 @@ class Dashboard extends React.Component {
   }
 
   componentDidMount() {
+    let user = firebase.auth().currentUser.uid;
+
+    db.collection("users")
+      .doc(user)
+      .onSnapshot(
+        function(doc) {
+          this.setState({
+            fundsWithoutCommas: doc.data()["currentfunds"]
+          });
+        }.bind(this)
+      );
     chartData1 = [];
     chartData2 = [];
     const gainers =

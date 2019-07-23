@@ -107,7 +107,6 @@ export default class stockPage extends React.Component {
     super(props);
     this.state = {
       loaded: "",
-      funds: "",
       fundsWithoutCommas: "",
       accountValue: "",
       changeColor: "",
@@ -576,9 +575,10 @@ export default class stockPage extends React.Component {
           .collection("users")
           .doc(user)
           .update({
-            currentfunds:
-              (Number(this.state.fundsWithoutCommas) -
-              Number(num) * Number(this.state.latestPrice)).toFixed(2)
+            currentfunds: (
+              Number(this.state.fundsWithoutCommas) -
+              Number(num) * Number(this.state.latestPrice)
+            ).toFixed(2)
           })
           .catch(error => {
             console.log("Error getting document:", error);
@@ -586,13 +586,6 @@ export default class stockPage extends React.Component {
               portfolioLoader: false
             });
           });
-          console
-          .log(
-            Number(this.state.fundsWithoutCommas)," ",
-              Number(num), " ", Number(this.state.latestPrice)
-          )
-        console.log(this.state.funds);
-        console.log(Number(num) * Number(this.state.latestPrice));
       })
       .then(() => {
         this.getFunds();
@@ -603,7 +596,6 @@ export default class stockPage extends React.Component {
   }
   getFunds() {
     this.setState({
-      funds: "",
       fundsWithoutCommas: ""
     });
     let user = firebase.auth().currentUser.uid;
@@ -618,7 +610,6 @@ export default class stockPage extends React.Component {
         this.setState({
           fundsWithoutCommas: doc.data()["currentfunds"]
         });
-
       })
       .catch(function(error) {
         console.log("Error getting document:", error);
