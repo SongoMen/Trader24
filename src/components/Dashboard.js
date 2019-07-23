@@ -436,7 +436,7 @@ class Dashboard extends React.Component {
         }
       })
       .then(() => {
-        if ($("#portfolio").length)
+        if ($("#portfolio").length && portfolioStocks.length > 0)
           document.getElementById("portfolio").style.display = "block";
       })
 
