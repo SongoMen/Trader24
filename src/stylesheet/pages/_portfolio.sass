@@ -2,7 +2,42 @@
     display: flex
     width: 100%
     .portfolio__container
-        width: 97%
+        width: 95%
         padding: 50px
         display: flex
         flex-direction: column 
+        .portfolio__list
+            width: 100%
+            font-size: 15px
+            border-spacing: 0 0px
+            white-space: nowrap
+            tr
+                background-color: $elements-color
+                height: 60px
+                transition: all .2s
+                td:last-child svg
+                    fill: white
+                    width: 30px
+                    padding: 5px
+                    border-radius: 50px
+                    transition: all .2s
+                    cursor: pointer
+                    &:hover
+                        fill: $main-color
+                        background-color: white
+                &:hover
+                    background-color: $panel-color
+                    z-index: 200
+            tr:first-child th:first-child 
+                border-top-left-radius: 15px
+            tr:first-child th:last-child 
+                border-top-right-radius: 15px
+            tr:last-child td:first-child 
+                border-bottom-left-radius: 15px
+            tr:last-child td:last-child 
+                border-bottom-right-radius: 15px            
+            td
+                text-align: center
+                padding: 10px
+        tr td:nth-child(4)
+            font-weight: bold

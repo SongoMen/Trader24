@@ -67,30 +67,25 @@ const apiKeys = [
   "7V0Q0N46CBIPHA2K"
 ];
 
-let chartData1 = [];
-let chartData2 = [];
+// CHARTS
 
-let stockSymbols = [];
-let stockPrices = [];
-let stockChanges = [];
-let changesColors = [];
+let chartData1 = [], chartData2 = [];
 
-let stockList = [];
-let stockListPrices = [];
-let stockListTickers = [];
-let stockListChange = [];
-let stockListChangeColors = [];
+// CHARTS INFO
 
-let tempStocksSymbols = [];
-let tempStockName = [];
-let tempStockPrice = [];
+let stockSymbols = [], stockPrices = [], stockChanges = [], changesColors = [];
 
-let portfolioStocks = [];
-let portfolioShares = [];
-let portfolioValue = [];
-let portfolioDifference = [];
-let portfolioColor = [];
-let portfolioMoneyPaid = [];
+// SYMBOLS LIST
+
+let stockList = [], stockListPrices = [], stockListTickers = [], stockListChange = [], stockListChangeColors = [];
+
+// TEMP SYMBOLS FOR DUPLICATES IN LISTS
+
+let tempStocksSymbols = [], tempStockName = [], tempStockPrice = [];
+
+// PORTFOLIO
+
+let portfolioStocks = [], portfolioShares = [], portfolioValue = [], portfolioDifference = [], portfolioColor = [], portfolioMoneyPaid = [];
 
 function Alert() {
   if (

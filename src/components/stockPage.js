@@ -80,6 +80,8 @@ const apiKeys = [
 
 let symbol;
 
+// CHARTS
+
 let chartData1 = [];
 let labels = [];
 let symbolsOnly = [];
@@ -87,6 +89,7 @@ let closePrice;
 let stockData = {};
 let keyData = [];
 let keyDataLabel = [];
+
 
 let twoYears = [];
 let twoYearsLabels = [];
@@ -102,6 +105,7 @@ let oneMonthLabels = [];
 
 let oneDay = [];
 let oneDayLabels = [];
+
 export default class stockPage extends React.Component {
   constructor(props) {
     super(props);
