@@ -69,23 +69,38 @@ const apiKeys = [
 
 // CHARTS
 
-let chartData1 = [], chartData2 = [];
+let chartData1 = [],
+  chartData2 = [];
 
 // CHARTS INFO
 
-let stockSymbols = [], stockPrices = [], stockChanges = [], changesColors = [];
+let stockSymbols = [],
+  stockPrices = [],
+  stockChanges = [],
+  changesColors = [];
 
 // SYMBOLS LIST
 
-let stockList = [], stockListPrices = [], stockListTickers = [], stockListChange = [], stockListChangeColors = [];
+let stockList = [],
+  stockListPrices = [],
+  stockListTickers = [],
+  stockListChange = [],
+  stockListChangeColors = [];
 
 // TEMP SYMBOLS FOR DUPLICATES IN LISTS
 
-let tempStocksSymbols = [], tempStockName = [], tempStockPrice = [];
+let tempStocksSymbols = [],
+  tempStockName = [],
+  tempStockPrice = [];
 
 // PORTFOLIO
 
-let portfolioStocks = [], portfolioShares = [], portfolioValue = [], portfolioDifference = [], portfolioColor = [], portfolioMoneyPaid = [];
+let portfolioStocks = [],
+  portfolioShares = [],
+  portfolioValue = [],
+  portfolioDifference = [],
+  portfolioColor = [],
+  portfolioMoneyPaid = [];
 
 function Alert() {
   if (
@@ -475,9 +490,10 @@ class Dashboard extends React.Component {
       .doc(user)
       .onSnapshot(
         function(doc) {
-          this.setState({
-            fundsWithoutCommas: doc.data()["currentfunds"]
-          });
+          if (doc.data() !== undefined)
+            this.setState({
+              fundsWithoutCommas: doc.data()["currentfunds"]
+            });
         }.bind(this)
       );
     chartData1 = [];
@@ -592,7 +608,7 @@ class Dashboard extends React.Component {
           });
           document.getElementById("chartFirst").href = "#";
         }
-        if (stockListChange.length < 1) {
+        if (stockListChange.length < 3) {
           this.setState({
             loader3: false
           });
@@ -613,7 +629,7 @@ class Dashboard extends React.Component {
           });
         }
       }
-    }, 3000);
+    }, 5000);
     document.querySelector(".hamburger").addEventListener("click", e => {
       e.currentTarget.classList.toggle("is-active");
     });
@@ -882,7 +898,7 @@ class Dashboard extends React.Component {
                   </svg>
                   <h3>Most Active</h3>
                 </div>
-                {this.state.loader3 === true ? (
+                {this.state.loader3 === true && (
                   <div className="panel__bottom">
                     <div className="panel__stockList">
                       <ul className="panel__list">
@@ -987,7 +1003,8 @@ class Dashboard extends React.Component {
                       </ul>
                     </div>
                   </div>
-                ) : (
+                )}{" "}
+                {this.state.loader3 === "" && (
                   <ul className="loader">
                     <li />
                     <li />

@@ -64,12 +64,16 @@ export default class Topbar extends React.Component {
       });
     db.collection("users")
       .doc(user)
-      .onSnapshot(function(doc) {
-        this.setState({
-          funds: "$" + this.numberWithCommas(Number(doc.data()["currentfunds"])),
-          fundsLoader: true
-        });
-      }.bind(this));
+      .onSnapshot(
+        function(doc) {
+          if (doc.data() !== undefined)
+            this.setState({
+              funds:
+                "$" + this.numberWithCommas(Number(doc.data()["currentfunds"])),
+              fundsLoader: true
+            });
+        }.bind(this)
+      );
   }
 
   render() {
