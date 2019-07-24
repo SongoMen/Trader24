@@ -20,8 +20,10 @@ export default class Leftbar extends React.Component {
     let section = window.location.href.split("/")[
       window.location.href.split("/").length - 1
     ];
-    if (section === "dashboard")
+    if (section === "dashboard" || section === "Dashboard")
       $(".leftbar__menu a:nth-child(1) svg").css("fill", "#5eb5f8 ");
+      else if (section === "portfolio" || section === "Portfolio")
+      $(".leftbar__menu a:nth-child(3) svg").css("fill", "#5eb5f8 ");
   }
   render() {
     return (
