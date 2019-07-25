@@ -9,14 +9,16 @@ let difference = [],
   symbols = [],
   color = [],
   shares = [],
-  value = [];
+  value = [],
+  position = [];
 let check;
 
 export default class portfolio extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loader1: ""
+      loader1: "",
+      confirmation: ""
     };
   }
   getLatestPrice(symbol, i) {
@@ -60,6 +62,7 @@ export default class portfolio extends React.Component {
       .then(snapshot => {
         if (snapshot.docs.length !== 0) {
           snapshot.forEach(doc => {
+            position.push(doc.id);
             symbols.push(doc.data().symbol);
             shares.push(doc.data().shares);
             moneyPaid.push(doc.data().moneyPaid);
@@ -71,6 +74,27 @@ export default class portfolio extends React.Component {
             portfolioLoader: "nothing"
           });
         }
+      });
+  }
+  handleStockSell(position, number) {
+    let user = firebase.auth().currentUser.uid;
+
+    this.setState({
+      confirmation: true
+    });
+    firebase
+      .firestore()
+      .collection("users")
+      .doc(user)
+      .collection("stocks")
+      .doc(position)
+      .delete()
+      .then(function() {
+        console.log("Document successfully deleted!");
+        this.getPositions()
+      })
+      .catch(function(error) {
+        console.error("Error removing document: ", error);
       });
   }
   componentDidMount() {
@@ -126,6 +150,9 @@ export default class portfolio extends React.Component {
                       <td>${value[index]}</td>
                       <td>
                         <svg
+                          onClick={() =>
+                            this.handleStockSell(position[index], index)
+                          }
                           xmlns="http://www.w3.org/2000/svg"
                           viewBox="0 0 24 24"
                         >
