@@ -53,6 +53,10 @@ export default class portfolio extends React.Component {
     return 100 * Math.abs((a - b) / ((a + b) / 2));
   }
   getPositions() {
+    symbols = [];
+    position = [];
+    shares = [];
+    moneyPaid = [];
     let user = firebase.auth().currentUser.uid;
     let i = 0;
     firebase
@@ -73,7 +77,7 @@ export default class portfolio extends React.Component {
           });
         } else {
           this.setState({
-            portfolioLoader: "nothing"
+            loader1: "nothing"
           });
         }
       });
@@ -105,7 +109,7 @@ export default class portfolio extends React.Component {
             .catch(error => {
               console.log("Error getting document:", error);
               this.setState({
-                portfolioLoader: false
+                loader1: false
               });
             });
           this.getPositions();
@@ -123,7 +127,7 @@ export default class portfolio extends React.Component {
     setTimeout(() => {}, 2000);
     check = () =>
       setInterval(() => {
-        if (symbols.length === difference.length) {
+        if (symbols.length === difference.length && symbols.length !== 0) {
           this.setState({
             loader1: true
           });
@@ -153,8 +157,8 @@ export default class portfolio extends React.Component {
       if (this.state.loader1 === "") {
         this.getPositions();
         check();
-        console.log("X");
       }
+      console.log(symbols.length);
     }, 5000);
     return (
       <div className="portfolio">
@@ -168,7 +172,7 @@ export default class portfolio extends React.Component {
               <li />
             </ul>
           )}
-          {this.state.loader1 === true && (
+          {this.state.loader1 === true && symbols.length > 0 && (
             <table className="portfolio__list">
               <tbody>
                 <tr>
@@ -206,6 +210,17 @@ export default class portfolio extends React.Component {
                 })}
               </tbody>
             </table>
+          )}
+          {this.state.loader1 === "nothing" && (
+            <div className="errorMsg">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <g>
+                  <path fill="none" d="M0 0h24v24H0z" />
+                  <path d="M5.373 4.51A9.962 9.962 0 0 1 12 2c5.523 0 10 4.477 10 10a9.954 9.954 0 0 1-1.793 5.715L17.5 12H20A8 8 0 0 0 6.274 6.413l-.9-1.902zm13.254 14.98A9.962 9.962 0 0 1 12 22C6.477 22 2 17.523 2 12c0-2.125.663-4.095 1.793-5.715L6.5 12H4a8 8 0 0 0 13.726 5.587l.9 1.902zm-5.213-4.662L10.586 12l-2.829 2.828-1.414-1.414 4.243-4.242L13.414 12l2.829-2.828 1.414 1.414-4.243 4.242z" />
+                </g>
+              </svg>
+              <h3>You didn't buy any stocks yet.</h3>
+            </div>
           )}
         </div>
       </div>

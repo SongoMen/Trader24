@@ -140,7 +140,8 @@ class Dashboard extends React.Component {
       loader3: "",
       portfolioLoader: "",
       fundsWithoutCommas: "",
-      accountValue: ""
+      accountValue: "",
+      marketStatus: ""
     };
     this.componentDidMount = this.componentDidMount.bind(this);
     this.getAccountInfo = this.getAccountInfo.bind(this);
@@ -470,6 +471,9 @@ class Dashboard extends React.Component {
             });
           }, 1200);
         }
+        setTimeout(() => {
+          if (this.state.marketStatus) this.getAccountInfo();
+        }, 10000);
       })
       .catch(error => {
         console.log("Error getting document:", error);
@@ -484,6 +488,13 @@ class Dashboard extends React.Component {
   }
 
   componentDidMount() {
+    fetch("https://financialmodelingprep.com/api/v3/is-the-market-open")
+      .then(res => res.json())
+      .then(result => {
+        this.setState({
+          marketStatus: result.isTheStockMarketOpen
+        });
+      });
     let user = firebase.auth().currentUser.uid;
 
     db.collection("users")

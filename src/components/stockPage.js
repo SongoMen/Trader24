@@ -90,7 +90,6 @@ let stockData = {};
 let keyData = [];
 let keyDataLabel = [];
 
-
 let twoYears = [];
 let twoYearsLabels = [];
 
@@ -397,17 +396,15 @@ export default class stockPage extends React.Component {
   }
   changeFocus(option) {
     setTimeout(() => {
-      setTimeout(() => {
-        if (option === 1) {
-          document.getElementById("1d").classList.add("active");
-          document.getElementById("1m").className = "";
-          document.getElementById("ytd").className = "";
+      if (option === 1) {
+        document.getElementById("1d").classList.add("active");
+        document.getElementById("1m").className = "";
+        document.getElementById("ytd").className = "";
 
-          document.getElementById("1y").className = "";
+        document.getElementById("1y").className = "";
 
-          document.getElementById("2y").className = "";
-        }
-      }, 800);
+        document.getElementById("2y").className = "";
+      }
 
       if (option === 2) {
         document.getElementById("1m").classList.add("active");
@@ -620,6 +617,13 @@ export default class stockPage extends React.Component {
       });
   }
   componentDidMount() {
+    fetch("https://financialmodelingprep.com/api/v3/is-the-market-open")
+      .then(res => res.json())
+      .then(result => {
+        this.setState({
+          marketStatus: result.isTheStockMarketOpen
+        });
+      });
     fetch(
       "https://cloud.iexapis.com/stable/ref-data/symbols?token=pk_d0e99ea2ee134a4f99d0a3ceb700336c"
     )
@@ -650,7 +654,15 @@ export default class stockPage extends React.Component {
           <div className="buyConfirmation">
             <h3>
               Are you sure you want to buy{" "}
-              {document.getElementById("buy-input").value} shares of {symbol}
+              {document.getElementById("buy-input").value} shares of {symbol}{" "}
+              for{" "}
+              <span style={{ fontWeight: "bold" }}>
+                {(
+                  document.getElementById("buy-input").value *
+                  this.state.latestPrice
+                ).toFixed(2)}
+              </span>{" "}
+              dollars
             </h3>
             <div>
               <button
@@ -785,7 +797,8 @@ export default class stockPage extends React.Component {
                             value.length > 0 &&
                             value > 0 &&
                             value * this.state.latestPrice <=
-                              this.state.fundsWithoutCommas
+                              this.state.fundsWithoutCommas &&
+                            this.state.marketStatus
                           )
                             this.setState({
                               buyConfirmation: true
