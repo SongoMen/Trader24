@@ -18,8 +18,10 @@ export default class portfolio extends React.Component {
     super(props);
     this.state = {
       loader1: "",
-      confirmation: ""
+      confirmation: "",
+      funds: ""
     };
+    this.handleStockSell = this.handleStockSell.bind(this);
   }
   getLatestPrice(symbol, i) {
     const lastPrice = `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_d0e99ea2ee134a4f99d0a3ceb700336c`;
@@ -78,7 +80,6 @@ export default class portfolio extends React.Component {
   }
   handleStockSell(position, number) {
     let user = firebase.auth().currentUser.uid;
-
     this.setState({
       confirmation: true
     });
@@ -89,15 +90,34 @@ export default class portfolio extends React.Component {
       .collection("stocks")
       .doc(position)
       .delete()
-      .then(function() {
-        console.log("Document successfully deleted!");
-        this.getPositions()
-      })
+      .then(
+        function() {
+          this.setState({
+            funds: Number(this.state.funds) + Number(moneyPaid[number])
+          });
+          firebase
+            .firestore()
+            .collection("users")
+            .doc(user)
+            .update({
+              currentfunds: this.state.funds
+            })
+            .catch(error => {
+              console.log("Error getting document:", error);
+              this.setState({
+                portfolioLoader: false
+              });
+            });
+          this.getPositions();
+        }.bind(this)
+      )
       .catch(function(error) {
         console.error("Error removing document: ", error);
       });
   }
   componentDidMount() {
+    let user = firebase.auth().currentUser.uid;
+
     document.title = document.title + " - Portfolio";
     this.getPositions();
     setTimeout(() => {}, 2000);
@@ -112,11 +132,30 @@ export default class portfolio extends React.Component {
         }
       }, 1000);
     check();
+    firebase
+      .firestore()
+      .collection("users")
+      .doc(user)
+      .onSnapshot(
+        function(doc) {
+          if (doc.data() !== undefined)
+            this.setState({
+              funds: doc.data()["currentfunds"]
+            });
+        }.bind(this)
+      );
   }
   componentWillUnmount() {
     clearInterval(check);
   }
   render() {
+    setTimeout(() => {
+      if (this.state.loader1 === "") {
+        this.getPositions();
+        check();
+        console.log("X");
+      }
+    }, 5000);
     return (
       <div className="portfolio">
         <Leftbar />

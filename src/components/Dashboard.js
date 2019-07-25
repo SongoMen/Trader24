@@ -518,7 +518,8 @@ class Dashboard extends React.Component {
                 if (
                   stockChanges[0] !== undefined &&
                   stockPrices[0] !== undefined &&
-                  chartData1.length >= 2
+                  chartData1.length >= 2 &&
+                  $("#chartFirst").length
                 ) {
                   this.setState({
                     loader1: true
@@ -529,7 +530,8 @@ class Dashboard extends React.Component {
                   this.setState({
                     loader1: false
                   });
-                  document.getElementById("chartFirst").href = "#";
+                  if ($("#chartFirst").length)
+                    document.getElementById("chartFirst").href = "#";
                 }
               }, 800);
             }
