@@ -9,7 +9,7 @@ import Leftbar from "./leftbar";
 import Topbar from "./topbar";
 
 defaults.global.defaultFontStyle = "Bold";
-defaults.global.defaultFontFamily = "Quicksand";
+defaults.global.defaultFontFamily = "Quantico";
 defaults.global.animation.duration = 200;
 
 const db = firebase.firestore();
@@ -143,7 +143,7 @@ export default class stockPage extends React.Component {
             backgroundColor: gradientFill,
             pointBackgroundColor: gradient,
             fill: true,
-            borderWidth: 1,
+            borderWidth: 2,
             data: chartData1
           }
         ]
@@ -192,9 +192,7 @@ export default class stockPage extends React.Component {
                 ).toFixed(2)
               );
               labels.push(
-                Object.keys(result["Time Series (1min)"])
-                  [i].split(" ")[1]
-                  .slice(0, -3)
+                Object.keys(result["Time Series (1min)"])[i].split(" ")[1].slice(0, -3)
               );
             }
           } else {
@@ -221,9 +219,7 @@ export default class stockPage extends React.Component {
                       ).toFixed(2)
                     );
                     labels.push(
-                      Object.keys(result["Time Series (1min)"])
-                        [i].split(" ")[1]
-                        .slice(0, -3)
+                      Object.keys(result["Time Series (1min)"])[i].split(" ")[1].slice(0, -3)
                     );
                   }
                 });

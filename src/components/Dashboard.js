@@ -385,9 +385,9 @@ class Dashboard extends React.Component {
     fetch(lastPrice)
       .then(res => res.json())
       .then(result => {
-        portfolioValue[i] = Number(
-          portfolioShares[i] * result.latestPrice
-        ).toFixed(2);
+        portfolioValue[i] = parseFloat(
+          Number(portfolioShares[i] * result.latestPrice).toFixed(2)
+        );
       })
       .then(() => {
         portfolioDifference[i] =

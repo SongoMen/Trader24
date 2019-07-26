@@ -1,6 +1,5 @@
 import React from "react";
 import Leftbar from "./leftbar";
-import { Link } from "react-router-dom";
 import Topbar from "./topbar";
 import firebase from "firebase/app";
 
@@ -28,7 +27,7 @@ export default class portfolio extends React.Component {
     fetch(lastPrice)
       .then(res => res.json())
       .then(result => {
-        value[i] = Number(shares[i] * result.latestPrice).toFixed(2);
+        value[i] = parseFloat(Number(shares[i] * result.latestPrice).toFixed(2))
       })
       .then(() => {
         difference[i] =
@@ -53,6 +52,9 @@ export default class portfolio extends React.Component {
     return 100 * Math.abs((a - b) / ((a + b) / 2));
   }
   getPositions() {
+    this.setState({
+      loader1:""
+    })
     symbols = [];
     position = [];
     shares = [];
@@ -80,7 +82,14 @@ export default class portfolio extends React.Component {
             loader1: "nothing"
           });
         }
-      });
+      })
+      .then(()=>{
+        setTimeout(() => {
+          this.setState({
+            loader1: true
+          })
+        }, 1500);
+      })
   }
   handleStockSell(position, number) {
     let user = firebase.auth().currentUser.uid;
@@ -106,8 +115,7 @@ export default class portfolio extends React.Component {
             .update({
               currentfunds: this.state.funds
             })
-            .catch(error => {
-              console.log("Error getting document:", error);
+            .catch(() => {
               this.setState({
                 loader1: false
               });
@@ -116,7 +124,7 @@ export default class portfolio extends React.Component {
         }.bind(this)
       )
       .catch(function(error) {
-        console.error("Error removing document: ", error);
+        console.error(error);
       });
   }
   componentDidMount() {
@@ -158,7 +166,6 @@ export default class portfolio extends React.Component {
         this.getPositions();
         check();
       }
-      console.log(symbols.length);
     }, 5000);
     return (
       <div className="portfolio">

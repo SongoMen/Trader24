@@ -7,8 +7,8 @@ import {
 } from "react-router-dom";
 import { firebaseAuth } from "./auth";
 
-import Home from "./Home.js";
-import Dashboard from "./Dashboard.js";
+import LandingPage from "./landingPage";
+import Dashboard from "./Dashboard";
 import Register from "./Register";
 import Login from "./Login";
 import Stocks from "./Stocks";
@@ -88,7 +88,7 @@ class App extends Component {
               authed={this.state.authed}
               exact
               path="/"
-              component={Home}
+              component={LandingPage}
             />
             <PublicRoute
               authed={this.state.authed}
