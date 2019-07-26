@@ -9,6 +9,7 @@ let difference = [],
   color = [],
   shares = [],
   value = [],
+  change = [],
   position = [];
 let check;
 
@@ -27,13 +28,20 @@ export default class portfolio extends React.Component {
     fetch(lastPrice)
       .then(res => res.json())
       .then(result => {
-        value[i] = parseFloat(Number(shares[i] * result.latestPrice).toFixed(2))
+        value[i] = parseFloat(
+          Number(shares[i] * result.latestPrice).toFixed(2)
+        );
       })
       .then(() => {
         difference[i] =
           this.relDiff(parseFloat(value[i]), parseFloat(moneyPaid[i])).toFixed(
             2
           ) + "%";
+        change[i] =
+          "$" +
+          parseFloat(
+            parseFloat(value[i] - parseFloat(moneyPaid[i])).toFixed(2)
+          );
         if (value[i] > moneyPaid[i]) {
           difference[i] = "+" + difference[i];
           color[i] = "#66F9DA";
@@ -46,6 +54,10 @@ export default class portfolio extends React.Component {
           difference[i] = "---";
           color[i] = "#999EAF";
         }
+        if (change[i].split("")[1] === "-") {
+          let name = "" + change[i]
+          change[i] = "-$" + name.substr(2)
+        }
       });
   }
   relDiff(a, b) {
@@ -53,8 +65,8 @@ export default class portfolio extends React.Component {
   }
   getPositions() {
     this.setState({
-      loader1:""
-    })
+      loader1: ""
+    });
     symbols = [];
     position = [];
     shares = [];
@@ -83,13 +95,13 @@ export default class portfolio extends React.Component {
           });
         }
       })
-      .then(()=>{
+      .then(() => {
         setTimeout(() => {
           this.setState({
             loader1: true
-          })
+          });
         }, 1500);
-      })
+      });
   }
   handleStockSell(position, number) {
     let user = firebase.auth().currentUser.uid;
@@ -186,6 +198,7 @@ export default class portfolio extends React.Component {
                   <th>SYMBOL</th>
                   <th>QUANTITY</th>
                   <th>GAIN/LOSS (%)</th>
+                  <th>GAIN/LOSS ($)</th>
                   <th>CURRENT VALUE</th>
                   <th />
                 </tr>
@@ -197,6 +210,7 @@ export default class portfolio extends React.Component {
                       <td style={{ color: color[index] }}>
                         {difference[index]}
                       </td>
+                      <td style={{ color: color[index] }}>{change[index]}</td>
                       <td>${value[index]}</td>
                       <td>
                         <svg
