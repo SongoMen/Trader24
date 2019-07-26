@@ -6,6 +6,7 @@ import {
   Switch
 } from "react-router-dom";
 import { firebaseAuth } from "./auth";
+import nprogress from 'nprogress'
 
 import LandingPage from "./landingPage";
 import Dashboard from "./Dashboard";
@@ -15,6 +16,7 @@ import Stocks from "./Stocks";
 import stockPage from "./stockPage";
 import portfolio from "./portfolio";
 import page404 from "./404";
+
 
 function PrivateRoute({ component: Component, authed, ...rest }) {
   return (
@@ -54,6 +56,8 @@ class App extends Component {
     loading: true
   };
   componentDidMount() {
+    nprogress.done()
+
     this.removeListener = firebaseAuth().onAuthStateChanged(user => {
       if (user) {
         this.setState({
@@ -71,6 +75,11 @@ class App extends Component {
   componentWillUnmount() {
     this.removeListener();
   }
+
+  componentWillMount(){
+    nprogress.start()
+  }
+
   render() {
     return this.state.loading ? (
       <div className="loader-background">

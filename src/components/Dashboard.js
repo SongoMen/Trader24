@@ -4,6 +4,7 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import $ from "jquery";
 import { Link } from "react-router-dom";
+import nprogress from 'nprogress'
 
 import Leftbar from "./leftbar";
 import Topbar from "./topbar";
@@ -646,6 +647,11 @@ class Dashboard extends React.Component {
     document.querySelector(".hamburger").addEventListener("click", e => {
       e.currentTarget.classList.toggle("is-active");
     });
+    nprogress.done()
+  }
+  componentWillMount(){
+    nprogress.start()
+
   }
   render() {
     for (let i = 0; i < stockSymbols.length; i++) {
