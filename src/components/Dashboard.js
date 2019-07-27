@@ -1,10 +1,10 @@
 import React from "react";
-import { Line } from "react-chartjs-2";
+import {Line} from "react-chartjs-2";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import $ from "jquery";
-import { Link } from "react-router-dom";
-import nprogress from 'nprogress'
+import {Link} from "react-router-dom";
+import nprogress from "nprogress";
 
 import Leftbar from "./leftbar";
 import Topbar from "./topbar";
@@ -27,8 +27,8 @@ var options = {
     },
     displayColors: false,
   },*/
-  tooltips: { enabled: false },
-  hover: { mode: null },
+  tooltips: {enabled: false},
+  hover: {mode: null},
   layout: {
     padding: {
       bottom: 15
@@ -154,7 +154,7 @@ class Dashboard extends React.Component {
       }
       return result.split(",");
     }
-    this.data1 = canvas => {
+    this.data1 = (canvas) => {
       const ctx = canvas.getContext("2d");
       const gradient = ctx.createLinearGradient(0, 0, 600, 10);
       gradient.addColorStop(0, "#7c83ff");
@@ -184,7 +184,7 @@ class Dashboard extends React.Component {
         ]
       };
     };
-    this.data2 = canvas => {
+    this.data2 = (canvas) => {
       const ctx = canvas.getContext("2d");
       const gradient = ctx.createLinearGradient(0, 0, 600, 10);
       gradient.addColorStop(0, "#7c83ff");
@@ -221,8 +221,8 @@ class Dashboard extends React.Component {
       apiKeys[0]
     }`;
     fetch(stockApi)
-      .then(res => res.json())
-      .then(result => {
+      .then((res) => res.json())
+      .then((result) => {
         if (result["Note"] === undefined) {
           for (
             let i = Object.keys(result["Time Series (1min)"]).length - 1;
@@ -244,8 +244,8 @@ class Dashboard extends React.Component {
               apiKeys[b]
             }`;
             fetch(stockApi)
-              .then(res => res.json())
-              .then(result => {
+              .then((res) => res.json())
+              .then((result) => {
                 for (
                   let i = Object.keys(result["Time Series (1min)"]).length - 1;
                   i > 0 || callback();
@@ -267,8 +267,8 @@ class Dashboard extends React.Component {
                 apiKeys[b]
               }`;
               fetch(stockApi)
-                .then(res => res.json())
-                .then(result => {
+                .then((res) => res.json())
+                .then((result) => {
                   for (
                     let i =
                       Object.keys(result["Time Series (1min)"]).length - 1;
@@ -292,8 +292,8 @@ class Dashboard extends React.Component {
   getStockInfo(symbol, dataChart, changeStash, priceStash, num, callback) {
     const percentageChange = `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_d0e99ea2ee134a4f99d0a3ceb700336c`;
     fetch(percentageChange)
-      .then(res => res.json())
-      .then(result => {
+      .then((res) => res.json())
+      .then((result) => {
         if (result.latestPrice !== null)
           priceStash[num] = result.latestPrice.toFixed(2);
         if (result.changePercent !== null)
@@ -305,14 +305,14 @@ class Dashboard extends React.Component {
     const stocks =
       "https://cloud.iexapis.com/stable/stock/market/list/mostactive?token=pk_d0e99ea2ee134a4f99d0a3ceb700336c";
     fetch(stocks)
-      .then(res => res.json())
-      .then(result => {
+      .then((res) => res.json())
+      .then((result) => {
         const gainers =
           "https://cloud.iexapis.com/stable/stock/market/list/gainers?token=pk_d0e99ea2ee134a4f99d0a3ceb700336c";
         let counter = 0;
         fetch(gainers)
-          .then(res => res.json())
-          .then(result => {
+          .then((res) => res.json())
+          .then((result) => {
             for (let i = 0; i < result.length; i++) {
               if (result[i].latestPrice !== null) {
                 tempStocksSymbols.push(result[i].symbol);
@@ -343,8 +343,8 @@ class Dashboard extends React.Component {
               stockListTickers[i]
             }/quote?displayPercent=true&token=pk_d0e99ea2ee134a4f99d0a3ceb700336c`;
             fetch(percentageChange)
-              .then(res => res.json())
-              .then(result => {
+              .then((res) => res.json())
+              .then((result) => {
                 stockListChange[i] = parseFloat(result.changePercent).toFixed(
                   2
                 );
@@ -384,8 +384,8 @@ class Dashboard extends React.Component {
   getLatestPrice(symbol, i) {
     const lastPrice = `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_d0e99ea2ee134a4f99d0a3ceb700336c`;
     fetch(lastPrice)
-      .then(res => res.json())
-      .then(result => {
+      .then((res) => res.json())
+      .then((result) => {
         portfolioValue[i] = parseFloat(
           Number(portfolioShares[i] * result.latestPrice).toFixed(2)
         );
@@ -429,11 +429,11 @@ class Dashboard extends React.Component {
       .doc(user)
       .collection("stocks")
       .get()
-      .then(snapshot => {
+      .then((snapshot) => {
         if (snapshot.docs.length !== 0) {
-          snapshot.forEach(doc => {
+          snapshot.forEach((doc) => {
             console.log(doc.id, "=>", doc.data());
-            if (portfolioStocks.length < 5) {
+            if (portfolioStocks.length < 4) {
               portfolioStocks.push(doc.data().symbol);
               portfolioShares.push(doc.data().shares);
               portfolioMoneyPaid.push(doc.data().moneyPaid);
@@ -476,7 +476,7 @@ class Dashboard extends React.Component {
           if (this.state.marketStatus) this.getAccountInfo();
         }, 10000);
       })
-      .catch(error => {
+      .catch((error) => {
         console.log("Error getting document:", error);
         this.setState({
           portfolioLoader: false
@@ -490,8 +490,8 @@ class Dashboard extends React.Component {
 
   componentDidMount() {
     fetch("https://financialmodelingprep.com/api/v3/is-the-market-open")
-      .then(res => res.json())
-      .then(result => {
+      .then((res) => res.json())
+      .then((result) => {
         this.setState({
           marketStatus: result.isTheStockMarketOpen
         });
@@ -513,10 +513,11 @@ class Dashboard extends React.Component {
     const gainers =
       "https://cloud.iexapis.com/stable/stock/market/list/gainers?token=pk_d0e99ea2ee134a4f99d0a3ceb700336c";
     fetch(gainers)
-      .then(res => res.json())
-      .then(result => {
+      .then((res) => res.json())
+      .then((result) => {
         for (let i = 0; i < 4; i++) {
-          stockSymbols.push(result[i].symbol);
+          if (result[i] !== undefined)
+            stockSymbols.push(result[i].symbol);
         }
         this.getStockInfo(
           stockSymbols[0],
@@ -644,14 +645,13 @@ class Dashboard extends React.Component {
         }
       }
     }, 5000);
-    document.querySelector(".hamburger").addEventListener("click", e => {
+    document.querySelector(".hamburger").addEventListener("click", (e) => {
       e.currentTarget.classList.toggle("is-active");
     });
-    nprogress.done()
+    nprogress.done();
   }
-  componentWillMount(){
-    nprogress.start()
-
+  componentWillMount() {
+    nprogress.start();
   }
   render() {
     for (let i = 0; i < stockSymbols.length; i++) {
@@ -678,17 +678,15 @@ class Dashboard extends React.Component {
     return (
       <div className="Dashboard">
         <Alert />
-        <div
-          style={{ display: "flex", flexDirection: "column", width: "100%" }}
-        >
-          <div style={{ display: "flex", height: "100%" }}>
+        <div style={{display: "flex", flexDirection: "column", width: "100%"}}>
+          <div style={{display: "flex", height: "100%"}}>
             <Leftbar />
             <div className="panel">
               <Topbar />
               <div className="panel__container">
                 <div className="panel__top">
                   <div className="panel__title">
-                    <div style={{ display: "flex", alignItems: "center" }}>
+                    <div style={{display: "flex", alignItems: "center"}}>
                       <svg
                         className="panel__popular"
                         xmlns="http://www.w3.org/2000/svg"
@@ -726,7 +724,7 @@ class Dashboard extends React.Component {
                       <h3>Portfolio</h3>
                     </div>
                   </div>
-                  <div className="panel__topCharts" style={{ display: "flex" }}>
+                  <div className="panel__topCharts" style={{display: "flex"}}>
                     <a id="chartFirst" href="/" className="chartLink">
                       <div className="stockChart">
                         {this.state.loader1 === "" && (
@@ -763,7 +761,7 @@ class Dashboard extends React.Component {
                             <div className="stockChart__price-info">
                               <h4
                                 className="stockChart__change"
-                                style={{ color: changesColors[0] }}
+                                style={{color: changesColors[0]}}
                               >
                                 {stockChanges[0]}%
                               </h4>
@@ -815,7 +813,7 @@ class Dashboard extends React.Component {
                             <div className="stockChart__price-info">
                               <h4
                                 className="stockChart__change"
-                                style={{ color: changesColors[1] }}
+                                style={{color: changesColors[1]}}
                               >
                                 {stockChanges[1]}%
                               </h4>
@@ -883,7 +881,7 @@ class Dashboard extends React.Component {
                                       <td>{value}</td>
                                       <td>{portfolioShares[index]}</td>
                                       <td
-                                        style={{ color: portfolioColor[index] }}
+                                        style={{color: portfolioColor[index]}}
                                       >
                                         {portfolioDifference[index]}
                                       </td>

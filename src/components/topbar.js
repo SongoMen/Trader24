@@ -56,9 +56,9 @@ export default class Topbar extends React.Component {
     fetch(
       "https://cloud.iexapis.com/stable/ref-data/symbols?token=pk_d0e99ea2ee134a4f99d0a3ceb700336c"
     )
-      .then(res => res.json())
-      .then(result => {
-        allSymbols = result.map(val => {
+      .then((res) => res.json())
+      .then((result) => {
+        allSymbols = result.map((val) => {
           return val;
         });
       });
@@ -125,7 +125,8 @@ export default class Topbar extends React.Component {
               }}
               onBlur={() => {
                 setTimeout(() => {
-                  document.getElementById("results").style.display = "none";
+                  if ($("#results").length)
+                    document.getElementById("results").style.display = "none";
                 }, 300);
                 document.getElementById("topbar__searchbar").style.boxShadow =
                   "none";

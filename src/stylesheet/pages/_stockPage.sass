@@ -30,7 +30,8 @@ input[type=number]
     overflow: hidden
 .stockPage
     width: 97%
-    padding: 50px
+    padding: 3%
+    padding-top: 2%
     display: flex
     flex-direction: column 
     .loader
@@ -38,7 +39,7 @@ input[type=number]
 .stockPage__top
     display: flex
     width: 100%
-    height: 50%
+    height: 45%
     .stock__chart
         width: 80%
         height: 80%
@@ -128,7 +129,7 @@ input[type=number]
 
 .stockPage__keyStats
     width: 100%
-    height: 50%
+    height: 55%
     display: flex
     .stockPage__headings
         display: flex
@@ -143,6 +144,7 @@ input[type=number]
         .stockPage__columns
             display: flex
             flex-wrap: wrap
+            height: 100%
         .data__label
             font-weight: 400
         .data__info
@@ -159,6 +161,38 @@ input[type=number]
             width: 30px
             margin-right: 10px
             fill: $main-color
+    .news
+        width: 50%
+        display: flex
+        flex-direction: column
+        height: 100%    
+        .article
+            width: 100%
+            background-color: $elements-color
+            padding: 5px
+            display: flex
+            margin: 10px 0
+            cursor: pointer
+            transition: all .3s
+            h4
+                margin: 0
+            h6
+                margin: 0 10px
+            h5
+                font-weight: 400
+                margin: 5px 0
+            &__image
+                width: 80px
+                background-repeat: no-repeat
+                background-size: contain
+                background-position: center
+                margin-right: 20px
+            &__top
+                display: flex
+                align-items: center
+            &:hover
+                box-shadow: 0px 0px 30px 0px rgba(0,0,0,0.15)
+
 
 .wrongSymbol
     width: 100%
