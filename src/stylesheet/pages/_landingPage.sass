@@ -38,11 +38,26 @@
         border-radius: 5px        
         &:hover
             background: $main-color
+.background
+    position: absolute
+    width: 100%
+    height: 100%
+    background-image: url("../images/bg.png")
+    top: 0
+    z-index: 1
 .landing
     width: 100%
     height: 85%
     display: flex
     align-items: center
-    padding: 40px
+    position: relative
+    padding: 30px
+    z-index: 10
     h1
         font-style: italic
+        z-index: 10
+    img
+        width: 60%
+        position: absolute
+        right: 30px
+        right: 0
