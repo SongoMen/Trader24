@@ -174,10 +174,17 @@ input[type=number]
             margin: 10px 0
             cursor: pointer
             transition: all .3s
+            position: relative
             h4
                 margin: 0
+                max-width: 90%
             h6
                 margin: 0 10px
+                white-space: nowrap
+                position: absolute
+                right: 10px
+                top: 10px
+                color: $inactive-color
             h5
                 font-weight: 400
                 margin: 5px 0
@@ -187,9 +194,11 @@ input[type=number]
                 background-size: contain
                 background-position: center
                 margin-right: 20px
+                max-width: 80px
             &__top
                 display: flex
                 align-items: center
+                justify-content: space-between
             &:hover
                 box-shadow: 0px 0px 30px 0px rgba(0,0,0,0.15)
 
