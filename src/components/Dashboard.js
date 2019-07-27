@@ -371,7 +371,7 @@ class Dashboard extends React.Component {
                 }, 900);
               });
           }
-        }, 1500);
+        }, 1800);
       });
   }
   relDiff(a, b) {
@@ -516,8 +516,7 @@ class Dashboard extends React.Component {
       .then((res) => res.json())
       .then((result) => {
         for (let i = 0; i < 4; i++) {
-          if (result[i] !== undefined)
-            stockSymbols.push(result[i].symbol);
+          if (result[i] !== undefined) stockSymbols.push(result[i].symbol);
         }
         this.getStockInfo(
           stockSymbols[0],
@@ -1027,6 +1026,17 @@ class Dashboard extends React.Component {
                     <li />
                     <li />
                   </ul>
+                )}
+                {this.state.loader3 === false && (
+                  <div className="errorMsg">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                      <g>
+                        <path fill="none" d="M0 0h24v24H0z" />
+                        <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm-1-5h2v2h-2v-2zm0-8h2v6h-2V7z" />
+                      </g>
+                    </svg>
+                    <p>Couldn't load list try again in few minutes</p>
+                  </div>
                 )}
               </div>
             </div>

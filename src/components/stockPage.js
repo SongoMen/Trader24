@@ -654,7 +654,7 @@ export default class stockPage extends React.Component {
       .then(() => {
         setTimeout(() => {
           for (let i = 0; i < newsUrl.length; i++) {
-            $("#" + newsRelated[i] + i).css(
+            $("#img" + i).css(
               "background-image",
               "url(" + newsImage[i] + ")"
             );
@@ -911,7 +911,7 @@ export default class stockPage extends React.Component {
                           <div className="article">
                             <div
                               className="article__image"
-                              id={newsRelated[indx] + indx}
+                              id={"img"+ indx}
                             />
                             <div className="article__content">
                               <div className="article__top">
