@@ -47,11 +47,15 @@ input[type=number]
         height: 60%
     .stock__chart
         width: 80%
-        height: 80%
+        height: 90%
         padding: 10px
         position: relative
         @media only screen and (max-width: 900px)
             width: 100%
+            height: 80%
+        @media only screen and (max-width: 900px)
+            width: 100%
+            height: 70%
         .stock__info
             width: 100%
         .stockPage__timers
@@ -86,7 +90,11 @@ input[type=number]
         @media only screen and (max-width: 900px)
             position: absolute
             right: 10px
-            bottom: 10px
+            bottom: 20px
+        @media only screen and (max-width: 400px)
+            width: 50%
+            input, button
+                font-size: 9px
     @media only screen and (max-width: 900px)
         flex-direction: row
         height: auto
@@ -194,7 +202,8 @@ input[type=number]
             color: $inactive-color
             @media only screen and (max-width: 900px)
                 margin: 10px 0
-
+            @media only screen and (max-height: 550px)
+                margin: 10px 0
     h3
         color: $inactive-color
         display: flex
@@ -217,9 +226,13 @@ input[type=number]
         &__articles a:last-child
             @media only screen and (max-width: 900px)
                 display: none
-
+            @media only screen and (max-height: 650px)
+                display: none
         @media only screen and (max-width: 750px)
             display: none
+        @media only screen and (max-height: 480px)
+            a:nth-child(2)
+                display: none
         .article
             width: 100%
             background-color: $elements-color

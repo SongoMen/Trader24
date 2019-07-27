@@ -93,8 +93,7 @@ class App extends Component {
       <Router>
         <div className="container">
           <Switch>
-            <PublicRoute
-              authed={this.state.authed}
+            <Route
               exact
               path="/"
               component={LandingPage}

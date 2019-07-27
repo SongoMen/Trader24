@@ -26,8 +26,8 @@ export default class portfolio extends React.Component {
   getLatestPrice(symbol, i) {
     const lastPrice = `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_d0e99ea2ee134a4f99d0a3ceb700336c`;
     fetch(lastPrice)
-      .then(res => res.json())
-      .then(result => {
+      .then((res) => res.json())
+      .then((result) => {
         value[i] = parseFloat(
           Number(shares[i] * result.latestPrice).toFixed(2)
         );
@@ -55,8 +55,8 @@ export default class portfolio extends React.Component {
           color[i] = "#999EAF";
         }
         if (change[i].split("")[1] === "-") {
-          let name = "" + change[i]
-          change[i] = "-$" + name.substr(2)
+          let name = "" + change[i];
+          change[i] = "-$" + name.substr(2);
         }
       });
   }
@@ -79,9 +79,9 @@ export default class portfolio extends React.Component {
       .doc(user)
       .collection("stocks")
       .get()
-      .then(snapshot => {
+      .then((snapshot) => {
         if (snapshot.docs.length !== 0) {
-          snapshot.forEach(doc => {
+          snapshot.forEach((doc) => {
             position.push(doc.id);
             symbols.push(doc.data().symbol);
             shares.push(doc.data().shares);
@@ -168,6 +168,9 @@ export default class portfolio extends React.Component {
             });
         }.bind(this)
       );
+    document.querySelector(".hamburger").addEventListener("click", (e) => {
+      e.currentTarget.classList.toggle("is-active");
+    });
   }
   componentWillUnmount() {
     clearInterval(check);
@@ -207,10 +210,8 @@ export default class portfolio extends React.Component {
                     <tr key={index}>
                       <td>{val}</td>
                       <td>{shares[index]}</td>
-                      <td style={{ color: color[index] }}>
-                        {difference[index]}
-                      </td>
-                      <td style={{ color: color[index] }}>{change[index]}</td>
+                      <td style={{color: color[index]}}>{difference[index]}</td>
+                      <td style={{color: color[index]}}>{change[index]}</td>
                       <td>${value[index]}</td>
                       <td>
                         <svg

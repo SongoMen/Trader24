@@ -546,6 +546,9 @@ export default class stockPage extends React.Component {
 
     this.getYTDChart();
     this.getLatestNews();
+    document.querySelector(".hamburger").addEventListener("click", (e) => {
+      e.currentTarget.classList.toggle("is-active");
+    });
   }
   handleBuyStock(num) {
     let user = firebase.auth().currentUser.uid;
