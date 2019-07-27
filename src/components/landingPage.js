@@ -11,13 +11,15 @@ const LandingPage = () => {
         url2="/register"
       />
       <div className="landing">
-        <h1>
-          MEET THE NEW STANDARTS FOR <br />
-          MARKET TRADING
-        </h1>
-        <img src={require("../images/mockup.png")} />
+        <h1>MEET THE NEW STANDARTS FOR MARKET TRADING</h1>
+        <img src={require("../images/mockup.png")} alt="preview"/>
       </div>
-      <div className="background" />
+      <div className="background">
+        <svg width="100%" height="100">
+          <path d="M600 0 L0 0 L1100 750 Z" />
+          <path d="M0 0 L0 1000 L1100 740 Z" />
+        </svg>
+      </div>
     </div>
   );
 };
