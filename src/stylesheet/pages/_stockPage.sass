@@ -34,17 +34,24 @@ input[type=number]
     padding-top: 2%
     display: flex
     flex-direction: column 
+    @media only screen and (max-width: 600px)
+        width: 100%
     .loader
         margin: 100px auto
 .stockPage__top
     display: flex
     width: 100%
+    flex-wrap: wrap
     height: 45%
+    @media only screen and (max-width: 900px)
+        height: 60%
     .stock__chart
         width: 80%
         height: 80%
         padding: 10px
         position: relative
+        @media only screen and (max-width: 900px)
+            width: 100%
         .stock__info
             width: 100%
         .stockPage__timers
@@ -74,10 +81,22 @@ input[type=number]
     align-items: flex-start
     border-radius: 8px
     flex-direction: column
-    min-width: 300px
+    position: relative
+    .stockPage__buy-container
+        @media only screen and (max-width: 900px)
+            position: absolute
+            right: 10px
+            bottom: 10px
+    @media only screen and (max-width: 900px)
+        flex-direction: row
+        height: auto
+        width: 100%
     h5
         color: white
         font-weight: 400
+        @media only screen and (max-width: 900px)
+            display: none
+
     h2
         font-weight: 400
     h4
@@ -87,17 +106,22 @@ input[type=number]
         margin-top: -20px
         margin: 0
         color: $inactive-color
+        @media only screen and (max-width: 900px)
+            margin-left: 20px
+
     .stockPage__trade-top
         width: 100%
         display: flex
         align-items: center
         margin-top: 20px
+        @media only screen and (max-width: 900px)
+            width: auto
         h2
             margin: 0
             margin-bottom: 10px  
         h6
             margin-left: 10px
-        h5
+            white-space: nowrap
     .stockPage__buy-input
         background-color: $elements-color
         color: white
@@ -105,7 +129,8 @@ input[type=number]
         font-weight: bold
         border-radius: 5px
         border: 1px solid $panel-color
-        margin-right: 10px
+        margin-right: 7px
+        width: 70%
         transition: all .5s 
         letter-spacing: 1px
         &:hover,&:focus
@@ -117,6 +142,7 @@ input[type=number]
     font-weight: bold
     transition: all .5s
     border-radius: 5px
+    width: 25%
     &:hover
         box-shadow: 0px 0px 10px 0px $main-color
     &:nth-child(1)
@@ -131,6 +157,8 @@ input[type=number]
     width: 100%
     height: 55%
     display: flex
+    @media only screen and (max-width: 900px)
+        height: 40%
     .stockPage__headings
         display: flex
         justify-content: space-between
@@ -141,6 +169,11 @@ input[type=number]
         height: 100%
         display: flex
         flex-direction: column
+        @media only screen and (max-width: 750px)
+            width: 100%
+        @media only screen and (max-width: 900px)
+            h3
+                margin-bottom: 0
         .stockPage__columns
             display: flex
             flex-wrap: wrap
@@ -149,14 +182,27 @@ input[type=number]
             font-weight: 400
         .data__info
             width: 33%
+            @media only screen and (max-width: 600px)
+                display: flex
+                justify-content: center
+                align-items: center
+                flex-direction: column
+            h3
+                color: white
         h4
             margin: 25px 0
             color: $inactive-color
+            @media only screen and (max-width: 900px)
+                margin: 10px 0
+
     h3
         color: $inactive-color
         display: flex
         align-items: center
         width: 100%
+        @media only screen and (max-width: 600px)
+            width: auto
+
         svg
             width: 30px
             margin-right: 10px
@@ -166,15 +212,25 @@ input[type=number]
         display: flex
         flex-direction: column
         height: 100%    
+        &__articles
+            margin-top: -15px
+        &__articles a:last-child
+            @media only screen and (max-width: 900px)
+                display: none
+
+        @media only screen and (max-width: 750px)
+            display: none
         .article
             width: 100%
             background-color: $elements-color
-            padding: 5px
+            padding: 5px 15px
             display: flex
             margin: 10px 0
             cursor: pointer
             transition: all .3s
             position: relative
+            height: 80px
+            border-radius: 10px
             h4
                 margin: 0
                 max-width: 90%
@@ -189,12 +245,15 @@ input[type=number]
                 font-weight: 400
                 margin: 5px 0
             &__image
-                width: 80px
+                min-width: 80px
                 background-repeat: no-repeat
                 background-size: contain
                 background-position: center
                 margin-right: 20px
                 max-width: 80px
+                @media only screen and (max-width: 900px)
+                    min-width: 40px
+                    margin-right: 10px
             &__top
                 display: flex
                 align-items: center

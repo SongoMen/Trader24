@@ -686,7 +686,7 @@ export default class stockPage extends React.Component {
             this.setState({valid: true});
             this.rendering();
           } else this.setState({valid: false});
-        }, 500);
+        }, 1000);
       });
     this.getFunds();
   }
@@ -803,12 +803,14 @@ export default class stockPage extends React.Component {
                     </div>
                   </div>
                   <div className="stockPage__trade">
+                    <div className="stockPage__mobile">
                     <h4>{stockData.name}</h4>
                     <div className="stockPage__trade-top">
                       <h2>${this.state.latestPrice}</h2>
                       <h6 style={{color: this.state.changeColor}}>
                         {stockData.change} ({stockData.changePercent}%)
                       </h6>
+                    </div>
                     </div>
                     {!this.state.marketStatus &
                     (stockData.extendedChange !== null) ? (
@@ -823,7 +825,7 @@ export default class stockPage extends React.Component {
                       <div />
                     )}
                     <h5>Buy {symbol}</h5>
-                    <div>
+                    <div className="stockPage__buy-container">
                       <input
                         autoCorrect="off"
                         autoCapitalize="off"
@@ -882,8 +884,8 @@ export default class stockPage extends React.Component {
                     {keyData.map((val, index) => {
                       return (
                         <div className="data__info" key={index}>
-                          <h5 className="data__label">{keyDataLabel[index]}</h5>
-                          <h4>{val}</h4>
+                          <h4 className="data__label">{keyDataLabel[index]}</h4>
+                          <h3>{val}</h3>
                         </div>
                       );
                     })}
