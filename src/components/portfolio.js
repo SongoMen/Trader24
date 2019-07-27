@@ -19,7 +19,8 @@ export default class portfolio extends React.Component {
     this.state = {
       loader1: "",
       confirmation: "",
-      funds: ""
+      funds: "",
+      marketStatus: ""
     };
     this.handleStockSell = this.handleStockSell.bind(this);
   }
@@ -105,41 +106,50 @@ export default class portfolio extends React.Component {
   }
   handleStockSell(position, number) {
     let user = firebase.auth().currentUser.uid;
-    this.setState({
-      confirmation: true
-    });
-    firebase
-      .firestore()
-      .collection("users")
-      .doc(user)
-      .collection("stocks")
-      .doc(position)
-      .delete()
-      .then(
-        function() {
-          this.setState({
-            funds: Number(this.state.funds) + Number(moneyPaid[number])
-          });
-          firebase
-            .firestore()
-            .collection("users")
-            .doc(user)
-            .update({
-              currentfunds: this.state.funds
-            })
-            .catch(() => {
-              this.setState({
-                loader1: false
-              });
-            });
-          this.getPositions();
-        }.bind(this)
-      )
-      .catch(function(error) {
-        console.error(error);
+    if (this.state.marketStatus) {
+      this.setState({
+        confirmation: true
       });
+      firebase
+        .firestore()
+        .collection("users")
+        .doc(user)
+        .collection("stocks")
+        .doc(position)
+        .delete()
+        .then(
+          function() {
+            this.setState({
+              funds: Number(this.state.funds) + Number(moneyPaid[number])
+            });
+            firebase
+              .firestore()
+              .collection("users")
+              .doc(user)
+              .update({
+                currentfunds: this.state.funds
+              })
+              .catch(() => {
+                this.setState({
+                  loader1: false
+                });
+              });
+            this.getPositions();
+          }.bind(this)
+        )
+        .catch(function(error) {
+          console.error(error);
+        });
+    }
   }
   componentDidMount() {
+    fetch("https://financialmodelingprep.com/api/v3/is-the-market-open")
+      .then((res) => res.json())
+      .then((result) => {
+        this.setState({
+          marketStatus: result.isTheStockMarketOpen
+        });
+      });
     let user = firebase.auth().currentUser.uid;
 
     document.title = document.title + " - Portfolio";
