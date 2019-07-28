@@ -20,7 +20,8 @@ export default class portfolio extends React.Component {
       loader1: "",
       confirmation: "",
       funds: "",
-      marketStatus: ""
+      marketStatus: "",
+      error: ""
     };
     this.handleStockSell = this.handleStockSell.bind(this);
   }
@@ -194,6 +195,21 @@ export default class portfolio extends React.Component {
     }, 5000);
     return (
       <div className="portfolio">
+        {this.state.error === true && (
+          <div className="alertMessage">
+            Market is currently closed{" "}
+            <button style={{margin:"20px"}}
+              className="stockPage__buy-button"
+              onClick={() => {
+                this.setState({
+                  error: false
+                });
+              }}
+            >
+              CONFIRM
+            </button>
+          </div>
+        )}
         <Leftbar />
         <div className="portfolio__container">
           <Topbar />
@@ -225,9 +241,14 @@ export default class portfolio extends React.Component {
                       <td>${value[index]}</td>
                       <td>
                         <svg
-                          onClick={() =>
-                            this.handleStockSell(position[index], index)
-                          }
+                          onClick={() => {
+                            if (this.state.marketStatus)
+                              this.handleStockSell(position[index], index);
+                            else
+                              this.setState({
+                                error: true
+                              });
+                          }}
                           xmlns="http://www.w3.org/2000/svg"
                           viewBox="0 0 24 24"
                         >
