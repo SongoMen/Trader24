@@ -17,7 +17,8 @@ const db = firebase.firestore();
 var options = {
   layout: {
     padding: {
-      right: 25
+      right: 25,
+      left: 25
     }
   },
   tooltips: {
@@ -49,7 +50,7 @@ var options = {
     yAxes: [
       {
         gridLines: {
-          color: "#373a46"
+          color: "rgba(0, 0, 0, 0)",
         },
         fontStyle: "bold",
 

@@ -142,7 +142,8 @@ class Dashboard extends React.Component {
       portfolioLoader: "",
       fundsWithoutCommas: "",
       accountValue: "",
-      marketStatus: ""
+      marketStatus: "",
+      theme: ""
     };
     this.componentDidMount = this.componentDidMount.bind(this);
     this.getAccountInfo = this.getAccountInfo.bind(this);
@@ -161,7 +162,10 @@ class Dashboard extends React.Component {
       gradient.addColorStop(1, "#7cf4ff");
       let gradientFill = ctx.createLinearGradient(0, 0, 0, 100);
       gradientFill.addColorStop(0.1, "rgba(124, 131, 255,.3)");
-      gradientFill.addColorStop(0.8, "rgba(55, 58, 70, 0)");
+      if (this.state.theme === "dark")
+        gradientFill.addColorStop(0.8, "rgba(55, 58, 70, 0)");
+      else if (this.state.theme === "light")
+        gradientFill.addColorStop(0.8, "rgba(255, 255, 255, 0)");
       ctx.shadowColor = "rgba(124, 131, 255,.3)";
       ctx.shadowBlur = 5;
       ctx.shadowOffsetX = 0;
@@ -191,7 +195,10 @@ class Dashboard extends React.Component {
       gradient.addColorStop(1, "#7cf4ff");
       let gradientFill = ctx.createLinearGradient(0, 0, 0, 100);
       gradientFill.addColorStop(0.1, "rgba(124, 131, 255,.3)");
-      gradientFill.addColorStop(0.8, "rgba(55, 58, 70, 0)");
+      if (this.state.theme === "dark")
+        gradientFill.addColorStop(0.8, "rgba(55, 58, 70, 0)");
+      else if (this.state.theme === "light")
+        gradientFill.addColorStop(0.8, "rgba(255, 255, 255, 0)");
       ctx.shadowColor = "rgba(124, 131, 255,.3)";
       ctx.shadowBlur = 5;
       ctx.shadowOffsetX = 0;
@@ -650,6 +657,11 @@ class Dashboard extends React.Component {
     nprogress.done();
   }
   componentWillMount() {
+    setInterval(() => {
+      let theme = localStorage.getItem("theme");
+      if (theme !== null) this.setState({theme: theme});
+      else this.setState({theme: "dark"});
+    }, 500);
     nprogress.start();
   }
   render() {
