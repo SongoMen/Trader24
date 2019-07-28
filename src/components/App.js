@@ -1,12 +1,12 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import {
   Route,
   BrowserRouter as Router,
   Redirect,
   Switch
 } from "react-router-dom";
-import { firebaseAuth } from "./auth";
-import nprogress from 'nprogress'
+import {firebaseAuth} from "./auth";
+import nprogress from "nprogress";
 
 import LandingPage from "./landingPage";
 import Dashboard from "./Dashboard";
@@ -17,29 +17,26 @@ import stockPage from "./stockPage";
 import portfolio from "./portfolio";
 import page404 from "./404";
 
-
-function PrivateRoute({ component: Component, authed, ...rest }) {
+function PrivateRoute({component: Component, authed, ...rest}) {
   return (
     <Route
       {...rest}
-      render={props =>
+      render={(props) =>
         authed === true ? (
           <Component {...props} {...rest} />
         ) : (
-          <Redirect
-            to={{ pathname: "/login", state: { from: props.location } }}
-          />
+          <Redirect to={{pathname: "/login", state: {from: props.location}}} />
         )
       }
     />
   );
 }
 
-function PublicRoute({ component: Component, authed, ...rest }) {
+function PublicRoute({component: Component, authed, ...rest}) {
   return (
     <Route
       {...rest}
-      render={props =>
+      render={(props) =>
         authed === false ? (
           <Component {...props} />
         ) : (
@@ -53,12 +50,13 @@ function PublicRoute({ component: Component, authed, ...rest }) {
 class App extends Component {
   state = {
     authed: false,
-    loading: true
+    loading: true,
+    theme: ""
   };
   componentDidMount() {
-    nprogress.done()
+    nprogress.done();
 
-    this.removeListener = firebaseAuth().onAuthStateChanged(user => {
+    this.removeListener = firebaseAuth().onAuthStateChanged((user) => {
       if (user) {
         this.setState({
           authed: true,
@@ -76,11 +74,23 @@ class App extends Component {
     this.removeListener();
   }
 
-  componentWillMount(){
-    nprogress.start()
+  componentWillMount() {
+    nprogress.start();
+    let theme = localStorage.getItem("theme");
+    this.setState({
+      theme: theme
+    });
   }
 
   render() {
+    if (this.state.theme === "light") {
+      localStorage.setItem("theme", "light");
+      document.getElementById("root").classList.add("light");
+    }
+    if (this.state.theme === "dark") {
+      localStorage.setItem("theme", "dark");
+      document.getElementById("root").classList.remove("light");
+    }
     return this.state.loading ? (
       <div className="loader-background">
         <ul className="loader">
@@ -93,11 +103,7 @@ class App extends Component {
       <Router>
         <div className="container">
           <Switch>
-            <Route
-              exact
-              path="/"
-              component={LandingPage}
-            />
+            <Route exact path="/" component={LandingPage} />
             <PublicRoute
               authed={this.state.authed}
               path="/register"

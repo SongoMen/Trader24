@@ -35,7 +35,7 @@
   &:first-child
     -webkit-animation: loadbars 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) infinite 0s
   &:nth-child(2)
-    -webkit-animation: loadbars 0.6s ease-in-out infinite -0.2s
+    -webkit-animation: loadbars 0.6s ease-in-out infinite -0.4s
   &:nth-child(3)
     -webkit-animation: loadbars 0.6s ease-in-out infinite -0.4s
 a
@@ -188,7 +188,7 @@ a
     border-radius: 10px
     color: white
     font-weight: bold
-    transition: all .5s
+    transition: all .4s
     &:hover
       box-shadow: 0px 0px 15px 0px $main-color
 
@@ -206,7 +206,7 @@ a
     margin-right: 30px
     display: flex
     box-shadow: 0px 0px 15px 0px $main-color
-    transition: all .5s
+    transition: all .4s
     user-select: none
     svg
       fill: white
@@ -229,7 +229,7 @@ a
   z-index: 10
   height: 45px
   justify-content: center
-  transition: .5s all
+  transition: .4s all
   width: 40%
   @media only screen and (max-width: 800px) 
     width: 60%
@@ -256,7 +256,7 @@ a
       width: 100%
       padding: 0 15px
       border-radius: 10px
-      transition: all .5s
+      transition: all .4s
 
       a
         color: white
@@ -276,7 +276,7 @@ a
     fill: $searchbarText-color
   input
     height: 30px
-    background-color: $panel-color
+    background-color: transparent
     color: $searchbarText-color
     padding: 10px
     font-weight: bold
@@ -290,7 +290,8 @@ a
   align-items: center
   justify-content: center
   flex-direction: column
-  padding: 0 10px;
+  padding: 0 10px
+  transition: all .4s
   min-width: 50px
   @media only screen and (max-width: 600px) 
     display: none
@@ -302,7 +303,7 @@ a
     width: 30%
     cursor: pointer
     position: absolute
-    transition: all .5s
+    transition: all .4s
     bottom: 20px
     min-width: 20px
     &:hover
@@ -332,14 +333,51 @@ a
   display: flex
   align-items: center
   margin-bottom: 5px
+
+.light
+  .panel
+    background-color: $light-panel-color
+    &__title h3
+      color: black
+    &__portfolio
+      background-color: white!important
+      td:nth-child(1),td:nth-child(2),td:nth-child(4),
+        color: #3a1414!important
+    &__list li
+      background-color: white
+    &__fullname h4, &__list-change h4, &__bottom-title h3, &__value
+      color: #3a1414!important
+  .leftbar
+    background-color: $light-bar-color
+    &__name
+      color: #3a1414
+    &__menu li
+      fill: $light-inactive-color
+  .stockChart
+    background-color: white
+    &__price
+      color: #3a1414
+  .topbar
+    &__searchbar input
+      color: $light-inactive-color
+    &__results
+      background-color: $light-panel-color
+      border-color: $light-panel-color
+      border-top: 40px solid $light-panel-color !important
+      li
+        h4
+          color: #3a1414
+        &:hover
+          background-color: $light-panel-color
   
+
 .panel
     background-color: $panel-color
     width: 95%
     height: 100%
     padding: 3%
     padding-top: 2%
-    transition: all .5s
+    transition: all .4s
     @media only screen and (max-width: 600px) 
       width: 100% 
     .panel__container
@@ -573,7 +611,7 @@ a
     cursor: pointer
     height: 30%
     color: $inactive-color
-    transition: all .5s
+    transition: all .4s
     &:hover
       fill: $main-color!important
 
