@@ -26,7 +26,7 @@ export default class portfolio extends React.Component {
     this.handleStockSell = this.handleStockSell.bind(this);
   }
   getLatestPrice(symbol, i) {
-    const lastPrice = `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_d0e99ea2ee134a4f99d0a3ceb700336c`;
+    const lastPrice = `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_1f989becf0bf4fd9a9547df1407aa290`;
     fetch(lastPrice)
       .then((res) => res.json())
       .then((result) => {

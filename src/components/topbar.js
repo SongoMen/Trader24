@@ -54,7 +54,7 @@ export default class Topbar extends React.Component {
   componentDidMount() {
     let user = firebase.auth().currentUser.uid;
     fetch(
-      "https://cloud.iexapis.com/stable/ref-data/symbols?token=pk_d0e99ea2ee134a4f99d0a3ceb700336c"
+      "https://cloud.iexapis.com/stable/ref-data/symbols?token=pk_1f989becf0bf4fd9a9547df1407aa290"
     )
       .then((res) => res.json())
       .then((result) => {

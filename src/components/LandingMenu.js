@@ -12,6 +12,7 @@ const LandingMenu = props => {
           </g>
         </svg>
         TRADER24
+        <span className="header__line"></span><h6>PRE-ALPHA</h6>
       </div>
       <ul className="header__menu">
         <Link to={props.url}>

@@ -255,7 +255,7 @@ export default class stockPage extends React.Component {
     labels = [];
     chartData1 = [];
     if (ytdChart.length === 0) {
-      const stockApi = `https://cloud.iexapis.com/beta/stock/${symbol}/batch?token=pk_d0e99ea2ee134a4f99d0a3ceb700336c&types=chart,quote&range=ytd`;
+      const stockApi = `https://cloud.iexapis.com/beta/stock/${symbol}/batch?token=pk_1f989becf0bf4fd9a9547df1407aa290&types=chart,quote&range=ytd`;
       fetch(stockApi)
         .then((res) => res.json())
         .then((result) => {
@@ -287,7 +287,7 @@ export default class stockPage extends React.Component {
     labels = [];
     chartData1 = [];
     if (oneYear.length === 0) {
-      const stockApi = `https://cloud.iexapis.com/beta/stock/${symbol}/batch?token=pk_d0e99ea2ee134a4f99d0a3ceb700336c&types=chart,quote&range=1y`;
+      const stockApi = `https://cloud.iexapis.com/beta/stock/${symbol}/batch?token=pk_1f989becf0bf4fd9a9547df1407aa290&types=chart,quote&range=1y`;
       fetch(stockApi)
         .then((res) => res.json())
         .then((result) => {
@@ -318,7 +318,7 @@ export default class stockPage extends React.Component {
     labels = [];
     chartData1 = [];
     if (twoYears.length === 0) {
-      const stockApi = `https://cloud.iexapis.com/beta/stock/${symbol}/batch?token=pk_d0e99ea2ee134a4f99d0a3ceb700336c&types=chart,quote&range=2y`;
+      const stockApi = `https://cloud.iexapis.com/beta/stock/${symbol}/batch?token=pk_1f989becf0bf4fd9a9547df1407aa290&types=chart,quote&range=2y`;
       fetch(stockApi)
         .then((res) => res.json())
         .then((result) => {
@@ -349,7 +349,7 @@ export default class stockPage extends React.Component {
     labels = [];
     chartData1 = [];
     if (oneMonth.length === 0) {
-      const stockApi = `https://cloud.iexapis.com/beta/stock/${symbol}/batch?token=pk_d0e99ea2ee134a4f99d0a3ceb700336c&types=chart,quote&range=1m`;
+      const stockApi = `https://cloud.iexapis.com/beta/stock/${symbol}/batch?token=pk_1f989becf0bf4fd9a9547df1407aa290&types=chart,quote&range=1m`;
       fetch(stockApi)
         .then((res) => res.json())
         .then((result) => {
@@ -449,7 +449,7 @@ export default class stockPage extends React.Component {
   }
   rendering() {
     fetch(
-      `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_d0e99ea2ee134a4f99d0a3ceb700336c`
+      `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_1f989becf0bf4fd9a9547df1407aa290`
     )
       .then((res) => res.json())
       .then((result) => {
@@ -511,7 +511,7 @@ export default class stockPage extends React.Component {
       });
     document.title = "Trader24 - " + symbol;
     fetch(
-      `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_d0e99ea2ee134a4f99d0a3ceb700336c`
+      `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_1f989becf0bf4fd9a9547df1407aa290`
     )
       .then((res) => res.json())
       .then((result) => {
@@ -523,7 +523,7 @@ export default class stockPage extends React.Component {
         if (this.state.marketStatus) {
           setInterval(() => {
             fetch(
-              `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_d0e99ea2ee134a4f99d0a3ceb700336c`
+              `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_1f989becf0bf4fd9a9547df1407aa290`
             )
               .then((res) => res.json())
               .then((result) => {
@@ -627,7 +627,7 @@ export default class stockPage extends React.Component {
 
   getLatestNews() {
     fetch(
-      `https://cloud.iexapis.com/stable/stock/${symbol}/news?token=pk_d0e99ea2ee134a4f99d0a3ceb700336c`
+      `https://cloud.iexapis.com/stable/stock/${symbol}/news?token=pk_1f989becf0bf4fd9a9547df1407aa290`
     )
       .then((res) => res.json())
       .then((result) => {
@@ -672,7 +672,7 @@ export default class stockPage extends React.Component {
         });
       });
     fetch(
-      "https://cloud.iexapis.com/stable/ref-data/symbols?token=pk_d0e99ea2ee134a4f99d0a3ceb700336c"
+      "https://cloud.iexapis.com/stable/ref-data/symbols?token=pk_1f989becf0bf4fd9a9547df1407aa290"
     )
       .then((res) => res.json())
       .then((result) => {

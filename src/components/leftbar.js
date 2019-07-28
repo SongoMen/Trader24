@@ -4,6 +4,12 @@ import { Link } from "react-router-dom";
 import $ from "jquery";
 
 export default class Leftbar extends React.Component {
+  constructor(){
+    super()
+    this.state = {
+      theme: "dark"
+    }
+  }
   componentDidMount() {
     fetch("https://financialmodelingprep.com/api/v3/is-the-market-open")
       .then(res => res.json())
@@ -26,6 +32,9 @@ export default class Leftbar extends React.Component {
       $(".leftbar__menu a:nth-child(3) svg").css("fill", "#5eb5f8 ");
   }
   render() {
+    if(this.state.theme === "light" && $("#dashboard").length){
+      document.getElementById("dashboard").classList.add("light")
+    }
     return (
       <div className="leftbar">
         <svg
@@ -54,8 +63,8 @@ export default class Leftbar extends React.Component {
               </svg>
             </li>
           </Link>
-          <Link to="/">
-            <li>
+          <Link>
+            <li onClick={()=>this.setState({theme:"light"})}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 xmlnsXlink="http://www.w3.org/1999/xlink"
