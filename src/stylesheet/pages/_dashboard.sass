@@ -41,106 +41,6 @@
 a
   color: white
 
-.hamburger
-  padding: 15px
-  cursor: pointer
-  display: none
-  overflow: hidden
-  background-color: transparent
-  @media only screen and (max-width: 600px) 
-    display: inline-block
-
-.hamburger__container
-  width: 36px
-  height: 24px
-  position: relative
-
-.hamburger
-  &:hover .hamburger__inner
-    transform: translate(-51px, 50%)
-    opacity: 0
-    &::before, &::after
-      transform: translate(102px, 0)
-      opacity: 0
-  &.is-active .hamburger__inner
-    display: none
-
-.hamburger__inner
-  width: 100%
-  height: 2px
-  background-color: #fff
-  border-radius: 4px
-  position: absolute
-  transition-property: transform, opacity
-  transition-timing-function: ease
-  transition-duration: 0.4s
-  top: 50%
-  transform: translate(5px, -50%)
-  opacity: 1
-  &::before, &::after
-    width: 100%
-    height: 2px
-    background-color: #fff
-    border-radius: 4px
-    position: absolute
-    transition-property: transform, opacity
-    transition-timing-function: ease
-    transition-duration: 0.4s
-    content: ""
-    opacity: 1
-    transform: translate(-5px, 0)
-  &::before
-    top: -13px
-  &::after
-    top: 13px
-
-.hamburger
-  &:hover .hamburger__hidden
-    opacity: 1
-    transform: translate(0, -50%)
-    &::before, &::after
-      opacity: 1
-      transform: translate(0, 0)
-  &.is-active .hamburger__hidden
-    opacity: 1
-    transform: rotate(45deg)
-    &::before
-      transform: translate(0, 13px) rotate(90deg)
-      transform-origin: center
-    &::after
-      transform-origin: center
-      transform: translate(0, -13px) rotate(0)
-
-.hamburger__hidden
-  opacity: 0
-  width: 100%
-  height: 2px
-  background-color: #fff
-  border-radius: 4px
-  position: absolute
-  transition-property: transform, opacity
-  transition-timing-function: ease
-  transition-duration: 0.4s
-  background-color: $main-color
-  top: 50%
-  transform: translate(51px, -50%)
-  &::before, &::after
-    width: 100%
-    height: 2px
-    background-color: #fff
-    border-radius: 4px
-    position: absolute
-    transition-property: transform, opacity
-    transition-timing-function: ease
-    transition-duration: 0.4s
-    background-color: $main-color
-    content: ""
-    transform: translate(102px, 0)
-  &::before
-    top: -13px
-  &::after
-    top: 13px  
-
 @keyframes show-popup
   0%
     -webkit-transform: translate(-50%, -50%) scale(0.7)
@@ -192,96 +92,6 @@ a
     &:hover
       box-shadow: 0px 0px 15px 0px $main-color
 
-.topbar
-  width: 100%
-  height: 7%
-  display: flex
-  align-items: center
-  justify-content: space-between
-  margin-bottom: 35px
-  .topbar__power
-    padding: 10px
-    background: linear-gradient(to right, rgb(124, 131, 255) 30%, rgb(124, 193, 255) 100%);
-    border-radius: 10px
-    margin-right: 30px
-    display: flex
-    box-shadow: 0px 0px 15px 0px $main-color
-    transition: all .4s
-    user-select: none
-    svg
-      fill: white
-      width: 20px
-      margin-right: 10px
-    h3
-      margin: 0
-  .topbar__container
-    display: flex
-    align-items: center
-.topbar__searchbar
-  display: flex
-  flex-direction: column
-  border-radius: 50px
-  margin-right: 80px
-  display: flex
-  align-items: flex-start
-  padding: 0 20px
-  position: relative
-  z-index: 10
-  height: 45px
-  justify-content: center
-  transition: .4s all
-  width: 40%
-  @media only screen and (max-width: 800px) 
-    width: 60%
-  @media only screen and (max-width: 600px) 
-    display: none
-  .topbar__results
-    position: absolute
-    left: 0
-    width: 100%
-    flex-direction: column
-    background-color: $panel-color
-    z-index: -1
-    padding: 0
-    top: 0
-    border-top: 40px solid $panel-color!important
-    border: 15px solid $panel-color
-    border-radius: 5px 
-    border-bottom-left-radius: 20px
-    border-bottom-right-radius: 20px
-    display: none
-    li
-      display: flex
-      justify-content: space-between
-      width: 100%
-      padding: 0 15px
-      border-radius: 10px
-      transition: all .4s
-
-      a
-        color: white
-        width: 100%
-      h4,h6
-        margin: 5px 0
-      h6
-        color: $inactive-color
-        text-align: left
-      &:hover
-        color: $main-color
-        background-color: $elements-color
-        cursor: pointer
-
-  svg
-    height: 15px
-    fill: $searchbarText-color
-  input
-    height: 30px
-    background-color: transparent
-    color: $searchbarText-color
-    padding: 10px
-    font-weight: bold
-    font-size: 16px
-    width: 100%
 .leftbar
   position: relative
   background-color: $bar-color
@@ -308,31 +118,6 @@ a
     min-width: 20px
     &:hover
       fill: $main-color
-    
-.topbar__user
-  bottom: 20px
-  white-space: nowrap
-  font-size: 13px
-  display: flex
-  align-items: center
-  justify-content: center
-  h3
-    margin-right: 20px
-.leftbar__name
-  font-weight: 800
-
-.topbar__logo
-  width: 5%
-  min-width: 40px
-  margin-right: 20px
-  position: absolute
-  top: 30px
-  fill: $main-color
-
-.topbar__bottom
-  display: flex
-  align-items: center
-  margin-bottom: 5px
 
 .light
   .panel
@@ -349,26 +134,12 @@ a
       color: #3a1414!important
   .leftbar
     background-color: $light-bar-color
-    &__name
-      color: #3a1414
     &__menu li
       fill: $light-inactive-color
   .stockChart
     background-color: $light-elements-color
     &__price
       color: #3a1414
-  .topbar
-    &__searchbar input
-      color: $light-inactive-color
-    &__results
-      background-color: $light-panel-color
-      border-color: $light-panel-color
-      border-top: 40px solid $light-panel-color !important
-      li
-        h4
-          color: #3a1414
-        &:hover
-          background-color: $light-elements-color
   .errorMsg p
     color: #3a1414
   .alertMessage

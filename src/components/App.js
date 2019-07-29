@@ -1,11 +1,11 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import {
   Route,
   BrowserRouter as Router,
   Redirect,
   Switch
 } from "react-router-dom";
-import {firebaseAuth} from "./auth";
+import { firebaseAuth } from "./auth";
 
 import LandingPage from "./landingPage";
 import Dashboard from "./Dashboard";
@@ -16,26 +16,28 @@ import stockPage from "./stockPage";
 import portfolio from "./portfolio";
 import page404 from "./404";
 
-function PrivateRoute({component: Component, authed, ...rest}) {
+function PrivateRoute({ component: Component, authed, ...rest }) {
   return (
     <Route
       {...rest}
-      render={(props) =>
+      render={props =>
         authed === true ? (
           <Component {...props} {...rest} />
         ) : (
-          <Redirect to={{pathname: "/login", state: {from: props.location}}} />
+          <Redirect
+            to={{ pathname: "/login", state: { from: props.location } }}
+          />
         )
       }
     />
   );
 }
 
-function PublicRoute({component: Component, authed, ...rest}) {
+function PublicRoute({ component: Component, authed, ...rest }) {
   return (
     <Route
       {...rest}
-      render={(props) =>
+      render={props =>
         authed === false ? (
           <Component {...props} />
         ) : (
@@ -53,7 +55,7 @@ class App extends Component {
     theme: ""
   };
   componentDidMount() {
-    this.removeListener = firebaseAuth().onAuthStateChanged((user) => {
+    this.removeListener = firebaseAuth().onAuthStateChanged(user => {
       if (user) {
         this.setState({
           authed: true,
@@ -73,9 +75,20 @@ class App extends Component {
 
   componentWillMount() {
     let theme = localStorage.getItem("theme");
-    this.setState({
-      theme: theme
-    });
+    if (
+      window.location.href.split("/")[
+        window.location.href.split("/").length - 1
+      ] !== ""
+    ) {
+      if (theme !== null)
+        this.setState({
+          theme: theme
+        });
+      else
+        this.setState({
+          theme: "dark"
+        });
+    }
   }
 
   render() {

@@ -149,7 +149,7 @@ export default class Topbar extends React.Component {
                 <h3>{this.state.funds}</h3>
               </div>
             )}
-            <span className="leftbar__name"> &nbsp;{user}</span>
+            <span className="topbar__name"> &nbsp;{user}</span>
           </div>
         </div>
       </div>
