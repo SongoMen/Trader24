@@ -493,7 +493,7 @@ export default class stockPage extends React.Component {
       .then(() => {
         if (stockData.change > 0) {
           this.setState({
-            changeColor: "#66F9DA"
+            changeColor: "#3ae885"
           });
         } else {
           this.setState({

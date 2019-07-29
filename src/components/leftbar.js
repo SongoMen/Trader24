@@ -33,10 +33,9 @@ export default class Leftbar extends React.Component {
   }
 
   componentWillMount(){
-    let theme = localStorage.getItem('theme')
-      this.setState({
-        theme: theme
-      })
+    let theme = localStorage.getItem("theme");
+    if (theme !== null) this.setState({theme: theme});
+    else this.setState({theme: "dark"});
   }
   render() {
     if (this.state.theme === "light") {

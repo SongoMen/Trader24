@@ -6,7 +6,6 @@ import {
   Switch
 } from "react-router-dom";
 import {firebaseAuth} from "./auth";
-import nprogress from "nprogress";
 
 import LandingPage from "./landingPage";
 import Dashboard from "./Dashboard";
@@ -54,8 +53,6 @@ class App extends Component {
     theme: ""
   };
   componentDidMount() {
-    nprogress.done();
-
     this.removeListener = firebaseAuth().onAuthStateChanged((user) => {
       if (user) {
         this.setState({
@@ -75,7 +72,6 @@ class App extends Component {
   }
 
   componentWillMount() {
-    nprogress.start();
     let theme = localStorage.getItem("theme");
     this.setState({
       theme: theme

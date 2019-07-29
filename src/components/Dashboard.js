@@ -4,7 +4,6 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import $ from "jquery";
 import {Link} from "react-router-dom";
-import nprogress from "nprogress";
 
 import Leftbar from "./leftbar";
 import Topbar from "./topbar";
@@ -654,7 +653,6 @@ class Dashboard extends React.Component {
     document.querySelector(".hamburger").addEventListener("click", (e) => {
       e.currentTarget.classList.toggle("is-active");
     });
-    nprogress.done();
   }
   componentWillMount() {
     setInterval(() => {
@@ -662,7 +660,6 @@ class Dashboard extends React.Component {
       if (theme !== null) this.setState({theme: theme});
       else this.setState({theme: "dark"});
     }, 500);
-    nprogress.start();
   }
   render() {
     for (let i = 0; i < stockSymbols.length; i++) {

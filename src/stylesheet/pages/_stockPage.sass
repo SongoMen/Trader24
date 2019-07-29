@@ -30,15 +30,20 @@ input[type=number]
         &__keyStats h3
             color: #3a1414
         &__timers h6
-            background-color: white !important
+            background-color: $light-elements-color !important
             color: #3a1414
+            &:hover
+                background-color: $light-inactive-color !important
         .active
             background-color: $light-inactive-color!important
-        &__trade-top h2
+        &__trade-top h2, &__trade h5
             color: #3a1414
-
+        &__buy-input
+            background-color: $light-elements-color !important
+            border: 1px $light-elements-color solid !important
+            color: #3a1414 !important
     .article
-        background-color: white!important
+        background-color: $light-elements-color!important
         &__content
             color: #3a1414
         &__top
@@ -49,7 +54,6 @@ input[type=number]
             color: #3a1414!important
         h3
             color: $main-color!important
-
       
 
 
@@ -267,7 +271,7 @@ input[type=number]
             background-color: $elements-color
             padding: 5px 15px
             display: flex
-            margin: 10px 0
+            margin: 15px 0
             cursor: pointer
             transition: all .3s
             position: relative
