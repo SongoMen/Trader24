@@ -13,12 +13,19 @@
           color: #3a1414
         &:hover
           background-color: $light-elements-color
+  .mobileMenu
+    background-color: $light-panel-color
+  .hamburger__inner
+    background-color: #3a1414!important
+    &:after,&:before
+      background-color: #3a1414!important
 .hamburger
   padding: 15px
   cursor: pointer
   display: none
   overflow: hidden
   background-color: transparent
+  z-index: 100
   @media only screen and (max-width: 600px) 
     display: inline-block
 
@@ -129,13 +136,6 @@
     display: flex
     align-items: center
     justify-content: center
-  &__logo
-    width: 5%
-    min-width: 40px
-    margin-right: 20px
-    position: absolute
-    top: 30px
-    fill: $main-color
   &__bottom
     display: flex
     align-items: center
@@ -222,3 +222,23 @@
     font-weight: bold
     font-size: 16px
     width: 100%
+.mobileMenu
+  width: 100%
+  position: absolute
+  background-color: $panel-color
+  height: 100%
+  z-index: 50
+  display: none
+  left: -100%
+  transition: all .3s
+  justify-content: center
+  align-items: center
+  bottom: 0
+  .leftbar
+    display: flex!important
+    background-color: transparent
+    height: 100%
+    svg
+      min-width: 50px
+    &__logo
+      min-width: 80px!important

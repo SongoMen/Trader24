@@ -49,7 +49,7 @@ export default class Leftbar extends React.Component {
     return (
       <div className="leftbar">
         <svg
-          className="topbar__logo"
+          className="leftbar__logo"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
         >

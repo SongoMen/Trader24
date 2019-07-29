@@ -438,7 +438,6 @@ class Dashboard extends React.Component {
       .then((snapshot) => {
         if (snapshot.docs.length !== 0) {
           snapshot.forEach((doc) => {
-            console.log(doc.id, "=>", doc.data());
             if (portfolioStocks.length < 4) {
               portfolioStocks.push(doc.data().symbol);
               portfolioShares.push(doc.data().shares);
@@ -650,9 +649,7 @@ class Dashboard extends React.Component {
         }
       }
     }, 5000);
-    document.querySelector(".hamburger").addEventListener("click", (e) => {
-      e.currentTarget.classList.toggle("is-active");
-    });
+
   }
   componentWillMount() {
     setInterval(() => {
