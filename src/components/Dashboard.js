@@ -456,7 +456,6 @@ class Dashboard extends React.Component {
         if ($("#portfolio").length && portfolioStocks.length > 0)
           document.getElementById("portfolio").style.display = "block";
       })
-
       .then(() => {
         setTimeout(() => {
           let val = portfolioValue.reduce((a, b) => Number(a) + Number(b), 0);

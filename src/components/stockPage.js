@@ -1,8 +1,8 @@
 import React from "react";
 import firebase from "firebase/app";
-import {Line} from "react-chartjs-2";
-import {defaults} from "react-chartjs-2";
-import {Link} from "react-router-dom";
+import { Line } from "react-chartjs-2";
+import { defaults } from "react-chartjs-2";
+import { Link } from "react-router-dom";
 import "chartjs-plugin-annotation";
 import $ from "jquery";
 
@@ -50,7 +50,7 @@ var options = {
     yAxes: [
       {
         gridLines: {
-          color: "rgba(0, 0, 0, 0)",
+          color: "rgba(0, 0, 0, 0)"
         },
         fontStyle: "bold",
 
@@ -128,7 +128,7 @@ export default class stockPage extends React.Component {
       latestPrice: "",
       buyConfirmation: ""
     };
-    this.data1 = (canvas) => {
+    this.data1 = canvas => {
       const ctx = canvas.getContext("2d");
       const gradient = ctx.createLinearGradient(0, 0, 600, 10);
       gradient.addColorStop(0, "#7c83ff");
@@ -185,8 +185,8 @@ export default class stockPage extends React.Component {
         apiKeys[0]
       }`;
       fetch(stockApi)
-        .then((res) => res.json())
-        .then((result) => {
+        .then(res => res.json())
+        .then(result => {
           if (result["Note"] === undefined) {
             for (
               let i = Object.keys(result["Time Series (1min)"]).length - 1;
@@ -211,8 +211,8 @@ export default class stockPage extends React.Component {
                 apiKeys[b]
               }`;
               fetch(stockApi)
-                .then((res) => res.json())
-                .then((result) => {
+                .then(res => res.json())
+                .then(result => {
                   for (
                     let i =
                       Object.keys(result["Time Series (1min)"]).length - 1;
@@ -239,8 +239,8 @@ export default class stockPage extends React.Component {
             this.setState({
               loaded: true
             });
-            chartData1.map((val) => oneDay.push(val));
-            labels.map((val) => oneDayLabels.push(val));
+            chartData1.map(val => oneDay.push(val));
+            labels.map(val => oneDayLabels.push(val));
           }, 1000);
         });
     } else {
@@ -258,8 +258,8 @@ export default class stockPage extends React.Component {
     if (ytdChart.length === 0) {
       const stockApi = `https://cloud.iexapis.com/beta/stock/${symbol}/batch?token=pk_1f989becf0bf4fd9a9547df1407aa290&types=chart,quote&range=ytd`;
       fetch(stockApi)
-        .then((res) => res.json())
-        .then((result) => {
+        .then(res => res.json())
+        .then(result => {
           for (let i = 0; i < result.chart.length; i++) {
             if (result.chart[i].average !== null) {
               chartData1.push(result.chart[i].close.toFixed(2));
@@ -271,8 +271,8 @@ export default class stockPage extends React.Component {
           this.setState({
             loaded: true
           });
-          chartData1.map((val) => ytdChart.push(val));
-          labels.map((val) => ytdLabels.push(val));
+          chartData1.map(val => ytdChart.push(val));
+          labels.map(val => ytdLabels.push(val));
         });
     } else {
       labels = ytdLabels;
@@ -290,8 +290,8 @@ export default class stockPage extends React.Component {
     if (oneYear.length === 0) {
       const stockApi = `https://cloud.iexapis.com/beta/stock/${symbol}/batch?token=pk_1f989becf0bf4fd9a9547df1407aa290&types=chart,quote&range=1y`;
       fetch(stockApi)
-        .then((res) => res.json())
-        .then((result) => {
+        .then(res => res.json())
+        .then(result => {
           for (let i = 0; i < result.chart.length; i++) {
             if (result.chart[i].average !== null) {
               chartData1.push(result.chart[i].close.toFixed(2));
@@ -303,8 +303,8 @@ export default class stockPage extends React.Component {
           this.setState({
             loaded: true
           });
-          chartData1.map((val) => oneYear.push(val));
-          labels.map((val) => oneYearLabels.push(val));
+          chartData1.map(val => oneYear.push(val));
+          labels.map(val => oneYearLabels.push(val));
         });
     } else {
       labels = oneYearLabels;
@@ -321,8 +321,8 @@ export default class stockPage extends React.Component {
     if (twoYears.length === 0) {
       const stockApi = `https://cloud.iexapis.com/beta/stock/${symbol}/batch?token=pk_1f989becf0bf4fd9a9547df1407aa290&types=chart,quote&range=2y`;
       fetch(stockApi)
-        .then((res) => res.json())
-        .then((result) => {
+        .then(res => res.json())
+        .then(result => {
           for (let i = 0; i < result.chart.length; i++) {
             if (result.chart[i].average !== null) {
               chartData1.push(result.chart[i].close.toFixed(2));
@@ -334,8 +334,8 @@ export default class stockPage extends React.Component {
           this.setState({
             loaded: true
           });
-          chartData1.map((val) => twoYears.push(val));
-          labels.map((val) => twoYearsLabels.push(val));
+          chartData1.map(val => twoYears.push(val));
+          labels.map(val => twoYearsLabels.push(val));
         });
     } else {
       labels = twoYearsLabels;
@@ -352,8 +352,8 @@ export default class stockPage extends React.Component {
     if (oneMonth.length === 0) {
       const stockApi = `https://cloud.iexapis.com/beta/stock/${symbol}/batch?token=pk_1f989becf0bf4fd9a9547df1407aa290&types=chart,quote&range=1m`;
       fetch(stockApi)
-        .then((res) => res.json())
-        .then((result) => {
+        .then(res => res.json())
+        .then(result => {
           for (let i = 0; i < result.chart.length; i++) {
             if (result.chart[i].average !== null) {
               chartData1.push(result.chart[i].close.toFixed(2));
@@ -365,8 +365,8 @@ export default class stockPage extends React.Component {
           this.setState({
             loaded: true
           });
-          chartData1.map((val) => oneMonth.push(val));
-          labels.map((val) => oneMonthLabels.push(val));
+          chartData1.map(val => oneMonth.push(val));
+          labels.map(val => oneMonthLabels.push(val));
         });
     } else {
       labels = oneMonthLabels;
@@ -452,8 +452,8 @@ export default class stockPage extends React.Component {
     fetch(
       `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_1f989becf0bf4fd9a9547df1407aa290`
     )
-      .then((res) => res.json())
-      .then((result) => {
+      .then(res => res.json())
+      .then(result => {
         stockData.changePercent = result.changePercent.toFixed(2);
         stockData.change = result.change.toFixed(2);
 
@@ -514,8 +514,8 @@ export default class stockPage extends React.Component {
     fetch(
       `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_1f989becf0bf4fd9a9547df1407aa290`
     )
-      .then((res) => res.json())
-      .then((result) => {
+      .then(res => res.json())
+      .then(result => {
         this.setState({
           latestPrice: result.latestPrice.toFixed(2)
         });
@@ -526,8 +526,8 @@ export default class stockPage extends React.Component {
             fetch(
               `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_1f989becf0bf4fd9a9547df1407aa290`
             )
-              .then((res) => res.json())
-              .then((result) => {
+              .then(res => res.json())
+              .then(result => {
                 this.setState({
                   latestPrice: result.latestPrice.toFixed(2)
                 });
@@ -543,25 +543,23 @@ export default class stockPage extends React.Component {
         document.getElementById("buy-input").disabled = false;
         document.getElementById("buy-input").placeholder = "QUANTITY";
       }
-    },1000);
+    }, 1000);
 
     this.getYTDChart();
     this.getLatestNews();
-    document.querySelector(".hamburger").addEventListener("click", (e) => {
+    document.querySelector(".hamburger").addEventListener("click", e => {
       e.currentTarget.classList.toggle("is-active");
     });
   }
   handleBuyStock(num) {
     let user = firebase.auth().currentUser.uid;
     let positionsNumber;
-    firebase
-      .firestore()
-      .collection("users")
+
+    db.collection("users")
       .doc(user)
-      .collection("stocks")
       .get()
-      .then((snapshot) => {
-        positionsNumber = snapshot.docs.length;
+      .then(doc => {
+        positionsNumber = doc.data()["positions"];
       })
       .then(() => {
         firebase
@@ -569,7 +567,7 @@ export default class stockPage extends React.Component {
           .collection("users")
           .doc(user)
           .collection("stocks")
-          .doc("Position" + (Number(positionsNumber) + 2))
+          .doc("Position" + positionsNumber)
           .set({
             symbol: symbol,
             moneyPaid: (Number(num) * Number(this.state.latestPrice)).toFixed(
@@ -578,7 +576,7 @@ export default class stockPage extends React.Component {
             shares: num,
             value: (Number(num) * Number(this.state.latestPrice)).toFixed(2)
           })
-          .catch((error) => {
+          .catch(error => {
             console.log("Error getting document:", error);
           });
       })
@@ -591,9 +589,10 @@ export default class stockPage extends React.Component {
             currentfunds: (
               Number(this.state.fundsWithoutCommas) -
               Number(num) * Number(this.state.latestPrice)
-            ).toFixed(2)
+            ).toFixed(2),
+            positions: Number(positionsNumber) + 1
           })
-          .catch((error) => {
+          .catch(error => {
             console.log("Error getting document:", error);
           });
       })
@@ -613,7 +612,7 @@ export default class stockPage extends React.Component {
 
     docRef
       .get()
-      .then((doc) => {
+      .then(doc => {
         this.setState({
           funds: "$" + this.numberWithCommas(doc.data()["currentfunds"])
         });
@@ -630,8 +629,8 @@ export default class stockPage extends React.Component {
     fetch(
       `https://cloud.iexapis.com/stable/stock/${symbol}/news?token=pk_1f989becf0bf4fd9a9547df1407aa290`
     )
-      .then((res) => res.json())
-      .then((result) => {
+      .then(res => res.json())
+      .then(result => {
         for (let i = 0; i < 3; i++) {
           newsDate[i] =
             Date(result[i].datetime)
@@ -655,10 +654,7 @@ export default class stockPage extends React.Component {
       .then(() => {
         setTimeout(() => {
           for (let i = 0; i < newsUrl.length; i++) {
-            $("#img" + i).css(
-              "background-image",
-              "url(" + newsImage[i] + ")"
-            );
+            $("#img" + i).css("background-image", "url(" + newsImage[i] + ")");
           }
         }, 1500);
       });
@@ -666,8 +662,8 @@ export default class stockPage extends React.Component {
 
   componentDidMount() {
     fetch("https://financialmodelingprep.com/api/v3/is-the-market-open")
-      .then((res) => res.json())
-      .then((result) => {
+      .then(res => res.json())
+      .then(result => {
         this.setState({
           marketStatus: result.isTheStockMarketOpen
         });
@@ -675,8 +671,8 @@ export default class stockPage extends React.Component {
     fetch(
       "https://cloud.iexapis.com/stable/ref-data/symbols?token=pk_1f989becf0bf4fd9a9547df1407aa290"
     )
-      .then((res) => res.json())
-      .then((result) => {
+      .then(res => res.json())
+      .then(result => {
         for (let i = 0; i < result.length; i++) {
           symbolsOnly.push(result[i].symbol);
         }
@@ -687,9 +683,9 @@ export default class stockPage extends React.Component {
         ];
         setTimeout(() => {
           if (this.isInArray(symbolsOnly, symbol)) {
-            this.setState({valid: true});
+            this.setState({ valid: true });
             this.rendering();
-          } else this.setState({valid: false});
+          } else this.setState({ valid: false });
         }, 1000);
       });
     this.getFunds();
@@ -704,11 +700,11 @@ export default class stockPage extends React.Component {
               Are you sure you want to buy{" "}
               {document.getElementById("buy-input").value} shares of {symbol}{" "}
               for{" "}
-              <span style={{fontWeight: "bold"}}>
-                {(
-                  document.getElementById("buy-input").value *
-                  this.state.latestPrice
-                ).toFixed(2)}
+              <span style={{ fontWeight: "bold" }}>
+                {parseFloat(
+                  (document.getElementById("buy-input").value *
+                    this.state.latestPrice
+                ).toFixed(2))}
               </span>{" "}
               dollars
             </h3>
@@ -746,7 +742,7 @@ export default class stockPage extends React.Component {
           </div>
         )}
         {this.state.valid && (
-          <div style={{display: "flex", height: "100%"}}>
+          <div style={{ display: "flex", height: "100%" }}>
             <Leftbar />
             <div className="stockPage">
               <Topbar />
@@ -808,19 +804,19 @@ export default class stockPage extends React.Component {
                   </div>
                   <div className="stockPage__trade">
                     <div className="stockPage__mobile">
-                    <h4>{stockData.name}</h4>
-                    <div className="stockPage__trade-top">
-                      <h2>${this.state.latestPrice}</h2>
-                      <h6 style={{color: this.state.changeColor}}>
-                        {stockData.change} ({stockData.changePercent}%)
-                      </h6>
-                    </div>
+                      <h4>{stockData.name}</h4>
+                      <div className="stockPage__trade-top">
+                        <h2>${this.state.latestPrice}</h2>
+                        <h6 style={{ color: this.state.changeColor }}>
+                          {stockData.change} ({stockData.changePercent}%)
+                        </h6>
+                      </div>
                     </div>
                     {!this.state.marketStatus &
                     (stockData.extendedChange !== null) ? (
                       <h6>
                         Extended Hours:{" "}
-                        <span style={{color: this.state.extendedColor}}>
+                        <span style={{ color: this.state.extendedColor }}>
                           ${stockData.extendedPrice} ({stockData.extendedChange}
                           )
                         </span>
@@ -908,12 +904,14 @@ export default class stockPage extends React.Component {
                   <div className="news__articles">
                     {newsHeadline.map((val, indx) => {
                       return (
-                        <a href={newsUrl[indx]} target="_blank" rel="noopener noreferrer" key={indx}>
+                        <a
+                          href={newsUrl[indx]}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          key={indx}
+                        >
                           <div className="article">
-                            <div
-                              className="article__image"
-                              id={"img"+ indx}
-                            />
+                            <div className="article__image" id={"img" + indx} />
                             <div className="article__content">
                               <div className="article__top">
                                 <h4>{val}</h4>

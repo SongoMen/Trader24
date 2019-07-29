@@ -33,7 +33,7 @@ export function auth(email, pw) {
         username: username,
         funds: "100000",
         currentfunds: "100000",
-        accountValue: "100000"
+        positions: "0"
       })
         .catch(function (error) {
           console.error("Error writing document: ", error);

@@ -1,6 +1,6 @@
 import React from "react";
-import {logout} from "./auth";
-import {Link} from "react-router-dom";
+import { logout } from "./auth";
+import { Link } from "react-router-dom";
 import $ from "jquery";
 
 export default class Leftbar extends React.Component {
@@ -12,8 +12,8 @@ export default class Leftbar extends React.Component {
   }
   componentDidMount() {
     fetch("https://financialmodelingprep.com/api/v3/is-the-market-open")
-      .then((res) => res.json())
-      .then((result) => {
+      .then(res => res.json())
+      .then(result => {
         if (result.isTheStockMarketOpen)
           document.getElementById("panel__status").style.color = "#5efad7";
         else document.getElementById("panel__status").style.color = "#eb5887";
@@ -32,20 +32,12 @@ export default class Leftbar extends React.Component {
       $(".leftbar__menu a:nth-child(2) svg").css("fill", "#5eb5f8 ");
   }
 
-  componentWillMount(){
+  componentWillMount() {
     let theme = localStorage.getItem("theme");
-    if (theme !== null) this.setState({theme: theme});
-    else this.setState({theme: "dark"});
+    if (theme !== null) this.setState({ theme: theme });
+    else this.setState({ theme: "dark" });
   }
   render() {
-    if (this.state.theme === "light") {
-      localStorage.setItem("theme", "light");
-      document.getElementById("root").classList.add("light");
-    }
-    if (this.state.theme === "dark") {
-      localStorage.setItem("theme", "dark");
-      document.getElementById("root").classList.remove("light");
-    }
     return (
       <div className="leftbar">
         <svg
@@ -94,11 +86,18 @@ export default class Leftbar extends React.Component {
           </Link>
           <li
             onClick={() => {
-              if (this.state.theme === "dark") this.setState({theme: "light"});
-              else
+              if (this.state.theme === "dark") {
+                this.setState({ theme: "light" });
+                localStorage.setItem("theme", "light");
+                document.getElementById("root").classList.add("light");
+              } else {
+                localStorage.setItem("theme", "dark");
+                document.getElementById("root").classList.remove("light");
+
                 this.setState({
                   theme: "dark"
                 });
+              }
             }}
           >
             {" "}
