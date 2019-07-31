@@ -1,7 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { firebaseAuth } from "./auth";
 
-const LandingMenu = props => {
+function LandingMenu(props) {
+  const [logged, setUser] = useState(null);
+  function userCheck() {
+    firebaseAuth().onAuthStateChanged(user => {
+      if (user) {
+        setUser(true);
+      } else {
+        setUser(false);
+      }
+    });
+  }
+  userCheck();
   return (
     <header className="header">
       <div className="header__logo">
@@ -12,26 +24,35 @@ const LandingMenu = props => {
           </g>
         </svg>
         TRADER24
-        <span className="header__line"></span><h6>PRE-ALPHA</h6>
+        <span className="header__line" />
+        <h6>PRE-ALPHA</h6>
       </div>
-      <ul className="header__menu">
-        <Link to={props.url}>
-          <li>
-            <button type="submit" className="header__button-login">
-              {props.name}
-            </button>
-          </li>
+      {logged === false ? (
+        <ul className="header__menu">
+          <Link to={props.url}>
+            <li>
+              <button type="submit" className="header__button-login">
+                {props.name}
+              </button>
+            </li>
+          </Link>
+          <Link to={props.url2}>
+            <li>
+              <button type="submit" className="header__button-register">
+                {props.name2}
+              </button>
+            </li>
+          </Link>
+        </ul>
+      ) : (
+        <Link to="/dashboard">
+          <button type="submit" className="header__button-register">
+            DASHBOARD
+          </button>
         </Link>
-        <Link to={props.url2}>
-          <li>
-            <button type="submit" className="header__button-register">
-              {props.name2}
-            </button>
-          </li>
-        </Link>
-      </ul>
+      )}
     </header>
   );
-};
+}
 
 export default LandingMenu;
