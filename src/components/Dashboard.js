@@ -889,7 +889,7 @@ class Dashboard extends React.Component {
                                       >
                                         {portfolioDifference[index]}
                                       </td>
-                                      <td>${portfolioValue[index]}</td>
+                                      <td>${(portfolioValue[index]).toLocaleString()}</td>
                                     </tr>
                                   );
                                 })}
