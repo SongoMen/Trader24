@@ -229,12 +229,13 @@ class Dashboard extends React.Component {
     fetch(stockApi)
       .then((res) => res.json())
       .then((result) => {
-        if (result["Note"] === undefined && result.length > 1) {
+        if (result["Note"] === undefined && Object.keys(result["Time Series (1min)"]).length > 1) {
           for (
             let i = Object.keys(result["Time Series (1min)"]).length - 1;
             i > 0 || callback();
             i--
           ) {
+            console.log('x')
             dataChart.push(
               parseFloat(
                 result["Time Series (1min)"][
@@ -306,8 +307,12 @@ class Dashboard extends React.Component {
         .then((result) => {
           if (result.latestPrice !== null)
             priceStash[num] = result.latestPrice.toFixed(2);
+          else if(result.iexRealtimePrice !== null)
+          priceStash[num] = result.iexRealtimePrice.toFixed(2);
           if (result.changePercent !== null)
             changeStash[num] = parseFloat(result.changePercent).toFixed(2);
+            console.log(result.latestPrice," ",this.relDiff(result.previousClose,result.latestPrice)," ",result.previousClose)
+
         });
       this.getChart(dataChart, symbol, callback);
     }
@@ -602,6 +607,11 @@ class Dashboard extends React.Component {
     //READ PORTFOLIO
     this.getAccountInfo();
     setTimeout(() => {
+      console.log(stockChanges)
+      console.log(stockPrices)
+      console.log(chartData2)
+
+
       if ($("#chartSecond").length && $("#chartFirst").length) {
         if (this.state.portfolioLoader !== true) this.getAccountInfo();
         if (
