@@ -63,6 +63,10 @@ iframe
   justify-content: space-between
   padding: 100px 100px
   align-items: center
+  @media only screen and (max-width: 960px)
+    width: 100%
+  @media only screen and (max-width: 760px)
+    padding: 20px 20px
 
 .register-pic
   width: 206px
@@ -167,14 +171,12 @@ iframe
 
 
 @media (max-width: 992px)
-
   .register-pic
     width: 35%
   .register-form
     width: 50%
 
 @media (max-width: 768px)
-
   .register-pic
     display: none
   .register-form

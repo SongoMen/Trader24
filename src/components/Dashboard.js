@@ -229,7 +229,7 @@ class Dashboard extends React.Component {
     fetch(stockApi)
       .then((res) => res.json())
       .then((result) => {
-        if (result["Note"] === undefined) {
+        if (result["Note"] === undefined && result.length > 1) {
           for (
             let i = Object.keys(result["Time Series (1min)"]).length - 1;
             i > 0 || callback();
@@ -252,22 +252,25 @@ class Dashboard extends React.Component {
             fetch(stockApi)
               .then((res) => res.json())
               .then((result) => {
-                for (
-                  let i = Object.keys(result["Time Series (1min)"]).length - 1;
-                  i > 0 || callback();
-                  i--
-                ) {
-                  dataChart.push(
-                    parseFloat(
-                      result["Time Series (1min)"][
-                        Object.keys(result["Time Series (1min)"])[i]
-                      ]["4. close"]
-                    ).toFixed(2)
-                  );
+                if (result["Note"] === undefined && result.length > 1) {
+                  for (
+                    let i =
+                      Object.keys(result["Time Series (1min)"]).length - 1;
+                    i > 0 || callback();
+                    i--
+                  ) {
+                    dataChart.push(
+                      parseFloat(
+                        result["Time Series (1min)"][
+                          Object.keys(result["Time Series (1min)"])[i]
+                        ]["4. close"]
+                      ).toFixed(2)
+                    );
+                  }
                 }
               });
           } else {
-            if (result["Note"] === undefined) {
+            if (result["Note"] === undefined && result.length > 1) {
               b++;
               const stockApi = `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=1min&apikey=${
                 apiKeys[b]
@@ -297,15 +300,17 @@ class Dashboard extends React.Component {
   }
   getStockInfo(symbol, dataChart, changeStash, priceStash, num, callback) {
     const percentageChange = `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_1f989becf0bf4fd9a9547df1407aa290`;
-    fetch(percentageChange)
-      .then((res) => res.json())
-      .then((result) => {
-        if (result.latestPrice !== null)
-          priceStash[num] = result.latestPrice.toFixed(2);
-        if (result.changePercent !== null)
-          changeStash[num] = parseFloat(result.changePercent).toFixed(2);
-      });
-    this.getChart(dataChart, symbol, callback);
+    if (symbol !== undefined) {
+      fetch(percentageChange)
+        .then((res) => res.json())
+        .then((result) => {
+          if (result.latestPrice !== null)
+            priceStash[num] = result.latestPrice.toFixed(2);
+          if (result.changePercent !== null)
+            changeStash[num] = parseFloat(result.changePercent).toFixed(2);
+        });
+      this.getChart(dataChart, symbol, callback);
+    }
   }
   getStocksList() {
     const stocks =
@@ -340,51 +345,56 @@ class Dashboard extends React.Component {
                 stockListTickers[i] = result[i].symbol;
               }
             }
-          });
-      })
-      .then(() => {
-        setTimeout(() => {
-          for (let i = 0; i < 9; i++) {
-            const percentageChange = `https://cloud.iexapis.com/stable/stock/${
-              stockListTickers[i]
-            }/quote?displayPercent=true&token=pk_1f989becf0bf4fd9a9547df1407aa290`;
-            fetch(percentageChange)
-              .then((res) => res.json())
-              .then((result) => {
-                stockListChange[i] = parseFloat(result.changePercent).toFixed(
-                  2
-                );
-                if (Math.sign(stockListChange[i]) === -1) {
-                  stockListChangeColors[i] = "rgb(244,84,133";
-                } else if (Math.sign(stockListChange[i]) === 1) {
-                  stockListChangeColors[i] = "rgb(102,249,218";
-                  stockListChange[i] = "+" + stockListChange[i];
-                  if (
-                    stockListChange[i].charAt(0) === "+" &&
-                    stockListChange[i].charAt(1) === "+"
-                  )
-                    stockListChange[i] = stockListChange[i].substr(1);
-                } else {
-                  stockListChangeColors[i] = "rgb(153,158,175";
+          })
+          .then(() => {
+            setTimeout(() => {
+              for (let i = 0; i < 9; i++) {
+                const percentageChange = `https://cloud.iexapis.com/stable/stock/${
+                  stockListTickers[i]
+                }/quote?displayPercent=true&token=pk_1f989becf0bf4fd9a9547df1407aa290`;
+                if (stockListTickers[i] !== undefined) {
+                  fetch(percentageChange)
+                    .then((res) => res.json())
+                    .then((result) => {
+                      stockListChange[i] = parseFloat(
+                        result.changePercent
+                      ).toFixed(2);
+                      if (Math.sign(stockListChange[i]) === -1) {
+                        stockListChangeColors[i] = "rgb(244,84,133";
+                      } else if (Math.sign(stockListChange[i]) === 1) {
+                        stockListChangeColors[i] = "rgb(102,249,218";
+                        stockListChange[i] = "+" + stockListChange[i];
+                        if (
+                          stockListChange[i].charAt(0) === "+" &&
+                          stockListChange[i].charAt(1) === "+"
+                        )
+                          stockListChange[i] = stockListChange[i].substr(1);
+                      } else {
+                        stockListChangeColors[i] = "rgb(153,158,175";
+                      }
+                      stockListChange[i] = stockListChange[i] + "%";
+                    })
+                    .then(() => {
+                      setTimeout(() => {
+                        this.setState({
+                          loader3: true
+                        });
+                      }, 900);
+                    });
                 }
-                stockListChange[i] = stockListChange[i] + "%";
-              })
-              .then(() => {
-                setTimeout(() => {
-                  this.setState({
-                    loader3: true
-                  });
-                }, 900);
-              });
-          }
-        }, 1800);
+              }
+            }, 1000);
+          });
       });
   }
   relDiff(a, b) {
     return 100 * Math.abs((a - b) / ((a + b) / 2));
   }
   numberWithCommas(x) {
+    if(x !==undefined)
     return x.toLocaleString();
+    else
+      return ""
   }
 
   getLatestPrice(symbol, i) {
@@ -402,6 +412,7 @@ class Dashboard extends React.Component {
             parseFloat(portfolioValue[i]),
             parseFloat(portfolioMoneyPaid[i])
           ).toFixed(2) + "%";
+          console.log(portfolioValue[i]," ",portfolioMoneyPaid[i] )
         if (portfolioValue[i] > portfolioMoneyPaid[i]) {
           portfolioDifference[i] = "+" + portfolioDifference[i];
           portfolioColor[i] = "#66F9DA";
@@ -441,7 +452,7 @@ class Dashboard extends React.Component {
             if (portfolioStocks.length < 4) {
               portfolioStocks.push(doc.data().symbol);
               portfolioShares.push(doc.data().shares);
-              portfolioMoneyPaid.push(doc.data().moneyPaid);
+              portfolioMoneyPaid.push(parseFloat(doc.data().moneyPaid))
               this.getLatestPrice(portfolioStocks[i], i);
               i++;
             }
@@ -648,7 +659,6 @@ class Dashboard extends React.Component {
         }
       }
     }, 5000);
-
   }
   componentWillMount() {
     setInterval(() => {
@@ -889,7 +899,10 @@ class Dashboard extends React.Component {
                                       >
                                         {portfolioDifference[index]}
                                       </td>
-                                      <td>${(portfolioValue[index]).toLocaleString()}</td>
+                                      <td>
+                                        $
+                                        {this.numberWithCommas(portfolioValue[index])}
+                                      </td>
                                     </tr>
                                   );
                                 })}

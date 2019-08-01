@@ -6,6 +6,10 @@
     justify-content: space-between
     align-items: center
     z-index: 50
+    @media only screen and (max-width: 530px)
+        padding: 20px
+    @media only screen and (max-width: 350px)
+        padding: 5px
     a
         z-index: 2
     &__logo
@@ -18,19 +22,29 @@
             width: 12%
             fill: white
             margin-right: 10px
+            min-width: 20px
         h6
             margin-left: 20px
+            @media only screen and (max-width: 450px)
+                margin-left: 5px
     &__line
         border-left: 1px solid white
         height: 50%
         width: 1px
         margin-left: 20px
         min-height: 30px
+        @media only screen and (max-width: 450px)
+            margin-left: 5px
+            min-height: 20px
     &__menu
         display: flex
         z-index: 10
+        @media only screen and (max-width: 450px)
+            padding: 0
         li
             margin-left: 20px
+            @media only screen and (max-width: 450px)
+                margin-left: 5px
     &__button-register
         padding: 10px 25px
         background: $main-color
@@ -49,3 +63,7 @@
         border-radius: 5px        
         &:hover
             background: $main-color
+    &__button-login, &__button-register
+        @media only screen and (max-width: 530px)
+            padding: 5px 10px
+    
