@@ -235,7 +235,6 @@ class Dashboard extends React.Component {
             i > 0 || callback();
             i--
           ) {
-            console.log('x')
             dataChart.push(
               parseFloat(
                 result["Time Series (1min)"][
@@ -311,8 +310,6 @@ class Dashboard extends React.Component {
           priceStash[num] = result.iexRealtimePrice.toFixed(2);
           if (result.changePercent !== null)
             changeStash[num] = parseFloat(result.changePercent).toFixed(2);
-            console.log(result.latestPrice," ",this.relDiff(result.previousClose,result.latestPrice)," ",result.previousClose)
-
         });
       this.getChart(dataChart, symbol, callback);
     }
@@ -607,11 +604,6 @@ class Dashboard extends React.Component {
     //READ PORTFOLIO
     this.getAccountInfo();
     setTimeout(() => {
-      console.log(stockChanges)
-      console.log(stockPrices)
-      console.log(chartData2)
-
-
       if ($("#chartSecond").length && $("#chartFirst").length) {
         if (this.state.portfolioLoader !== true) this.getAccountInfo();
         if (
