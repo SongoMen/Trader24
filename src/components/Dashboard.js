@@ -412,7 +412,6 @@ class Dashboard extends React.Component {
             parseFloat(portfolioValue[i]),
             parseFloat(portfolioMoneyPaid[i])
           ).toFixed(2) + "%";
-          console.log(portfolioValue[i]," ",portfolioMoneyPaid[i] )
         if (portfolioValue[i] > portfolioMoneyPaid[i]) {
           portfolioDifference[i] = "+" + portfolioDifference[i];
           portfolioColor[i] = "#66F9DA";
