@@ -22,7 +22,7 @@ export default class Topbar extends React.Component {
     document.getElementById("results").innerHTML = "";
     let b = 0;
     let filter = document.getElementById("searchBar").value.toUpperCase();
-    if (e.key === "Enter") window.location = "stocks/" + filter;
+    if (e.key === "Enter") window.location = "/stocks/" + filter;
     if (filter.length === 0) {
       document.getElementById("results").innerHTML = "";
       document.getElementById("results").style.display = "none";

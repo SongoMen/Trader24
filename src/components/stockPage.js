@@ -91,6 +91,7 @@ let closePrice;
 let stockData = {};
 let keyData = [];
 let keyDataLabel = [];
+let allSymbols = [];
 
 let twoYears = [];
 let twoYearsLabels = [];
@@ -162,6 +163,37 @@ export default class stockPage extends React.Component {
   numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
+
+  searchStocks(e) {
+    document.getElementById("results").innerHTML = "";
+    let b = 0;
+    let filter = document.getElementById("searchBar").value.toUpperCase();
+    if (e.key === "Enter") window.location = "/stocks/" + filter;
+    if (filter.length === 0) {
+      document.getElementById("results").innerHTML = "";
+      document.getElementById("results").style.display = "none";
+    } else {
+      for (let i = 0; i < allSymbols.length; i++) {
+        let splitSymbol = allSymbols[i].symbol.split("");
+        let splitFilter = filter.split("");
+        for (let a = 0; a < splitFilter.length; a++) {
+          if (
+            allSymbols[i].symbol.indexOf(filter) > -1 &&
+            splitSymbol[a] === splitFilter[a]
+          ) {
+            if (a === 0) {
+              document.getElementById("results").style.display = "flex";
+              $("#results").append(
+                `<li><a href="/stocks/${allSymbols[i].symbol}"><h4>${allSymbols[i].symbol}</h4><h6>${allSymbols[i].name}</h6></a></li>`
+              );
+              b++;
+            }
+          }
+        }
+        if (b === 10) break;
+      }
+    }
+  }
   getOneDayChart() {
     const anno = {
       annotations: [
@@ -195,21 +227,14 @@ export default class stockPage extends React.Component {
             ) {
               chartData1.push(
                 parseFloat(
-                  result["Time Series (1min)"][
-                    Object.keys(result["Time Series (1min)"])[i]
-                  ]["4. close"]
-                ).toFixed(2)
+                  result["Time Series (1min)"][Object.keys(result["Time Series (1min)"])[i]]["4. close"]).toFixed(2)
               );
-              labels.push(
-                Object.keys(result["Time Series (1min)"])[i].split(" ")[1].slice(0, -3)
-              );
+              labels.push(Object.keys(result["Time Series (1min)"])[i].split(" ")[1].slice(0, -3));
             }
           } else {
             setTimeout(() => {
               b++;
-              const stockApi = `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=1min&apikey=${
-                apiKeys[b]
-              }`;
+              const stockApi = `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=1min&apikey=${apiKeys[b]}`;
               fetch(stockApi)
                 .then(res => res.json())
                 .then(result => {
@@ -226,8 +251,7 @@ export default class stockPage extends React.Component {
                         ]["4. close"]
                       ).toFixed(2)
                     );
-                    labels.push(
-                      Object.keys(result["Time Series (1min)"])[i].split(" ")[1].slice(0, -3)
+                    labels.push(Object.keys(result["Time Series (1min)"])[i].split(" ")[1].slice(0, -3)
                     );
                   }
                 });
@@ -673,6 +697,9 @@ export default class stockPage extends React.Component {
     )
       .then(res => res.json())
       .then(result => {
+        allSymbols = result.map(val => {
+          return val;
+        });
         for (let i = 0; i < result.length; i++) {
           symbolsOnly.push(result[i].symbol);
         }
@@ -702,9 +729,11 @@ export default class stockPage extends React.Component {
               for{" "}
               <span style={{ fontWeight: "bold" }}>
                 {parseFloat(
-                  (document.getElementById("buy-input").value *
+                  (
+                    document.getElementById("buy-input").value *
                     this.state.latestPrice
-                ).toFixed(2))}
+                  ).toFixed(2)
+                )}
               </span>{" "}
               dollars
             </h3>
