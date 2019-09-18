@@ -140,11 +140,24 @@
     display: flex
     align-items: center
     margin-bottom: 5px
+  &__dev
+    padding: 10px
+    background: $dev-color
+    border-radius: 10px
+    box-shadow: 0px 0px 15px 0px $dev-color
+    margin-right: 20px
+    display: flex
+    transition: all .4s
+    user-select: none
+    cursor: pointer
+    font-weight: bold
+    h4
+      margin: 0
   &__power
     padding: 10px
     background: linear-gradient(to right, rgb(124, 131, 255) 30%, rgb(124, 193, 255) 100%);
     border-radius: 10px
-    margin-right: 30px
+    margin-right: 20px
     display: flex
     box-shadow: 0px 0px 15px 0px $main-color
     transition: all .4s

@@ -2,6 +2,7 @@ import React from "react";
 import firebase from "firebase/app";
 import $ from "jquery";
 import "firebase/firestore";
+import {Link} from 'react-router-dom'
 
 import Leftbar from "./leftbar";
 
@@ -38,9 +39,7 @@ export default class Topbar extends React.Component {
             if (a === 0) {
               document.getElementById("results").style.display = "flex";
               $("#results").append(
-                `<li><a href="/stocks/${allSymbols[i].symbol}"><h4>${
-                  allSymbols[i].symbol
-                }</h4><h6>${allSymbols[i].name}</h6></a></li>`
+                `<li><a href="/stocks/${allSymbols[i].symbol}"><h4>${allSymbols[i].symbol}</h4><h6>${allSymbols[i].name}</h6></a></li>`
               );
               b++;
             }
@@ -73,7 +72,8 @@ export default class Topbar extends React.Component {
             this.setState({
               funds:
                 "$" + this.numberWithCommas(Number(doc.data()["currentfunds"])),
-              fundsLoader: true
+              fundsLoader: true,
+              admin: doc.data()["admin"]
             });
         }.bind(this)
       );
@@ -97,9 +97,9 @@ export default class Topbar extends React.Component {
   render() {
     let user = firebase.auth().currentUser.displayName;
     return (
-      <div style={{display:"flex",alignItems:"center"}}>
-        <div className="mobileMenu" id="mobileMenu" >
-        <Leftbar></Leftbar>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <div className="mobileMenu" id="mobileMenu">
+          <Leftbar></Leftbar>
         </div>
         <div className="topbar">
           <div className="hamburger">
@@ -160,6 +160,13 @@ export default class Topbar extends React.Component {
           </div>
           <div className="topbar__container">
             <div className="topbar__user">
+              {this.state.admin && (
+                <Link to="/admin">
+                  <div className="topbar__dev">
+                    <h4>DEV</h4>
+                  </div>
+                </Link>
+              )}
               {this.state.fundsLoader === true && (
                 <div className="topbar__power">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
