@@ -5,4 +5,5 @@ Technologies:
 - Chartjs 2
 - Firebase
 - react-router
+- node-sass
 - Jest
