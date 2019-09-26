@@ -31,10 +31,15 @@ export default class Admin extends React.Component {
             usersInfo.currentFunds.push(doc.data().currentfunds);
             usersInfo.positions.push(doc.data().positions);
             usersInfo.isAdmin.push(doc.data().admin);
+            if(usersInfo.isAdmin.length === snapshot.docs.length){
+              this.setState({
+                loaded: true
+              })
+            }
           });
         } else {
           this.setState({
-            portfolioLoader: "nothing"
+            loaded: "nothing"
           });
         }
       });
@@ -43,17 +48,24 @@ export default class Admin extends React.Component {
     this.loadUsers();
   }
 
+  numberWithCommas(x) {
+    if(x !==undefined)
+    return x.toLocaleString();
+    else
+      return ""
+  }
+
   render() {
     return (
       <div className="devPanel">
         <div className="topbar">
+        <h1>DEV PANEL</h1>
           <Link to="/dashboard">
             <div className="topbar__dev">
               <h4>DASHBOARD</h4>
             </div>
           </Link>
         </div>
-
         <div className="devPanel__content">
           {this.state.loaded ? (
             <table>
@@ -66,8 +78,13 @@ export default class Admin extends React.Component {
                   <th>Is admin</th>
                 </tr>
                 {usersInfo.username.map((val, index) => (
-                  <tr>
-                    <td>x</td>
+                  <tr key={index}>
+                    <td>{val}</td>
+                    <td>{usersInfo.email[index]}</td>
+                    <td>${this.numberWithCommas(usersInfo.currentFunds[index])}</td>
+                    <td>{usersInfo.positions[index]}</td>
+                    <td>{usersInfo.isAdmin[index]}</td>
+
                   </tr>
                 ))}
               </tbody>
