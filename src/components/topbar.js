@@ -9,6 +9,7 @@ import Leftbar from "./leftbar";
 const db = firebase.firestore();
 
 let allSymbols;
+let admin
 
 export default class Topbar extends React.Component {
   constructor(props) {
@@ -73,8 +74,8 @@ export default class Topbar extends React.Component {
               funds:
                 "$" + this.numberWithCommas(Number(doc.data()["currentfunds"])),
               fundsLoader: true,
-              admin: doc.data()["admin"]
             });
+            admin = doc.data()["admin"]
         }.bind(this)
       );
     document.querySelector(".hamburger").addEventListener("click", e => {
@@ -160,7 +161,7 @@ export default class Topbar extends React.Component {
           </div>
           <div className="topbar__container">
             <div className="topbar__user">
-              {this.state.admin && (
+              {admin && (
                 <Link to="/admin">
                   <div className="topbar__dev">
                     <h4>DEV</h4>

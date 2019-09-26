@@ -15,7 +15,7 @@ import Stocks from "./Stocks";
 import stockPage from "./stockPage";
 import portfolio from "./portfolio";
 import page404 from "./404";
-import Admin from "./Admin";
+import Admin from "./admin";
 
 function PrivateRoute({ component: Component, authed, ...rest }) {
   return (
