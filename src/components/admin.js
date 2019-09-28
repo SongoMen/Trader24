@@ -31,10 +31,10 @@ export default class Admin extends React.Component {
             usersInfo.currentFunds.push(doc.data().currentfunds);
             usersInfo.positions.push(doc.data().positions);
             usersInfo.isAdmin.push(doc.data().admin);
-            if(usersInfo.isAdmin.length === snapshot.docs.length){
+            if (usersInfo.isAdmin.length === snapshot.docs.length) {
               this.setState({
                 loaded: true
-              })
+              });
             }
           });
         } else {
@@ -49,17 +49,17 @@ export default class Admin extends React.Component {
   }
 
   numberWithCommas(x) {
-    if(x !==undefined)
-    return x.toLocaleString();
-    else
-      return ""
+    if (x !== undefined) return x.toLocaleString();
+    else return "";
+  }
+  editFunds(){
   }
 
   render() {
     return (
       <div className="devPanel">
         <div className="topbar">
-        <h1>DEV PANEL</h1>
+          <h1>DEV PANEL</h1>
           <Link to="/dashboard">
             <div className="topbar__dev">
               <h4>DASHBOARD</h4>
@@ -81,10 +81,15 @@ export default class Admin extends React.Component {
                   <tr key={index}>
                     <td>{val}</td>
                     <td>{usersInfo.email[index]}</td>
-                    <td>${this.numberWithCommas(usersInfo.currentFunds[index])}</td>
+                    <td>
+                      <input
+                        type="text"
+                        placeholder={usersInfo.currentFunds[index]}
+                        onKeyDown = {this.editFunds}                              
+                      ></input>
+                    </td>
                     <td>{usersInfo.positions[index]}</td>
                     <td>{usersInfo.isAdmin[index]}</td>
-
                   </tr>
                 ))}
               </tbody>
