@@ -8,4 +8,4 @@ Technologies:
 - node-sass
 - Jest
 
-Codacy for refactoring and error fixes
+Using Codacy for refactoring and error fixes
