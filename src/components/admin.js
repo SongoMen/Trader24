@@ -52,7 +52,8 @@ export default class Admin extends React.Component {
     if (x !== undefined) return x.toLocaleString();
     else return "";
   }
-  editFunds(){
+  editFunds({ target }) {
+    console.log(target.value);
   }
 
   render() {
@@ -83,10 +84,11 @@ export default class Admin extends React.Component {
                     <td>{usersInfo.email[index]}</td>
                     <td>
                       <input
+                        name={val}
                         type="text"
                         placeholder={usersInfo.currentFunds[index]}
-                        onKeyDown = {this.editFunds}                              
-                      ></input>
+                        onKeyDown={this.editFunds}
+                      />
                     </td>
                     <td>{usersInfo.positions[index]}</td>
                     <td>{usersInfo.isAdmin[index]}</td>
