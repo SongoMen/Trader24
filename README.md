@@ -7,3 +7,5 @@ Technologies:
 - react-router
 - node-sass
 - Jest
+
+Using Codacy for refactoring and error fixes
