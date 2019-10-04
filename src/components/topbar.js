@@ -37,7 +37,7 @@ export default class Topbar extends React.Component {
         for (let a = 0; a < splitFilter.length; a++) {
           if (
             allSymbols[parseInt(i)].symbol.indexOf(filter) > -1 &&
-            splitSymbol[a] === splitFilter[a]
+            splitSymbol[parseInt(a)] === splitFilter[parseInt(a)]
           ) {
             if (a === 0) {
               document.getElementById("results").style.display = "flex";
@@ -73,13 +73,14 @@ export default class Topbar extends React.Component {
       .doc(user)
       .onSnapshot(
         function(doc) {
-          if (typeof doc.data() !== "undefined")
+          if (typeof doc.data() !== "undefined") {
             this.setState({
               funds:
                 "$" + this.numberWithCommas(Number(doc.data()["currentfunds"])),
               fundsLoader: true
             });
-          admin = doc.data()["admin"];
+            admin = doc.data()["admin"];
+          }
         }.bind(this)
       );
     document.querySelector(".hamburger").addEventListener("click", e => {
@@ -153,8 +154,9 @@ export default class Topbar extends React.Component {
                 }}
                 onBlur={() => {
                   setTimeout(() => {
-                    if ($("#results").length)
+                    if ($("#results").length) {
                       document.getElementById("results").style.display = "none";
+                    }
                   }, 300);
                   document.getElementById("topbar__searchbar").style.boxShadow =
                     "none";

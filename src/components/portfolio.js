@@ -28,26 +28,30 @@ export default class portfolio extends React.Component {
   getLatestPrice(symbol, i) {
     const lastPrice = `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_1f989becf0bf4fd9a9547df1407aa290`;
     fetch(lastPrice)
-      .then((res) => res.json())
-      .then((result) => {
+      .then(res => res.json())
+      .then(result => {
         value[parseInt(i)] = parseFloat(
           Number(shares[parseInt(i)] * result.latestPrice).toFixed(2)
         );
       })
       .then(() => {
         difference[parseInt(i)] =
-          this.relDiff(parseFloat(value[parseInt(i)]), parseFloat(moneyPaid[parseInt(i)])).toFixed(
-            2
-          ) + "%";
+          this.relDiff(
+            parseFloat(value[parseInt(i)]),
+            parseFloat(moneyPaid[parseInt(i)])
+          ).toFixed(2) + "%";
         change[parseInt(i)] =
           "$" +
           parseFloat(
-            parseFloat(value[parseInt(i)] - parseFloat(moneyPaid[parseInt(i)])).toFixed(2)
+            parseFloat(
+              value[parseInt(i)] - parseFloat(moneyPaid[parseInt(i)])
+            ).toFixed(2)
           );
         if (value[parseInt(i)] > moneyPaid[parseInt(i)]) {
           difference[parseInt(i)] = "+" + difference[parseInt(i)];
           color[parseInt(i)] = "#66F9DA";
-        } else if (value[parseInt(i)] === moneyPaid[parseInt(i)]) color[parseInt(i)] = "#999EAF";
+        } else if (value[parseInt(i)] === moneyPaid[parseInt(i)])
+          color[parseInt(i)] = "#999EAF";
         else {
           difference[parseInt(i)] = "-" + difference[parseInt(i)];
           color[parseInt(i)] = "#F45385";
@@ -81,9 +85,9 @@ export default class portfolio extends React.Component {
       .doc(user)
       .collection("stocks")
       .get()
-      .then((snapshot) => {
+      .then(snapshot => {
         if (snapshot.docs.length !== 0) {
-          snapshot.forEach((doc) => {
+          snapshot.forEach(doc => {
             position.push(doc.id);
             symbols.push(doc.data().symbol);
             shares.push(doc.data().shares);
@@ -121,7 +125,8 @@ export default class portfolio extends React.Component {
         .then(
           function() {
             this.setState({
-              funds: Number(this.state.funds) + Number(moneyPaid[number])
+              funds:
+                Number(this.state.funds) + Number(moneyPaid[parseInt(number)])
             });
             firebase
               .firestore()
@@ -145,8 +150,8 @@ export default class portfolio extends React.Component {
   }
   componentDidMount() {
     fetch("https://financialmodelingprep.com/api/v3/is-the-market-open")
-      .then((res) => res.json())
-      .then((result) => {
+      .then(res => res.json())
+      .then(result => {
         this.setState({
           marketStatus: result.isTheStockMarketOpen
         });
@@ -173,15 +178,14 @@ export default class portfolio extends React.Component {
       .doc(user)
       .onSnapshot(
         function(doc) {
-          if (doc.data() !== undefined)
-          {
+          if (typeof doc.data() !== "undefined") {
             this.setState({
               funds: doc.data()["currentfunds"]
             });
           }
         }.bind(this)
       );
-    document.querySelector(".hamburger").addEventListener("click", (e) => {
+    document.querySelector(".hamburger").addEventListener("click", e => {
       e.currentTarget.classList.toggle("is-active");
     });
   }
@@ -200,7 +204,8 @@ export default class portfolio extends React.Component {
         {this.state.error === true && (
           <div className="alertMessage">
             Market is currently closed{" "}
-            <button style={{margin:"20px"}}
+            <button
+              style={{ margin: "20px" }}
               className="stockPage__buy-button"
               onClick={() => {
                 this.setState({
@@ -238,18 +243,26 @@ export default class portfolio extends React.Component {
                     <tr key={index}>
                       <td>{val}</td>
                       <td>{shares[parseInt(index)]}</td>
-                      <td style={{color: color[parseInt(index)]}}>{difference[parseInt(index)]}</td>
-                      <td style={{color: color[parseInt(index)]}}>{change[parseInt(index)]}</td>
+                      <td style={{ color: color[parseInt(index)] }}>
+                        {difference[parseInt(index)]}
+                      </td>
+                      <td style={{ color: color[parseInt(index)] }}>
+                        {change[parseInt(index)]}
+                      </td>
                       <td>${value[parseInt(index)]}</td>
                       <td>
                         <svg
                           onClick={() => {
-                            if (this.state.marketStatus)
-                              this.handleStockSell(position[parseInt(index)], index);
-                            else
+                            if (this.state.marketStatus) {
+                              this.handleStockSell(
+                                position[parseInt(index)],
+                                index
+                              );
+                            } else {
                               this.setState({
                                 error: true
                               });
+                            }
                           }}
                           xmlns="http://www.w3.org/2000/svg"
                           viewBox="0 0 24 24"

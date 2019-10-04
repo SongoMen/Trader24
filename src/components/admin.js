@@ -35,22 +35,20 @@ export default class Admin extends React.Component {
           });
         }
       })
-      .then(()=>{
+      .then(() => {
         if (usersInfo.isAdmin.length > 0 && this._isMounted) {
           this.setState({
             loaded: true
           });
-        }
-        else if(this._isMounted){
+        } else if (this._isMounted) {
           this.setState({
             loaded: "nothing"
           });
         }
-      })
+      });
   }
-  componentWillUnmount(){
+  componentWillUnmount() {
     this._isMounted = false;
-
   }
   componentDidMount() {
     this._isMounted = true;
@@ -58,8 +56,11 @@ export default class Admin extends React.Component {
   }
 
   numberWithCommas(x) {
-    if (x !== undefined) {return x.toLocaleString();}
-    else return "";
+    if (x !== undefined) {
+      return x.toLocaleString();
+    } else {
+      return "";
+    }
   }
   editFunds({ target }) {
     console.log(target.value);

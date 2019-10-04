@@ -25,25 +25,27 @@ export function loginWithGoogle() {
 }
 
 export function auth(email, pw) {
-  let username = localStorage.getItem("user")
-  return firebaseAuth().createUserWithEmailAndPassword(email, pw)
-    .then(function (newUser) {
-      db.collection("users").doc(newUser.user.uid).set({
-        email,
-        username,
-        funds: "100000",
-        currentfunds: "100000",
-        positions: "0",
-        admin: false
-      })
-        .catch(function (error) {
+  let username = localStorage.getItem("user");
+  return firebaseAuth()
+    .createUserWithEmailAndPassword(email, pw)
+    .then(function(newUser) {
+      db.collection("users")
+        .doc(newUser.user.uid)
+        .set({
+          email,
+          username,
+          funds: "100000",
+          currentfunds: "100000",
+          positions: "0",
+          admin: false
+        })
+        .catch(function(error) {
           console.error("Error writing document: ", error);
         });
       return firebase.auth().currentUser.updateProfile({
         displayName: username
       });
-    })
-
+    });
 }
 
 export function logout() {
@@ -57,4 +59,3 @@ export function login(email, pw) {
 export function resetPassword(email) {
   return firebaseAuth().sendPasswordResetEmail(email);
 }
-

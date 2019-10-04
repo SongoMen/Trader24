@@ -8,6 +8,6 @@ export default class page404 extends React.Component{
                 <h1>404</h1>
                 <h4>Go back to <Link to="/dashboard">Dashboard</Link></h4>
             </div>
-        )
+        );
     }
 }
