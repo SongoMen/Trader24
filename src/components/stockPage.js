@@ -810,10 +810,11 @@ export default class stockPage extends React.Component {
                     document.getElementById("buy-input").value *
                       this.state.latestPrice <=
                     this.state.fundsWithoutCommas
-                  )
+                  ){
                     this.handleBuyStock(
                       document.getElementById("buy-input").value
                     );
+                  }
                   else if (this._isMounted) {
                     this.setState({
                       buyConfirmation: false

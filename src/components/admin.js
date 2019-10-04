@@ -56,7 +56,7 @@ export default class Admin extends React.Component {
   }
 
   numberWithCommas(x) {
-    if (x !== undefined) {
+    if (typeof x !== "undefined") {
       return x.toLocaleString();
     } else {
       return "";

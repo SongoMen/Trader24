@@ -252,7 +252,9 @@ class Dashboard extends React.Component {
         } else {
           if (typeof result["Note"] === "undefined") {
             b++;
-            const stockApi = `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=1min&apikey=${apiKeys[parseInt(b)]}`;
+            const stockApi = `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=1min&apikey=${
+              apiKeys[parseInt(b)]
+            }`;
             fetch(stockApi)
               .then(res => res.json())
               .then(result => {
@@ -395,7 +397,7 @@ class Dashboard extends React.Component {
                         if (
                           stockListChange[parseInt(i)].charAt(0) === "+" &&
                           stockListChange[parseInt(i)].charAt(1) === "+"
-                        ){
+                        ) {
                           stockListChange[parseInt(i)] = stockListChange[
                             parseInt(i)
                           ].substr(1);
@@ -427,7 +429,9 @@ class Dashboard extends React.Component {
   numberWithCommas(x) {
     if (typeof x !== "undefined") {
       return x.toLocaleString();
-    } else return "";
+    } else {
+      return "";
+    }
   }
 
   getLatestPrice(symbol, i) {
@@ -574,7 +578,7 @@ class Dashboard extends React.Component {
         .then(res => res.json())
         .then(result => {
           for (let i = 0; i < 4; i++) {
-            if (typeof result[parseInt(i)] !== "undefined"){
+            if (typeof result[parseInt(i)] !== "undefined") {
               stockSymbols.push(result[parseInt(i)].symbol);
             }
           }
@@ -1008,7 +1012,12 @@ class Dashboard extends React.Component {
                           if (index < 3) {
                             return (
                               <li key={index}>
-                                <Link to={"stocks/" + stockListTickers[parseInt(index)]}>
+                                <Link
+                                  to={
+                                    "stocks/" +
+                                    stockListTickers[parseInt(index)]
+                                  }
+                                >
                                   <span className="panel__fullname">
                                     <h4>{stockListTickers[parseInt(index)]}</h4>
                                     <h6 className="panel__name">{value}</h6>
@@ -1018,11 +1027,15 @@ class Dashboard extends React.Component {
                                     <h5
                                       style={{
                                         color:
-                                          stockListChangeColors[parseInt(index)] + ")",
+                                          stockListChangeColors[
+                                            parseInt(index)
+                                          ] + ")",
                                         margin: "5px 0 0 0",
                                         textShadow:
                                           "0px 0px 7px " +
-                                          stockListChangeColors[parseInt(index)] +
+                                          stockListChangeColors[
+                                            parseInt(index)
+                                          ] +
                                           ",0.5)"
                                       }}
                                     >
@@ -1044,7 +1057,12 @@ class Dashboard extends React.Component {
                           if (index >= 3 && index < 6) {
                             return (
                               <li key={index}>
-                                <Link to={"stocks/" + stockListTickers[parseInt(index)]}>
+                                <Link
+                                  to={
+                                    "stocks/" +
+                                    stockListTickers[parseInt(index)]
+                                  }
+                                >
                                   <span className="panel__fullname">
                                     <h4>{stockListTickers[parseInt(index)]}</h4>
                                     <h6 className="panel__name">{value}</h6>
@@ -1054,11 +1072,15 @@ class Dashboard extends React.Component {
                                     <h5
                                       style={{
                                         color:
-                                          stockListChangeColors[parseInt(index)] + ")",
+                                          stockListChangeColors[
+                                            parseInt(index)
+                                          ] + ")",
                                         margin: "5px 0 0 0",
                                         textShadow:
                                           "0px 0px 7px " +
-                                          stockListChangeColors[parseInt(index)] +
+                                          stockListChangeColors[
+                                            parseInt(index)
+                                          ] +
                                           ",0.5)"
                                       }}
                                     >
