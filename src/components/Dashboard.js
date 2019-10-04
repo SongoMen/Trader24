@@ -252,7 +252,7 @@ class Dashboard extends React.Component {
         } else {
           if (typeof result["Note"] === "undefined") {
             b++;
-            const stockApi = `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=1min&apikey=${apiKeys[b]}`;
+            const stockApi = `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=1min&apikey=${apiKeys[parseInt(b)]}`;
             fetch(stockApi)
               .then(res => res.json())
               .then(result => {
@@ -395,10 +395,11 @@ class Dashboard extends React.Component {
                         if (
                           stockListChange[parseInt(i)].charAt(0) === "+" &&
                           stockListChange[parseInt(i)].charAt(1) === "+"
-                        )
+                        ){
                           stockListChange[parseInt(i)] = stockListChange[
                             parseInt(i)
                           ].substr(1);
+                        }
                       } else {
                         stockListChangeColors[parseInt(i)] = "rgb(153,158,175";
                       }
@@ -573,8 +574,9 @@ class Dashboard extends React.Component {
         .then(res => res.json())
         .then(result => {
           for (let i = 0; i < 4; i++) {
-            if (typeof result[parseInt(i)] !== "undefined")
+            if (typeof result[parseInt(i)] !== "undefined"){
               stockSymbols.push(result[parseInt(i)].symbol);
+            }
           }
           this.getStockInfo(
             stockSymbols[0],
@@ -1006,25 +1008,25 @@ class Dashboard extends React.Component {
                           if (index < 3) {
                             return (
                               <li key={index}>
-                                <Link to={"stocks/" + stockListTickers[index]}>
+                                <Link to={"stocks/" + stockListTickers[parseInt(index)]}>
                                   <span className="panel__fullname">
-                                    <h4>{stockListTickers[index]}</h4>
+                                    <h4>{stockListTickers[parseInt(index)]}</h4>
                                     <h6 className="panel__name">{value}</h6>
                                   </span>
                                   <div className="panel__list-change">
-                                    <h4> {stockListPrices[index]}</h4>
+                                    <h4> {stockListPrices[parseInt(index)]}</h4>
                                     <h5
                                       style={{
                                         color:
-                                          stockListChangeColors[index] + ")",
+                                          stockListChangeColors[parseInt(index)] + ")",
                                         margin: "5px 0 0 0",
                                         textShadow:
                                           "0px 0px 7px " +
-                                          stockListChangeColors[index] +
+                                          stockListChangeColors[parseInt(index)] +
                                           ",0.5)"
                                       }}
                                     >
-                                      {stockListChange[index]}
+                                      {stockListChange[parseInt(index)]}
                                     </h5>
                                   </div>
                                 </Link>
@@ -1042,25 +1044,25 @@ class Dashboard extends React.Component {
                           if (index >= 3 && index < 6) {
                             return (
                               <li key={index}>
-                                <Link to={"stocks/" + stockListTickers[index]}>
+                                <Link to={"stocks/" + stockListTickers[parseInt(index)]}>
                                   <span className="panel__fullname">
-                                    <h4>{stockListTickers[index]}</h4>
+                                    <h4>{stockListTickers[parseInt(index)]}</h4>
                                     <h6 className="panel__name">{value}</h6>
                                   </span>
                                   <div className="panel__list-change">
-                                    <h4> {stockListPrices[index]}</h4>
+                                    <h4> {stockListPrices[parseInt(index)]}</h4>
                                     <h5
                                       style={{
                                         color:
-                                          stockListChangeColors[index] + ")",
+                                          stockListChangeColors[parseInt(index)] + ")",
                                         margin: "5px 0 0 0",
                                         textShadow:
                                           "0px 0px 7px " +
-                                          stockListChangeColors[index] +
+                                          stockListChangeColors[parseInt(index)] +
                                           ",0.5)"
                                       }}
                                     >
-                                      {stockListChange[index]}
+                                      {stockListChange[parseInt(index)]}
                                     </h5>
                                   </div>
                                 </Link>

@@ -9,7 +9,7 @@ import Leftbar from "./leftbar";
 const db = firebase.firestore();
 
 let allSymbols;
-let admin
+let admin;
 
 export default class Topbar extends React.Component {
   constructor(props) {
@@ -30,23 +30,23 @@ export default class Topbar extends React.Component {
       document.getElementById("results").style.display = "none";
     } else {
       for (let i = 0; i < allSymbols.length; i++) {
-        let splitSymbol = allSymbols[i].symbol.split("");
+        let splitSymbol = allSymbols[parseInt(i)].symbol.split("");
         let splitFilter = filter.split("");
         for (let a = 0; a < splitFilter.length; a++) {
           if (
-            allSymbols[i].symbol.indexOf(filter) > -1 &&
+            allSymbols[parseInt(i)].symbol.indexOf(filter) > -1 &&
             splitSymbol[a] === splitFilter[a]
           ) {
             if (a === 0) {
               document.getElementById("results").style.display = "flex";
               $("#results").append(
-                `<li><a href="/stocks/${allSymbols[i].symbol}"><h4>${allSymbols[i].symbol}</h4><h6>${allSymbols[i].name}</h6></a></li>`
+                `<li><a href="/stocks/${allSymbols[parseInt(i)].symbol}"><h4>${allSymbols[parseInt(i)].symbol}</h4><h6>${allSymbols[parseInt(i)].name}</h6></a></li>`
               );
               b++;
             }
           }
         }
-        if (b === 10) break;
+        if (b === 10){break;}
       }
     }
   }
@@ -69,13 +69,13 @@ export default class Topbar extends React.Component {
       .doc(user)
       .onSnapshot(
         function(doc) {
-          if (doc.data() !== undefined)
+          if (typeof doc.data() !== "undefined")
             this.setState({
               funds:
                 "$" + this.numberWithCommas(Number(doc.data()["currentfunds"])),
               fundsLoader: true,
             });
-            admin = doc.data()["admin"]
+            admin = doc.data()["admin"];
         }.bind(this)
       );
     document.querySelector(".hamburger").addEventListener("click", e => {
@@ -139,8 +139,9 @@ export default class Topbar extends React.Component {
                 onKeyUp={this.searchStocks}
                 placeholder="Search by symbol"
                 onFocus={() => {
-                  if (document.getElementById("results").firstChild)
+                  if (document.getElementById("results").firstChild){
                     document.getElementById("results").style.display = "flex";
+                  }
                   document.getElementById("topbar__searchbar").style.boxShadow =
                     "0px 0px 30px 0px rgba(0,0,0,0.10)";
                   document.getElementById("results").style.boxShadow =
