@@ -429,13 +429,6 @@ class Dashboard extends React.Component {
   }
 
   getAccountInfo() {
-    portfolioColor = [];
-    portfolioDifference = [];
-    portfolioMoneyPaid = [];
-    portfolioShares = [];
-    portfolioStocks = [];
-    portfolioValue = [];
-
     let user = firebase.auth().currentUser.uid;
     let i = 0;
 
@@ -446,7 +439,7 @@ class Dashboard extends React.Component {
       .collection("stocks")
       .get()
       .then(snapshot => {
-        if (snapshot.docs.length !== 0) {
+        if (snapshot.docs.length !== 0 && portfolioDifference.length === 0) {
           snapshot.forEach(doc => {
             if (portfolioStocks.length < 4) {
               portfolioStocks.push(doc.data().symbol);
@@ -456,12 +449,10 @@ class Dashboard extends React.Component {
               i++;
             }
           });
-        } else {
-          if (this._isMounted) {
-            this.setState({
-              portfolioLoader: "nothing"
-            });
-          }
+        } else if (this._isMounted && portfolioStocks.length === 0) {
+          this.setState({
+            portfolioLoader: "nothing"
+          });
         }
       })
       .then(() => {
