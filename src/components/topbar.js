@@ -2,7 +2,7 @@ import React from "react";
 import firebase from "firebase/app";
 import $ from "jquery";
 import "firebase/firestore";
-import {Link} from 'react-router-dom'
+import { Link } from "react-router-dom";
 
 import Leftbar from "./leftbar";
 
@@ -24,7 +24,9 @@ export default class Topbar extends React.Component {
     document.getElementById("results").innerHTML = "";
     let b = 0;
     let filter = document.getElementById("searchBar").value.toUpperCase();
-    if (e.key === "Enter") window.location = "/stocks/" + filter;
+    if (e.key === "Enter") {
+      window.location = "/stocks/" + filter;
+    }
     if (filter.length === 0) {
       document.getElementById("results").innerHTML = "";
       document.getElementById("results").style.display = "none";
@@ -46,7 +48,9 @@ export default class Topbar extends React.Component {
             }
           }
         }
-        if (b === 10){break;}
+        if (b === 10) {
+          break;
+        }
       }
     }
   }
@@ -73,9 +77,9 @@ export default class Topbar extends React.Component {
             this.setState({
               funds:
                 "$" + this.numberWithCommas(Number(doc.data()["currentfunds"])),
-              fundsLoader: true,
+              fundsLoader: true
             });
-            admin = doc.data()["admin"];
+          admin = doc.data()["admin"];
         }.bind(this)
       );
     document.querySelector(".hamburger").addEventListener("click", e => {
@@ -139,7 +143,7 @@ export default class Topbar extends React.Component {
                 onKeyUp={this.searchStocks}
                 placeholder="Search by symbol"
                 onFocus={() => {
-                  if (document.getElementById("results").firstChild){
+                  if (document.getElementById("results").firstChild) {
                     document.getElementById("results").style.display = "flex";
                   }
                   document.getElementById("topbar__searchbar").style.boxShadow =

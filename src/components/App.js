@@ -11,7 +11,6 @@ import LandingPage from "./landingPage";
 import Dashboard from "./Dashboard";
 import Register from "./Register";
 import Login from "./Login";
-import Stocks from "./Stocks";
 import stockPage from "./stockPage";
 import portfolio from "./portfolio";
 import page404 from "./404";
@@ -134,11 +133,6 @@ class App extends Component {
               authed={this.state.authed}
               path="/dashboard"
               component={Dashboard}
-            />
-            <PrivateRoute
-              authed={this.state.authed}
-              path="/allstocks"
-              component={Stocks}
             />
             <PrivateRoute
               authed={this.state.authed}
