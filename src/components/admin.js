@@ -12,6 +12,7 @@ let usersInfo = {
 };
 
 export default class Admin extends React.Component {
+  _isMounted = false;
   constructor(props) {
     super(props);
     this.state = {
@@ -24,27 +25,35 @@ export default class Admin extends React.Component {
       .collection("users")
       .get()
       .then(snapshot => {
-        if (snapshot.docs.length !== 0) {
+        if (snapshot.docs.length !== 0 && usersInfo.isAdmin.length === 0) {
           snapshot.forEach(doc => {
             usersInfo.username.push(doc.data().username);
             usersInfo.email.push(doc.data().email);
             usersInfo.currentFunds.push(doc.data().currentfunds);
             usersInfo.positions.push(doc.data().positions);
             usersInfo.isAdmin.push(doc.data().admin);
-            if (usersInfo.isAdmin.length === snapshot.docs.length) {
-              this.setState({
-                loaded: true
-              });
-            }
           });
-        } else {
+        }
+      })
+      .then(()=>{
+        if (usersInfo.isAdmin.length > 0 && this._isMounted) {
+          this.setState({
+            loaded: true
+          });
+        }
+        else if(this._isMounted){
           this.setState({
             loaded: "nothing"
           });
         }
-      });
+      })
+  }
+  componentWillUnmount(){
+    this._isMounted = false;
+
   }
   componentDidMount() {
+    this._isMounted = true;
     this.loadUsers();
   }
 

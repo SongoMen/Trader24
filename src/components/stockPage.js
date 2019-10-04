@@ -116,6 +116,7 @@ let newsUrl = [];
 let newsRelated = [];
 
 export default class stockPage extends React.Component {
+  _isMounted = false;
   constructor(props) {
     super(props);
     this.state = {
@@ -229,7 +230,9 @@ export default class stockPage extends React.Component {
                 parseFloat(
                   result["Time Series (1min)"][Object.keys(result["Time Series (1min)"])[i]]["4. close"]).toFixed(2)
               );
-              labels.push(Object.keys(result["Time Series (1min)"])[i].split(" ")[1].slice(0, -3));
+              labels.push(
+                Object.keys(result["Time Series (1min)"])[i].split(" ")[1].slice(0, -3)
+              );
             }
           } else {
             setTimeout(() => {
@@ -251,7 +254,8 @@ export default class stockPage extends React.Component {
                         ]["4. close"]
                       ).toFixed(2)
                     );
-                    labels.push(Object.keys(result["Time Series (1min)"])[i].split(" ")[1].slice(0, -3)
+                    labels.push(
+                      Object.keys(result["Time Series (1min)"])[i].split(" ")[1].slice(0, -3)
                     );
                   }
                 });
@@ -260,19 +264,23 @@ export default class stockPage extends React.Component {
         })
         .then(() => {
           setTimeout(() => {
-            this.setState({
-              loaded: true
-            });
-            chartData1.map(val => oneDay.push(val));
-            labels.map(val => oneDayLabels.push(val));
+            if (this._isMounted) {
+              this.setState({
+                loaded: true
+              });
+              chartData1.map(val => oneDay.push(val));
+              labels.map(val => oneDayLabels.push(val));
+            }
           }, 1000);
         });
     } else {
       labels = oneDayLabels;
       chartData1 = oneDay;
-      this.setState({
-        loaded: true
-      });
+      if (this._isMounted) {
+        this.setState({
+          loaded: true
+        });
+      }
     }
     options.annotation = anno;
   }
@@ -292,18 +300,23 @@ export default class stockPage extends React.Component {
           }
         })
         .then(() => {
-          this.setState({
-            loaded: true
-          });
-          chartData1.map(val => ytdChart.push(val));
-          labels.map(val => ytdLabels.push(val));
+          if (this._isMounted) {
+            this.setState({
+              loaded: true
+            });
+
+            chartData1.map(val => ytdChart.push(val));
+            labels.map(val => ytdLabels.push(val));
+          }
         });
     } else {
       labels = ytdLabels;
       chartData1 = ytdChart;
-      this.setState({
-        loaded: true
-      });
+      if (this._isMounted) {
+        this.setState({
+          loaded: true
+        });
+      }
     }
 
     options.annotation = "";
@@ -324,18 +337,22 @@ export default class stockPage extends React.Component {
           }
         })
         .then(() => {
-          this.setState({
-            loaded: true
-          });
+          if (this._isMounted) {
+            this.setState({
+              loaded: true
+            });
+          }
           chartData1.map(val => oneYear.push(val));
           labels.map(val => oneYearLabels.push(val));
         });
     } else {
       labels = oneYearLabels;
       chartData1 = oneYear;
-      this.setState({
-        loaded: true
-      });
+      if (this._isMounted) {
+        this.setState({
+          loaded: true
+        });
+      }
     }
     options.annotation = "";
   }
@@ -355,18 +372,22 @@ export default class stockPage extends React.Component {
           }
         })
         .then(() => {
-          this.setState({
-            loaded: true
-          });
+          if (this._isMounted) {
+            this.setState({
+              loaded: true
+            });
+          }
           chartData1.map(val => twoYears.push(val));
           labels.map(val => twoYearsLabels.push(val));
         });
     } else {
       labels = twoYearsLabels;
       chartData1 = twoYears;
-      this.setState({
-        loaded: true
-      });
+      if (this._isMounted) {
+        this.setState({
+          loaded: true
+        });
+      }
     }
     options.annotation = "";
   }
@@ -386,18 +407,22 @@ export default class stockPage extends React.Component {
           }
         })
         .then(() => {
-          this.setState({
-            loaded: true
-          });
+          if (this._isMounted) {
+            this.setState({
+              loaded: true
+            });
+          }
           chartData1.map(val => oneMonth.push(val));
           labels.map(val => oneMonthLabels.push(val));
         });
     } else {
       labels = oneMonthLabels;
       chartData1 = oneMonth;
-      this.setState({
-        loaded: true
-      });
+      if (this._isMounted) {
+        this.setState({
+          loaded: true
+        });
+      }
     }
     options.annotation = "";
   }
@@ -492,9 +517,11 @@ export default class stockPage extends React.Component {
           stockData.extendedChange = "";
         }
         stockData.extendedChange = result.extendedChange;
-        this.setState({
-          latestPrice: result.latestPrice.toFixed(2)
-        });
+        if (this._isMounted) {
+          this.setState({
+            latestPrice: result.latestPrice.toFixed(2)
+          });
+        }
         keyData[0] = this.abbrNum(result.marketCap, 2);
         keyDataLabel[0] = "Market Cap ";
         keyData[1] = result.peRatio;
@@ -515,20 +542,20 @@ export default class stockPage extends React.Component {
         keyDataLabel[5] = "Volume ";
       })
       .then(() => {
-        if (stockData.change > 0) {
+        if (stockData.change > 0 && this._isMounted) {
           this.setState({
             changeColor: "#3ae885"
           });
-        } else {
+        } else if (this._isMounted) {
           this.setState({
             changeColor: "#F45385"
           });
         }
-        if (stockData.extendedChange > 0) {
+        if (stockData.extendedChange > 0 && this._isMounted) {
           this.setState({
             extendedColor: "#66F9DA"
           });
-        } else {
+        } else if (this._isMounted) {
           this.setState({
             extendedColor: "#F45385"
           });
@@ -540,9 +567,11 @@ export default class stockPage extends React.Component {
     )
       .then(res => res.json())
       .then(result => {
-        this.setState({
-          latestPrice: result.latestPrice.toFixed(2)
-        });
+        if (this._isMounted) {
+          this.setState({
+            latestPrice: result.latestPrice.toFixed(2)
+          });
+        }
       })
       .then(() => {
         if (this.state.marketStatus) {
@@ -552,9 +581,11 @@ export default class stockPage extends React.Component {
             )
               .then(res => res.json())
               .then(result => {
-                this.setState({
-                  latestPrice: result.latestPrice.toFixed(2)
-                });
+                if (this._isMounted) {
+                  this.setState({
+                    latestPrice: result.latestPrice.toFixed(2)
+                  });
+                }
               });
           }, 5000);
         }
@@ -622,27 +653,33 @@ export default class stockPage extends React.Component {
       })
       .then(() => {
         this.getFunds();
-        this.setState({
-          buyConfirmation: false
-        });
+        if (this._isMounted) {
+          this.setState({
+            buyConfirmation: false
+          });
+        }
       });
   }
   getFunds() {
-    this.setState({
-      fundsWithoutCommas: ""
-    });
+    if (this._isMounted) {
+      this.setState({
+        fundsWithoutCommas: ""
+      });
+    }
     let user = firebase.auth().currentUser.uid;
     let docRef = db.collection("users").doc(user);
 
     docRef
       .get()
       .then(doc => {
-        this.setState({
-          funds: "$" + this.numberWithCommas(doc.data()["currentfunds"])
-        });
-        this.setState({
-          fundsWithoutCommas: doc.data()["currentfunds"]
-        });
+        if (this._isMounted) {
+          this.setState({
+            funds: "$" + this.numberWithCommas(doc.data()["currentfunds"])
+          });
+          this.setState({
+            fundsWithoutCommas: doc.data()["currentfunds"]
+          });
+        }
       })
       .catch(function(error) {
         console.log("Error getting document:", error);
@@ -688,9 +725,11 @@ export default class stockPage extends React.Component {
     fetch("https://financialmodelingprep.com/api/v3/is-the-market-open")
       .then(res => res.json())
       .then(result => {
-        this.setState({
-          marketStatus: result.isTheStockMarketOpen
-        });
+        if (this._isMounted) {
+          this.setState({
+            marketStatus: result.isTheStockMarketOpen
+          });
+        }
       });
     fetch(
       "https://cloud.iexapis.com/stable/ref-data/symbols?token=pk_1f989becf0bf4fd9a9547df1407aa290"
@@ -710,9 +749,13 @@ export default class stockPage extends React.Component {
         ];
         setTimeout(() => {
           if (this.isInArray(symbolsOnly, symbol)) {
-            this.setState({ valid: true });
+            if (this._isMounted) {
+              this.setState({ valid: true });
+            }
             this.rendering();
-          } else this.setState({ valid: false });
+          } else if (this._isMounted) {
+            this.setState({ valid: false });
+          }
         }, 1000);
       });
     this.getFunds();
@@ -749,10 +792,11 @@ export default class stockPage extends React.Component {
                     this.handleBuyStock(
                       document.getElementById("buy-input").value
                     );
-                  else
+                  else if (this._isMounted) {
                     this.setState({
                       buyConfirmation: false
                     });
+                  }
                 }}
               >
                 CONFIRM
@@ -760,9 +804,11 @@ export default class stockPage extends React.Component {
               <button
                 className="stockPage__buy-button cancel"
                 onClick={() => {
-                  this.setState({
-                    buyConfirmation: false
-                  });
+                  if (this._isMounted) {
+                    this.setState({
+                      buyConfirmation: false
+                    });
+                  }
                 }}
               >
                 CANCEL
@@ -874,7 +920,8 @@ export default class stockPage extends React.Component {
                             value > 0 &&
                             value * this.state.latestPrice <=
                               this.state.fundsWithoutCommas &&
-                            this.state.marketStatus
+                            this.state.marketStatus &&
+                            this._isMounted
                           )
                             this.setState({
                               buyConfirmation: true

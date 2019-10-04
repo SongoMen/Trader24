@@ -1,9 +1,9 @@
 import React from "react";
-import {Line} from "react-chartjs-2";
+import { Line } from "react-chartjs-2";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import $ from "jquery";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import Leftbar from "./leftbar";
 import Topbar from "./topbar";
@@ -26,8 +26,8 @@ var options = {
     },
     displayColors: false,
   },*/
-  tooltips: {enabled: false},
-  hover: {mode: null},
+  tooltips: { enabled: false },
+  hover: { mode: null },
   layout: {
     padding: {
       bottom: 15
@@ -132,6 +132,7 @@ function Alert() {
 }
 
 class Dashboard extends React.Component {
+  _isMounted = false;
   constructor(props) {
     super(props);
     this.state = {
@@ -154,7 +155,7 @@ class Dashboard extends React.Component {
       }
       return result.split(",");
     }
-    this.data1 = (canvas) => {
+    this.data1 = canvas => {
       const ctx = canvas.getContext("2d");
       const gradient = ctx.createLinearGradient(0, 0, 600, 10);
       gradient.addColorStop(0, "#7c83ff");
@@ -187,7 +188,7 @@ class Dashboard extends React.Component {
         ]
       };
     };
-    this.data2 = (canvas) => {
+    this.data2 = canvas => {
       const ctx = canvas.getContext("2d");
       const gradient = ctx.createLinearGradient(0, 0, 600, 10);
       gradient.addColorStop(0, "#7c83ff");
@@ -227,9 +228,12 @@ class Dashboard extends React.Component {
       apiKeys[0]
     }`;
     fetch(stockApi)
-      .then((res) => res.json())
-      .then((result) => {
-        if (result["Note"] === undefined && Object.keys(result["Time Series (1min)"]).length > 1) {
+      .then(res => res.json())
+      .then(result => {
+        if (
+          result["Note"] === undefined &&
+          Object.keys(result["Time Series (1min)"]).length > 1
+        ) {
           for (
             let i = Object.keys(result["Time Series (1min)"]).length - 1;
             i > 0 || callback();
@@ -246,12 +250,10 @@ class Dashboard extends React.Component {
         } else {
           if (result["Note"] === undefined) {
             b++;
-            const stockApi = `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=1min&apikey=${
-              apiKeys[b]
-            }`;
+            const stockApi = `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=1min&apikey=${apiKeys[b]}`;
             fetch(stockApi)
-              .then((res) => res.json())
-              .then((result) => {
+              .then(res => res.json())
+              .then(result => {
                 if (result["Note"] === undefined && result.length > 1) {
                   for (
                     let i =
@@ -272,12 +274,10 @@ class Dashboard extends React.Component {
           } else {
             if (result["Note"] === undefined && result.length > 1) {
               b++;
-              const stockApi = `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=1min&apikey=${
-                apiKeys[b]
-              }`;
+              const stockApi = `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=1min&apikey=${apiKeys[b]}`;
               fetch(stockApi)
-                .then((res) => res.json())
-                .then((result) => {
+                .then(res => res.json())
+                .then(result => {
                   for (
                     let i =
                       Object.keys(result["Time Series (1min)"]).length - 1;
@@ -302,12 +302,12 @@ class Dashboard extends React.Component {
     const percentageChange = `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_1f989becf0bf4fd9a9547df1407aa290`;
     if (symbol !== undefined) {
       fetch(percentageChange)
-        .then((res) => res.json())
-        .then((result) => {
+        .then(res => res.json())
+        .then(result => {
           if (result.latestPrice !== null)
             priceStash[num] = result.latestPrice.toFixed(2);
-          else if(result.iexRealtimePrice !== null)
-          priceStash[num] = result.iexRealtimePrice.toFixed(2);
+          else if (result.iexRealtimePrice !== null)
+            priceStash[num] = result.iexRealtimePrice.toFixed(2);
           if (result.changePercent !== null)
             changeStash[num] = parseFloat(result.changePercent).toFixed(2);
         });
@@ -318,14 +318,14 @@ class Dashboard extends React.Component {
     const stocks =
       "https://cloud.iexapis.com/stable/stock/market/list/mostactive?token=pk_1f989becf0bf4fd9a9547df1407aa290";
     fetch(stocks)
-      .then((res) => res.json())
-      .then((result) => {
+      .then(res => res.json())
+      .then(result => {
         const gainers =
           "https://cloud.iexapis.com/stable/stock/market/list/gainers?token=pk_1f989becf0bf4fd9a9547df1407aa290";
         let counter = 0;
         fetch(gainers)
-          .then((res) => res.json())
-          .then((result) => {
+          .then(res => res.json())
+          .then(result => {
             for (let i = 0; i < result.length; i++) {
               if (result[i].latestPrice !== null) {
                 tempStocksSymbols.push(result[i].symbol);
@@ -351,13 +351,11 @@ class Dashboard extends React.Component {
           .then(() => {
             setTimeout(() => {
               for (let i = 0; i < 9; i++) {
-                const percentageChange = `https://cloud.iexapis.com/stable/stock/${
-                  stockListTickers[i]
-                }/quote?displayPercent=true&token=pk_1f989becf0bf4fd9a9547df1407aa290`;
+                const percentageChange = `https://cloud.iexapis.com/stable/stock/${stockListTickers[i]}/quote?displayPercent=true&token=pk_1f989becf0bf4fd9a9547df1407aa290`;
                 if (stockListTickers[i] !== undefined) {
                   fetch(percentageChange)
-                    .then((res) => res.json())
-                    .then((result) => {
+                    .then(res => res.json())
+                    .then(result => {
                       stockListChange[i] = parseFloat(
                         result.changePercent
                       ).toFixed(2);
@@ -378,9 +376,11 @@ class Dashboard extends React.Component {
                     })
                     .then(() => {
                       setTimeout(() => {
-                        this.setState({
-                          loader3: true
-                        });
+                        if (this._isMounted) {
+                          this.setState({
+                            loader3: true
+                          });
+                        }
                       }, 900);
                     });
                 }
@@ -393,17 +393,15 @@ class Dashboard extends React.Component {
     return 100 * Math.abs((a - b) / ((a + b) / 2));
   }
   numberWithCommas(x) {
-    if(x !==undefined)
-    return x.toLocaleString();
-    else
-      return ""
+    if (x !== undefined) return x.toLocaleString();
+    else return "";
   }
 
   getLatestPrice(symbol, i) {
     const lastPrice = `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_1f989becf0bf4fd9a9547df1407aa290`;
     fetch(lastPrice)
-      .then((res) => res.json())
-      .then((result) => {
+      .then(res => res.json())
+      .then(result => {
         portfolioValue[i] = parseFloat(
           Number(portfolioShares[i] * result.latestPrice).toFixed(2)
         );
@@ -447,21 +445,23 @@ class Dashboard extends React.Component {
       .doc(user)
       .collection("stocks")
       .get()
-      .then((snapshot) => {
+      .then(snapshot => {
         if (snapshot.docs.length !== 0) {
-          snapshot.forEach((doc) => {
+          snapshot.forEach(doc => {
             if (portfolioStocks.length < 4) {
               portfolioStocks.push(doc.data().symbol);
               portfolioShares.push(doc.data().shares);
-              portfolioMoneyPaid.push(parseFloat(doc.data().moneyPaid))
+              portfolioMoneyPaid.push(parseFloat(doc.data().moneyPaid));
               this.getLatestPrice(portfolioStocks[i], i);
               i++;
             }
           });
         } else {
-          this.setState({
-            portfolioLoader: "nothing"
-          });
+          if (this._isMounted) {
+            this.setState({
+              portfolioLoader: "nothing"
+            });
+          }
         }
       })
       .then(() => {
@@ -471,32 +471,38 @@ class Dashboard extends React.Component {
       .then(() => {
         setTimeout(() => {
           let val = portfolioValue.reduce((a, b) => Number(a) + Number(b), 0);
-          this.setState({
-            accountValue:
-              "$" +
-              this.numberWithCommas(
-                Number(val) + Number(this.state.fundsWithoutCommas)
-              )
-          });
+          if (this._isMounted) {
+            this.setState({
+              accountValue:
+                "$" +
+                this.numberWithCommas(
+                  Number(val) + Number(this.state.fundsWithoutCommas)
+                )
+            });
+          }
         }, 1300);
       })
       .then(() => {
         if (portfolioStocks.length > 0) {
           setTimeout(() => {
-            this.setState({
-              portfolioLoader: true
-            });
+            if (this._isMounted) {
+              this.setState({
+                portfolioLoader: true
+              });
+            }
           }, 1200);
         }
         setTimeout(() => {
           if (this.state.marketStatus) this.getAccountInfo();
         }, 10000);
       })
-      .catch((error) => {
+      .catch(error => {
         console.log("Error getting document:", error);
-        this.setState({
-          portfolioLoader: false
-        });
+        if (this._isMounted) {
+          this.setState({
+            portfolioLoader: false
+          });
+        }
       });
   }
 
@@ -505,168 +511,184 @@ class Dashboard extends React.Component {
   }
 
   componentDidMount() {
-    fetch("https://financialmodelingprep.com/api/v3/is-the-market-open")
-      .then((res) => res.json())
-      .then((result) => {
-        this.setState({
-          marketStatus: result.isTheStockMarketOpen
-        });
-      });
-    let user = firebase.auth().currentUser.uid;
-
-    db.collection("users")
-      .doc(user)
-      .onSnapshot(
-        function(doc) {
-          if (doc.data() !== undefined)
+    this._isMounted = true;
+    if (this._isMounted) {
+      fetch("https://financialmodelingprep.com/api/v3/is-the-market-open")
+        .then(res => res.json())
+        .then(result => {
+          if (this._isMounted) {
             this.setState({
-              fundsWithoutCommas: doc.data()["currentfunds"]
+              marketStatus: result.isTheStockMarketOpen
             });
-        }.bind(this)
-      );
-    chartData1 = [];
-    chartData2 = [];
-    const gainers =
-      "https://cloud.iexapis.com/stable/stock/market/list/gainers?token=pk_1f989becf0bf4fd9a9547df1407aa290";
-    fetch(gainers)
-      .then((res) => res.json())
-      .then((result) => {
-        for (let i = 0; i < 4; i++) {
-          if (result[i] !== undefined) stockSymbols.push(result[i].symbol);
-        }
-        this.getStockInfo(
-          stockSymbols[0],
-          chartData1,
-          stockChanges,
-          stockPrices,
-          0,
-          () => {
-            if ($("#chartFirst").length) {
+          }
+        });
+      let user = firebase.auth().currentUser.uid;
+
+      db.collection("users")
+        .doc(user)
+        .onSnapshot(
+          function(doc) {
+            if (doc.data() !== undefined && this._isMounted) {
+              this.setState({
+                fundsWithoutCommas: doc.data()["currentfunds"]
+              });
+            }
+          }.bind(this)
+        );
+      chartData1 = [];
+      chartData2 = [];
+      const gainers =
+        "https://cloud.iexapis.com/stable/stock/market/list/gainers?token=pk_1f989becf0bf4fd9a9547df1407aa290";
+      fetch(gainers)
+        .then(res => res.json())
+        .then(result => {
+          for (let i = 0; i < 4; i++) {
+            if (result[i] !== undefined) stockSymbols.push(result[i].symbol);
+          }
+          this.getStockInfo(
+            stockSymbols[0],
+            chartData1,
+            stockChanges,
+            stockPrices,
+            0,
+            () => {
+              if ($("#chartFirst").length) {
+                setTimeout(() => {
+                  if (
+                    stockChanges[0] !== undefined &&
+                    stockPrices[0] !== undefined &&
+                    chartData1.length >= 2 &&
+                    $("#chartFirst").length &&
+                    this._isMounted
+                  ) {
+                    this.setState({
+                      loader1: true
+                    });
+                    document.getElementById("chartFirst").href =
+                      "/stocks/" + stockSymbols[0];
+                  } else if (this._isMounted) {
+                    this.setState({
+                      loader1: false
+                    });
+                    if ($("#chartFirst").length)
+                      document.getElementById("chartFirst").href = "#";
+                  }
+                }, 800);
+              }
+            }
+          );
+          this.getStockInfo(
+            stockSymbols[1],
+            chartData2,
+            stockChanges,
+            stockPrices,
+            1,
+            () => {
               setTimeout(() => {
-                if (
-                  stockChanges[0] !== undefined &&
-                  stockPrices[0] !== undefined &&
-                  chartData1.length >= 2 &&
-                  $("#chartFirst").length
-                ) {
-                  this.setState({
-                    loader1: true
-                  });
-                  document.getElementById("chartFirst").href =
-                    "/stocks/" + stockSymbols[0];
-                } else {
-                  this.setState({
-                    loader1: false
-                  });
-                  if ($("#chartFirst").length)
-                    document.getElementById("chartFirst").href = "#";
+                if ($("#chartSecond").length) {
+                  if (
+                    stockChanges[1] !== undefined &&
+                    stockPrices[1] !== undefined &&
+                    chartData2.length >= 2 &&
+                    this._isMounted
+                  ) {
+                    this.setState({
+                      loader2: true
+                    });
+                    document.getElementById("chartSecond").href =
+                      "/stocks/" + stockSymbols[1];
+                  } else if (this._isMounted) {
+                    this.setState({
+                      loader2: false
+                    });
+                    document.getElementById("chartSecond").href = "#";
+                  }
                 }
               }, 800);
             }
-          }
-        );
-        this.getStockInfo(
-          stockSymbols[1],
-          chartData2,
-          stockChanges,
-          stockPrices,
-          1,
-          () => {
-            setTimeout(() => {
-              if ($("#chartSecond").length) {
-                if (
-                  stockChanges[1] !== undefined &&
-                  stockPrices[1] !== undefined &&
-                  chartData2.length >= 2
-                ) {
-                  this.setState({
-                    loader2: true
-                  });
-                  document.getElementById("chartSecond").href =
-                    "/stocks/" + stockSymbols[1];
-                } else {
-                  this.setState({
-                    loader2: false
-                  });
-                  document.getElementById("chartSecond").href = "#";
-                }
-              }
-            }, 800);
-          }
-        );
-      });
-    document.title = "Trader24 - Dashboard";
-    // GET CHARTS
+          );
+        });
+      document.title = "Trader24 - Dashboard";
+      // GET CHARTS
 
-    // STOCK LIST
-    this.getStocksList();
+      // STOCK LIST
+      this.getStocksList();
 
-    //READ PORTFOLIO
-    this.getAccountInfo();
-    setTimeout(() => {
-      if ($("#chartSecond").length && $("#chartFirst").length) {
-        if (this.state.portfolioLoader !== true) this.getAccountInfo();
-        if (
-          stockChanges[1] !== undefined &&
-          stockPrices[1] !== undefined &&
-          chartData2.length >= 2
-        ) {
-          this.setState({
-            loader2: true
-          });
-          document.getElementById("chartSecond").href =
-            "/stocks/" + stockSymbols[1];
-        } else {
-          this.setState({
-            loader2: false
-          });
-          document.getElementById("chartSecond").href = "#";
+      //READ PORTFOLIO
+      this.getAccountInfo();
+      setTimeout(() => {
+        if ($("#chartSecond").length && $("#chartFirst").length) {
+          if (this.state.portfolioLoader !== true) this.getAccountInfo();
+          if (
+            stockChanges[1] !== undefined &&
+            stockPrices[1] !== undefined &&
+            chartData2.length >= 2 &&
+            this._isMounted
+          ) {
+            this.setState({
+              loader2: true
+            });
+            document.getElementById("chartSecond").href =
+              "/stocks/" + stockSymbols[1];
+          } else if (this._isMounted) {
+            this.setState({
+              loader2: false
+            });
+            document.getElementById("chartSecond").href = "#";
+          }
+          if (
+            stockChanges[0] !== undefined &&
+            stockPrices[0] !== undefined &&
+            chartData1.length >= 2 &&
+            this._isMounted
+          ) {
+            this.setState({
+              loader1: true
+            });
+            document.getElementById("chartFirst").href =
+              "/stocks/" + stockSymbols[0];
+          } else if (this._isMounted) {
+            this.setState({
+              loader1: false
+            });
+            document.getElementById("chartFirst").href = "#";
+          }
+          if (stockListChange.length < 3 && this._isMounted) {
+            this.setState({
+              loader3: false
+            });
+          }
+          if (this.state.loader3 !== true && this._isMounted) {
+            this.setState({
+              loader3: false
+            });
+          }
+          if (this.state.loader1 === "" && this._isMounted) {
+            this.setState({
+              loader1: false
+            });
+          }
+          if (this.state.loader2 === "" && this._isMounted) {
+            this.setState({
+              loader2: false
+            });
+          }
         }
-        if (
-          stockChanges[0] !== undefined &&
-          stockPrices[0] !== undefined &&
-          chartData1.length >= 2
-        ) {
-          this.setState({
-            loader1: true
-          });
-          document.getElementById("chartFirst").href =
-            "/stocks/" + stockSymbols[0];
-        } else {
-          this.setState({
-            loader1: false
-          });
-          document.getElementById("chartFirst").href = "#";
-        }
-        if (stockListChange.length < 3) {
-          this.setState({
-            loader3: false
-          });
-        }
-        if (this.state.loader3 !== true) {
-          this.setState({
-            loader3: false
-          });
-        }
-        if (this.state.loader1 === "") {
-          this.setState({
-            loader1: false
-          });
-        }
-        if (this.state.loader2 === "") {
-          this.setState({
-            loader2: false
-          });
-        }
-      }
-    }, 5000);
+      }, 5000);
+    }
   }
   componentWillMount() {
     setInterval(() => {
       let theme = localStorage.getItem("theme");
-      if (theme !== null) this.setState({theme: theme});
-      else this.setState({theme: "dark"});
+      if (theme !== null && this._isMounted) {
+        this.setState({ theme: theme });
+      } else if (this._isMounted) {
+        this.setState({ theme: "dark" });
+      }
     }, 500);
+  }
+  componentWillUnmount() {
+    this._isMounted = false;
   }
   render() {
     for (let i = 0; i < stockSymbols.length; i++) {
@@ -693,15 +715,17 @@ class Dashboard extends React.Component {
     return (
       <div className="Dashboard" id="dashboard">
         <Alert />
-        <div style={{display: "flex", flexDirection: "column", width: "100%"}}>
-          <div style={{display: "flex", height: "100%"}}>
+        <div
+          style={{ display: "flex", flexDirection: "column", width: "100%" }}
+        >
+          <div style={{ display: "flex", height: "100%" }}>
             <Leftbar />
             <div className="panel">
               <Topbar />
               <div className="panel__container">
                 <div className="panel__top">
                   <div className="panel__title">
-                    <div style={{display: "flex", alignItems: "center"}}>
+                    <div style={{ display: "flex", alignItems: "center" }}>
                       <svg
                         className="panel__popular"
                         xmlns="http://www.w3.org/2000/svg"
@@ -739,7 +763,7 @@ class Dashboard extends React.Component {
                       <h3>Portfolio</h3>
                     </div>
                   </div>
-                  <div className="panel__topCharts" style={{display: "flex"}}>
+                  <div className="panel__topCharts" style={{ display: "flex" }}>
                     <a id="chartFirst" href="/" className="chartLink">
                       <div className="stockChart">
                         {this.state.loader1 === "" && (
@@ -776,7 +800,7 @@ class Dashboard extends React.Component {
                             <div className="stockChart__price-info">
                               <h4
                                 className="stockChart__change"
-                                style={{color: changesColors[0]}}
+                                style={{ color: changesColors[0] }}
                               >
                                 {stockChanges[0]}%
                               </h4>
@@ -828,7 +852,7 @@ class Dashboard extends React.Component {
                             <div className="stockChart__price-info">
                               <h4
                                 className="stockChart__change"
-                                style={{color: changesColors[1]}}
+                                style={{ color: changesColors[1] }}
                               >
                                 {stockChanges[1]}%
                               </h4>
@@ -896,13 +920,15 @@ class Dashboard extends React.Component {
                                       <td>{value}</td>
                                       <td>{portfolioShares[index]}</td>
                                       <td
-                                        style={{color: portfolioColor[index]}}
+                                        style={{ color: portfolioColor[index] }}
                                       >
                                         {portfolioDifference[index]}
                                       </td>
                                       <td>
                                         $
-                                        {this.numberWithCommas(portfolioValue[index])}
+                                        {this.numberWithCommas(
+                                          portfolioValue[index]
+                                        )}
                                       </td>
                                     </tr>
                                   );

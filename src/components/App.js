@@ -50,13 +50,16 @@ function PublicRoute({ component: Component, authed, ...rest }) {
 }
 
 class App extends Component {
+  _isMounted = false
   state = {
     authed: false,
     loading: true,
     theme: ""
   };
   componentDidMount() {
+    this._isMounted = true;
     this.removeListener = firebaseAuth().onAuthStateChanged(user => {
+      if(this._isMounted){
       if (user) {
         this.setState({
           authed: true,
@@ -68,9 +71,12 @@ class App extends Component {
           loading: false
         });
       }
+    }
     });
+  
   }
   componentWillUnmount() {
+    this._isMounted = false
     this.removeListener();
   }
 
