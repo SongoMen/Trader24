@@ -130,7 +130,7 @@ export default class stockPage extends React.Component {
       latestPrice: "",
       buyConfirmation: ""
     };
-    this.data1 = (canvas) => {
+    this.data1 = canvas => {
       const ctx = canvas.getContext("2d");
       const gradient = ctx.createLinearGradient(0, 0, 600, 10);
       gradient.addColorStop(0, "#7c83ff");
@@ -169,7 +169,9 @@ export default class stockPage extends React.Component {
     document.getElementById("results").innerHTML = "";
     let b = 0;
     let filter = document.getElementById("searchBar").value.toUpperCase();
-    if (e.key === "Enter") {window.location = "/stocks/" + filter;}
+    if (e.key === "Enter") {
+      window.location = "/stocks/" + filter;
+    }
     if (filter.length === 0) {
       document.getElementById("results").innerHTML = "";
       document.getElementById("results").style.display = "none";
@@ -191,7 +193,9 @@ export default class stockPage extends React.Component {
             }
           }
         }
-        if (b === 10) {break};
+        if (b === 10) {
+          break;
+        }
       }
     }
   }
@@ -220,7 +224,7 @@ export default class stockPage extends React.Component {
       fetch(stockApi)
         .then(res => res.json())
         .then(result => {
-          if (typeof result["Note"] === 'undefined') {
+          if (typeof result["Note"] === "undefined") {
             for (
               let i = Object.keys(result["Time Series (1min)"]).length - 1;
               i > 0;
@@ -228,7 +232,10 @@ export default class stockPage extends React.Component {
             ) {
               chartData1.push(
                 parseFloat(
-                  result["Time Series (1min)"][Object.keys(result["Time Series (1min)"])[parseInt(i)]]["4. close"]).toFixed(2)
+                  result["Time Series (1min)"][
+                    Object.keys(result["Time Series (1min)"])[parseInt(i)]
+                  ]["4. close"]
+                ).toFixed(2)
               );
               labels.push(
                 Object.keys(result["Time Series (1min)"])[parseInt(i)].split(" ")[1].slice(0, -3)
@@ -237,7 +244,9 @@ export default class stockPage extends React.Component {
           } else {
             setTimeout(() => {
               b++;
-              const stockApi = `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=1min&apikey=${apiKeys[parseInt(b)]}`;
+              const stockApi = `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=1min&apikey=${
+                apiKeys[parseInt(b)]
+              }`;
               fetch(stockApi)
                 .then(res => res.json())
                 .then(result => {
@@ -249,10 +258,7 @@ export default class stockPage extends React.Component {
                   ) {
                     chartData1.push(
                       parseFloat(
-                        result["Time Series (1min)"][
-                          Object.keys(result["Time Series (1min)"])[parseInt(i)]
-                        ]["4. close"]
-                      ).toFixed(2)
+                        result["Time Series (1min)"][Object.keys(result["Time Series (1min)"])[parseInt(i)]]["4. close"]).toFixed(2)
                     );
                     labels.push(
                       Object.keys(result["Time Series (1min)"])[parseInt(i)].split(" ")[1].slice(0, -3)
@@ -268,8 +274,8 @@ export default class stockPage extends React.Component {
               this.setState({
                 loaded: true
               });
-              chartData1.map((val) => oneDay.push(val));
-              labels.map((val) => oneDayLabels.push(val));
+              chartData1.map(val => oneDay.push(val));
+              labels.map(val => oneDayLabels.push(val));
             }
           }, 1000);
         });
@@ -305,8 +311,8 @@ export default class stockPage extends React.Component {
               loaded: true
             });
 
-            chartData1.map((val) => ytdChart.push(val));
-            labels.map((val) => ytdLabels.push(val));
+            chartData1.map(val => ytdChart.push(val));
+            labels.map(val => ytdLabels.push(val));
           }
         });
     } else {
@@ -328,7 +334,7 @@ export default class stockPage extends React.Component {
       const stockApi = `https://cloud.iexapis.com/beta/stock/${symbol}/batch?token=pk_1f989becf0bf4fd9a9547df1407aa290&types=chart,quote&range=1y`;
       fetch(stockApi)
         .then(res => res.json())
-        .then(result => {
+        .then((result) => {
           for (let i = 0; i < result.chart.length; i++) {
             if (result.chart[i].average !== null) {
               chartData1.push(result.chart[i].close.toFixed(2));
@@ -342,8 +348,8 @@ export default class stockPage extends React.Component {
               loaded: true
             });
           }
-          chartData1.map((val) => oneYear.push(val));
-          labels.map((val) => oneYearLabels.push(val));
+          chartData1.map(val => oneYear.push(val));
+          labels.map(val => oneYearLabels.push(val));
         });
     } else {
       labels = oneYearLabels;
@@ -365,9 +371,9 @@ export default class stockPage extends React.Component {
         .then(res => res.json())
         .then(result => {
           for (let i = 0; i < result.chart.length; i++) {
-            if (result.chart[i].average !== null) {
-              chartData1.push(result.chart[i].close.toFixed(2));
-              labels.push(result.chart[i].label);
+            if (result.chart[parseInt(i)].average !== null) {
+              chartData1.push(result.chart[parseInt(i)].close.toFixed(2));
+              labels.push(result.chart[parseInt(i)].label);
             }
           }
         })
@@ -377,8 +383,8 @@ export default class stockPage extends React.Component {
               loaded: true
             });
           }
-          chartData1.map((val) => twoYears.push(val));
-          labels.map((val) => twoYearsLabels.push(val));
+          chartData1.map(val => twoYears.push(val));
+          labels.map(val => twoYearsLabels.push(val));
         });
     } else {
       labels = twoYearsLabels;
@@ -412,8 +418,8 @@ export default class stockPage extends React.Component {
               loaded: true
             });
           }
-          chartData1.map((val) => oneMonth.push(val));
-          labels.map((val) => oneMonthLabels.push(val));
+          chartData1.map(val => oneMonth.push(val));
+          labels.map(val => oneMonthLabels.push(val));
         });
     } else {
       labels = oneMonthLabels;
@@ -537,30 +543,35 @@ export default class stockPage extends React.Component {
         keyDataLabel[4] = "YTD Change ";
 
         keyData[5] = result.latestVolume;
-        if (keyData[5] !== null) {keyData[5] = this.numberWithCommas(keyData[5]);}
-        else{ keyData[5] = "---";}
+        if (keyData[5] !== null) {
+          keyData[5] = this.numberWithCommas(keyData[5]);
+        } else {
+          keyData[5] = "---";
+        }
         keyDataLabel[5] = "Volume ";
       })
-      .then(function(){
-        if (stockData.change > 0 && this._isMounted) {
-          this.setState({
-            changeColor: "#3ae885"
-          });
-        } else if (this._isMounted) {
-          this.setState({
-            changeColor: "#F45385"
-          });
-        }
-        if (stockData.extendedChange > 0 && this._isMounted) {
-          this.setState({
-            extendedColor: "#66F9DA"
-          });
-        } else if (this._isMounted) {
-          this.setState({
-            extendedColor: "#F45385"
-          });
-        }
-      });
+      .then(
+        function() {
+          if (stockData.change > 0 && this._isMounted) {
+            this.setState({
+              changeColor: "#3ae885"
+            });
+          } else if (this._isMounted) {
+            this.setState({
+              changeColor: "#F45385"
+            });
+          }
+          if (stockData.extendedChange > 0 && this._isMounted) {
+            this.setState({
+              extendedColor: "#66F9DA"
+            });
+          } else if (this._isMounted) {
+            this.setState({
+              extendedColor: "#F45385"
+            });
+          }
+        }.bind(this)
+      );
     document.title = "Trader24 - " + symbol;
     fetch(
       `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_1f989becf0bf4fd9a9547df1407aa290`
@@ -602,11 +613,11 @@ export default class stockPage extends React.Component {
 
     this.getYTDChart();
     this.getLatestNews();
-    if(document.querySelector(".hamburger")){
-      document.querySelector(".hamburger").addEventListener("click", (e) => {
+    if (document.querySelector(".hamburger")) {
+      document.querySelector(".hamburger").addEventListener("click", e => {
         e.currentTarget.classList.toggle("is-active");
       });
-  }
+    }
   }
   handleBuyStock(num) {
     let user = firebase.auth().currentUser.uid;
@@ -649,7 +660,7 @@ export default class stockPage extends React.Component {
             ).toFixed(2),
             positions: Number(positionsNumber) + 1
           })
-          .catch((error) => {
+          .catch(error => {
             console.log("Error getting document:", error);
           });
       })
@@ -673,7 +684,7 @@ export default class stockPage extends React.Component {
 
     docRef
       .get()
-      .then((doc) => {
+      .then(doc => {
         if (this._isMounted) {
           this.setState({
             funds: "$" + this.numberWithCommas(doc.data()["currentfunds"])
@@ -693,7 +704,7 @@ export default class stockPage extends React.Component {
       `https://cloud.iexapis.com/stable/stock/${symbol}/news?token=pk_1f989becf0bf4fd9a9547df1407aa290`
     )
       .then(res => res.json())
-      .then((result) => {
+      .then(result => {
         for (let i = 0; i < 3; i++) {
           newsDate[parseInt(i)] =
             Date(result[parseInt(i)].datetime)
@@ -717,14 +728,17 @@ export default class stockPage extends React.Component {
       .then(() => {
         setTimeout(() => {
           for (let i = 0; i < newsUrl.length; i++) {
-            $("#img" + i).css("background-image", "url(" + newsImage[parseInt(i)] + ")");
+            $("#img" + i).css(
+              "background-image",
+              "url(" + newsImage[parseInt(i)] + ")"
+            );
           }
         }, 1500);
       });
   }
 
   componentDidMount() {
-    this._isMounted = true
+    this._isMounted = true;
     fetch("https://financialmodelingprep.com/api/v3/is-the-market-open")
       .then(res => res.json())
       .then(result => {
@@ -743,7 +757,7 @@ export default class stockPage extends React.Component {
           return val;
         });
         for (let i = 0; i < result.length; i++) {
-          symbolsOnly.push(result[i].symbol);
+          symbolsOnly.push(result[parseInt(i)].symbol);
         }
       })
       .then(() => {
@@ -764,8 +778,8 @@ export default class stockPage extends React.Component {
     this.getFunds();
   }
 
-  componentWillUnmount(){
-    this._isMounted = false
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   render() {
@@ -930,10 +944,10 @@ export default class stockPage extends React.Component {
                               this.state.fundsWithoutCommas &&
                             this.state.marketStatus &&
                             this._isMounted
-                          )
+                          ){
                             this.setState({
                               buyConfirmation: true
-                            });
+                            });}
                           else {
                             document.getElementById("buy-input").style.border =
                               "solid 1px #f45485";
@@ -968,7 +982,7 @@ export default class stockPage extends React.Component {
                     {keyData.map((val, index) => {
                       return (
                         <div className="data__info" key={index}>
-                          <h4 className="data__label">{keyDataLabel[index]}</h4>
+                          <h4 className="data__label">{keyDataLabel[parseInt(index)]}</h4>
                           <h3>{val}</h3>
                         </div>
                       );
@@ -989,7 +1003,7 @@ export default class stockPage extends React.Component {
                     {newsHeadline.map((val, indx) => {
                       return (
                         <a
-                          href={newsUrl[indx]}
+                          href={newsUrl[parseInt(indx)]}
                           target="_blank"
                           rel="noopener noreferrer"
                           key={indx}
@@ -999,9 +1013,9 @@ export default class stockPage extends React.Component {
                             <div className="article__content">
                               <div className="article__top">
                                 <h4>{val}</h4>
-                                <h6>{newsDate[indx]}</h6>
+                                <h6>{newsDate[parseInt(indx)]}</h6>
                               </div>
-                              <h5>{newsSummary[indx]}</h5>
+                              <h5>{newsSummary[parseInt(indx)]}</h5>
                             </div>
                           </div>
                         </a>
@@ -1046,8 +1060,9 @@ export default class stockPage extends React.Component {
                   onKeyUp={this.searchStocks}
                   placeholder="Search by symbol"
                   onFocus={() => {
-                    if (document.getElementById("results").firstChild)
+                    if (document.getElementById("results").firstChild){
                       document.getElementById("results").style.display = "flex";
+                    }
                     document.getElementById(
                       "topbar__searchbar"
                     ).style.boxShadow = "0px 0px 30px 0px rgba(0,0,0,0.10)";

@@ -155,7 +155,7 @@ class Dashboard extends React.Component {
       }
       return result.split(",");
     }
-    this.data1 = canvas => {
+    this.data1 = (canvas) => {
       const ctx = canvas.getContext("2d");
       const gradient = ctx.createLinearGradient(0, 0, 600, 10);
       gradient.addColorStop(0, "#7c83ff");
@@ -188,17 +188,19 @@ class Dashboard extends React.Component {
         ]
       };
     };
-    this.data2 = canvas => {
+    this.data2 = (canvas) => {
       const ctx = canvas.getContext("2d");
       const gradient = ctx.createLinearGradient(0, 0, 600, 10);
       gradient.addColorStop(0, "#7c83ff");
       gradient.addColorStop(1, "#7cf4ff");
       let gradientFill = ctx.createLinearGradient(0, 0, 0, 100);
       gradientFill.addColorStop(0.1, "rgba(124, 131, 255,.3)");
-      if (this.state.theme === "dark")
+      if (this.state.theme === "dark"){
         gradientFill.addColorStop(0.8, "rgba(55, 58, 70, 0)");
-      else if (this.state.theme === "light")
+      }
+      else if (this.state.theme === "light"){
         gradientFill.addColorStop(0.8, "rgba(255, 255, 255, 0)");
+      }
       ctx.shadowColor = "rgba(124, 131, 255,.3)";
       ctx.shadowBlur = 5;
       ctx.shadowOffsetX = 0;
@@ -228,10 +230,10 @@ class Dashboard extends React.Component {
       apiKeys[0]
     }`;
     fetch(stockApi)
-      .then(res => res.json())
-      .then(result => {
+      .then((res) => res.json())
+      .then((result) => {
         if (
-          result["Note"] === undefined &&
+          typeof result["Note"] === "undefined" &&
           Object.keys(result["Time Series (1min)"]).length > 1
         ) {
           for (
@@ -242,13 +244,13 @@ class Dashboard extends React.Component {
             dataChart.push(
               parseFloat(
                 result["Time Series (1min)"][
-                  Object.keys(result["Time Series (1min)"])[i]
+                  Object.keys(result["Time Series (1min)"])[parseInt(i)]
                 ]["4. close"]
               ).toFixed(2)
             );
           }
         } else {
-          if (result["Note"] === undefined) {
+          if (typeof result["Note"] === "undefined") {
             b++;
             const stockApi = `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=1min&apikey=${apiKeys[b]}`;
             fetch(stockApi)
@@ -264,7 +266,7 @@ class Dashboard extends React.Component {
                     dataChart.push(
                       parseFloat(
                         result["Time Series (1min)"][
-                          Object.keys(result["Time Series (1min)"])[i]
+                          Object.keys(result["Time Series (1min)"])[parseInt(i)]
                         ]["4. close"]
                       ).toFixed(2)
                     );
@@ -272,7 +274,7 @@ class Dashboard extends React.Component {
                 }
               });
           } else {
-            if (result["Note"] === undefined && result.length > 1) {
+            if (typeof result["Note"] === "undefined" && result.length > 1) {
               b++;
               const stockApi = `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=1min&apikey=${apiKeys[b]}`;
               fetch(stockApi)
@@ -287,7 +289,7 @@ class Dashboard extends React.Component {
                     dataChart.push(
                       parseFloat(
                         result["Time Series (1min)"][
-                          Object.keys(result["Time Series (1min)"])[i]
+                          Object.keys(result["Time Series (1min)"])[parseInt(i)]
                         ]["4. close"]
                       ).toFixed(2)
                     );
@@ -300,16 +302,19 @@ class Dashboard extends React.Component {
   }
   getStockInfo(symbol, dataChart, changeStash, priceStash, num, callback) {
     const percentageChange = `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_1f989becf0bf4fd9a9547df1407aa290`;
-    if (symbol !== undefined) {
+    if (typeof symbol !== "undefined") {
       fetch(percentageChange)
-        .then(res => res.json())
-        .then(result => {
-          if (result.latestPrice !== null)
-            priceStash[num] = result.latestPrice.toFixed(2);
-          else if (result.iexRealtimePrice !== null)
-            priceStash[num] = result.iexRealtimePrice.toFixed(2);
-          if (result.changePercent !== null)
-            changeStash[num] = parseFloat(result.changePercent).toFixed(2);
+        .then((res) => res.json())
+        .then((result) => {
+          if (result.latestPrice !== null){
+            priceStash[parseInt(num)] = result.latestPrice.toFixed(2);
+          }
+          else if (result.iexRealtimePrice !== null){
+            priceStash[parseInt(num)] = result.iexRealtimePrice.toFixed(2);
+          }
+          if (result.changePercent !== null){
+            changeStash[parseInt(num)] = parseFloat(result.changePercent).toFixed(2);
+          }
         });
       this.getChart(dataChart, symbol, callback);
     }
@@ -318,8 +323,8 @@ class Dashboard extends React.Component {
     const stocks =
       "https://cloud.iexapis.com/stable/stock/market/list/mostactive?token=pk_1f989becf0bf4fd9a9547df1407aa290";
     fetch(stocks)
-      .then(res => res.json())
-      .then(result => {
+      .then((res) => res.json())
+      .then((result) => {
         const gainers =
           "https://cloud.iexapis.com/stable/stock/market/list/gainers?token=pk_1f989becf0bf4fd9a9547df1407aa290";
         let counter = 0;
@@ -327,52 +332,54 @@ class Dashboard extends React.Component {
           .then(res => res.json())
           .then(result => {
             for (let i = 0; i < result.length; i++) {
-              if (result[i].latestPrice !== null) {
-                tempStocksSymbols.push(result[i].symbol);
-                tempStockName.push(result[i].companyName);
-                tempStockPrice.push("$" + result[i].latestPrice.toFixed(2));
+              if (result[parseInt(i)].latestPrice !== null) {
+                tempStocksSymbols.push(result[parseInt(i)].symbol);
+                tempStockName.push(result[parseInt(i)].companyName);
+                tempStockPrice.push("$" + result[parseInt(i)].latestPrice.toFixed(2));
               }
             }
           })
           .then(() => {
             for (let i = 0; i < 9; i++) {
-              if (this.isInArray(stockSymbols, result[i].symbol.toString())) {
-                stockList[i] = tempStockName[counter];
-                stockListPrices[i] = tempStockPrice[counter];
-                stockListTickers[i] = tempStocksSymbols[counter];
+              if(typeof result[parseInt(i)] !== "undefined"){
+              if (this.isInArray(stockSymbols, result[parseInt(i)].symbol.toString())) {
+                stockList[parseInt(i)] = tempStockName[parseInt(counter)];
+                stockListPrices[parseInt(i)] = tempStockPrice[parseInt(counter)];
+                stockListTickers[parseInt(i)] = tempStocksSymbols[parseInt(counter)];
                 counter++;
               } else {
-                stockList[i] = result[i].companyName;
-                stockListPrices[i] = "$" + result[i].latestPrice.toFixed(2);
-                stockListTickers[i] = result[i].symbol;
+                stockList[parseInt(i)] = result[parseInt(i)].companyName;
+                stockListPrices[parseInt(i)] = "$" + result[parseInt(i)].latestPrice.toFixed(2);
+                stockListTickers[parseInt(i)] = result[parseInt(i)].symbol;
               }
+            }
             }
           })
           .then(() => {
             setTimeout(() => {
               for (let i = 0; i < 9; i++) {
-                const percentageChange = `https://cloud.iexapis.com/stable/stock/${stockListTickers[i]}/quote?displayPercent=true&token=pk_1f989becf0bf4fd9a9547df1407aa290`;
-                if (stockListTickers[i] !== undefined) {
+                const percentageChange = `https://cloud.iexapis.com/stable/stock/${stockListTickers[parseInt(i)]}/quote?displayPercent=true&token=pk_1f989becf0bf4fd9a9547df1407aa290`;
+                if (typeof stockListTickers[parseInt(i)] !== "undefined") {
                   fetch(percentageChange)
-                    .then(res => res.json())
-                    .then(result => {
-                      stockListChange[i] = parseFloat(
+                    .then((res) => res.json())
+                    .then((result) => {
+                      stockListChange[parseInt(i)] = parseFloat(
                         result.changePercent
                       ).toFixed(2);
-                      if (Math.sign(stockListChange[i]) === -1) {
-                        stockListChangeColors[i] = "rgb(244,84,133";
-                      } else if (Math.sign(stockListChange[i]) === 1) {
-                        stockListChangeColors[i] = "rgb(102,249,218";
-                        stockListChange[i] = "+" + stockListChange[i];
+                      if (Math.sign(stockListChange[parseInt(i)]) === -1) {
+                        stockListChangeColors[parseInt(i)] = "rgb(244,84,133";
+                      } else if (Math.sign(stockListChange[parseInt(i)]) === 1) {
+                        stockListChangeColors[parseInt(i)] = "rgb(102,249,218";
+                        stockListChange[parseInt(i)] = "+" + stockListChange[parseInt(i)];
                         if (
-                          stockListChange[i].charAt(0) === "+" &&
-                          stockListChange[i].charAt(1) === "+"
+                          stockListChange[parseInt(i)].charAt(0) === "+" &&
+                          stockListChange[parseInt(i)].charAt(1) === "+"
                         )
-                          stockListChange[i] = stockListChange[i].substr(1);
+                          stockListChange[parseInt(i)] = stockListChange[parseInt(i)].substr(1);
                       } else {
-                        stockListChangeColors[i] = "rgb(153,158,175";
+                        stockListChangeColors[parseInt(i)] = "rgb(153,158,175";
                       }
-                      stockListChange[i] = stockListChange[i] + "%";
+                      stockListChange[parseInt(i)] = stockListChange[parseInt(i)] + "%";
                     })
                     .then(() => {
                       setTimeout(() => {
@@ -402,28 +409,28 @@ class Dashboard extends React.Component {
     fetch(lastPrice)
       .then(res => res.json())
       .then(result => {
-        portfolioValue[i] = parseFloat(
-          Number(portfolioShares[i] * result.latestPrice).toFixed(2)
+        portfolioValue[parseInt(i)] = parseFloat(
+          Number(portfolioShares[parseInt(i)] * result.latestPrice).toFixed(2)
         );
       })
       .then(() => {
-        portfolioDifference[i] =
+        portfolioDifference[parseInt(i)] =
           this.relDiff(
-            parseFloat(portfolioValue[i]),
-            parseFloat(portfolioMoneyPaid[i])
+            parseFloat(portfolioValue[parseInt(i)]),
+            parseFloat(portfolioMoneyPaid[parseInt(i)])
           ).toFixed(2) + "%";
-        if (portfolioValue[i] > portfolioMoneyPaid[i]) {
-          portfolioDifference[i] = "+" + portfolioDifference[i];
-          portfolioColor[i] = "#66F9DA";
-        } else if (portfolioValue[i] === portfolioMoneyPaid[i])
-          portfolioColor[i] = "#999EAF";
+        if (portfolioValue[parseInt(i)] > portfolioMoneyPaid[parseInt(i)]) {
+          portfolioDifference[parseInt(i)] = "+" + portfolioDifference[parseInt(i)];
+          portfolioColor[parseInt(i)] = "#66F9DA";
+        } else if (portfolioValue[parseInt(i)] === portfolioMoneyPaid[parseInt(i)])
+          portfolioColor[parseInt(i)] = "#999EAF";
         else {
-          portfolioDifference[i] = "-" + portfolioDifference[i];
-          portfolioColor[i] = "#F45385";
+          portfolioDifference[parseInt(i)] = "-" + portfolioDifference[parseInt(i)];
+          portfolioColor[parseInt(i)] = "#F45385";
         }
-        if (portfolioDifference[i].includes("NaN")) {
-          portfolioDifference[i] = "---";
-          portfolioColor[i] = "#999EAF";
+        if (portfolioDifference[parseInt(i)].includes("NaN")) {
+          portfolioDifference[parseInt(i)] = "---";
+          portfolioColor[parseInt(i)] = "#999EAF";
         }
       });
   }
@@ -445,7 +452,7 @@ class Dashboard extends React.Component {
               portfolioStocks.push(doc.data().symbol);
               portfolioShares.push(doc.data().shares);
               portfolioMoneyPaid.push(parseFloat(doc.data().moneyPaid));
-              this.getLatestPrice(portfolioStocks[i], i);
+              this.getLatestPrice(portfolioStocks[parseInt(i)], i);
               i++;
             }
           });
@@ -534,7 +541,7 @@ class Dashboard extends React.Component {
         .then(res => res.json())
         .then(result => {
           for (let i = 0; i < 4; i++) {
-            if (result[i] !== undefined) stockSymbols.push(result[i].symbol);
+            if (result[parseInt(i)] !== undefined) stockSymbols.push(result[parseInt(i)].symbol);
           }
           this.getStockInfo(
             stockSymbols[0],
@@ -683,18 +690,18 @@ class Dashboard extends React.Component {
   }
   render() {
     for (let i = 0; i < stockSymbols.length; i++) {
-      if (Math.sign(stockChanges[i]) === -1) {
-        changesColors[i] = "#f45485";
-      } else if (Math.sign(stockChanges[i]) === 1) {
-        changesColors[i] = "#66f9da";
-        stockChanges[i] = "+" + stockChanges[i];
+      if (Math.sign(stockChanges[parseInt(i)]) === -1) {
+        changesColors[parseInt(i)] = "#f45485";
+      } else if (Math.sign(stockChanges[parseInt(i)]) === 1) {
+        changesColors[parseInt(i)] = "#66f9da";
+        stockChanges[parseInt(i)] = "+" + stockChanges[parseInt(i)];
         if (
-          stockChanges[i].charAt(0) === "+" &&
-          stockChanges[i].charAt(1) === "+"
+          stockChanges[parseInt(i)].charAt(0) === "+" &&
+          stockChanges[parseInt(i)].charAt(1) === "+"
         )
-          stockChanges[i] = stockChanges[i].substr(1);
+          stockChanges[parseInt(i)] = stockChanges[parseInt(i)].substr(1);
       } else {
-        changesColors[i] = "#999eaf";
+        changesColors[parseInt(i)] = "#999eaf";
       }
       if (document.getElementById("searchBar") === document.activeElement) {
         document.getElementById("topbar__searchbar").style.boxShadow =
