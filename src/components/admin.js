@@ -58,7 +58,7 @@ export default class Admin extends React.Component {
   }
 
   numberWithCommas(x) {
-    if (x !== undefined) return x.toLocaleString();
+    if (x !== undefined) {return x.toLocaleString();}
     else return "";
   }
   editFunds({ target }) {
@@ -90,17 +90,17 @@ export default class Admin extends React.Component {
                 {usersInfo.username.map((val, index) => (
                   <tr key={index}>
                     <td>{val}</td>
-                    <td>{usersInfo.email[index]}</td>
+                    <td>{usersInfo.email[parseInt(index)]}</td>
                     <td>
                       <input
                         name={val}
                         type="text"
-                        placeholder={usersInfo.currentFunds[index]}
+                        placeholder={usersInfo.currentFunds[parseInt(index)]}
                         onKeyDown={this.editFunds}
                       />
                     </td>
-                    <td>{usersInfo.positions[index]}</td>
-                    <td>{usersInfo.isAdmin[index]}</td>
+                    <td>{usersInfo.positions[parseInt(index)]}</td>
+                    <td>{usersInfo.isAdmin[parseInt(index)]}</td>
                   </tr>
                 ))}
               </tbody>

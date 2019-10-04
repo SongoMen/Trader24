@@ -299,9 +299,9 @@ export default class stockPage extends React.Component {
         .then(res => res.json())
         .then(result => {
           for (let i = 0; i < result.chart.length; i++) {
-            if (result.chart[i].average !== null) {
-              chartData1.push(result.chart[i].close.toFixed(2));
-              labels.push(result.chart[i].label);
+            if (result.chart[parseInt(i)].average !== null) {
+              chartData1.push(result.chart[parseInt(i)].close.toFixed(2));
+              labels.push(result.chart[parseInt(i)].label);
             }
           }
         })
@@ -336,9 +336,9 @@ export default class stockPage extends React.Component {
         .then(res => res.json())
         .then((result) => {
           for (let i = 0; i < result.chart.length; i++) {
-            if (result.chart[i].average !== null) {
-              chartData1.push(result.chart[i].close.toFixed(2));
-              labels.push(result.chart[i].label);
+            if (result.chart[parseInt(i)].average !== null) {
+              chartData1.push(result.chart[parseInt(i)].close.toFixed(2));
+              labels.push(result.chart[parseInt(i)].label);
             }
           }
         })

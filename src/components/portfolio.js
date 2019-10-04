@@ -30,35 +30,35 @@ export default class portfolio extends React.Component {
     fetch(lastPrice)
       .then((res) => res.json())
       .then((result) => {
-        value[i] = parseFloat(
-          Number(shares[i] * result.latestPrice).toFixed(2)
+        value[parseInt(i)] = parseFloat(
+          Number(shares[parseInt(i)] * result.latestPrice).toFixed(2)
         );
       })
       .then(() => {
-        difference[i] =
-          this.relDiff(parseFloat(value[i]), parseFloat(moneyPaid[i])).toFixed(
+        difference[parseInt(i)] =
+          this.relDiff(parseFloat(value[parseInt(i)]), parseFloat(moneyPaid[parseInt(i)])).toFixed(
             2
           ) + "%";
-        change[i] =
+        change[parseInt(i)] =
           "$" +
           parseFloat(
-            parseFloat(value[i] - parseFloat(moneyPaid[i])).toFixed(2)
+            parseFloat(value[parseInt(i)] - parseFloat(moneyPaid[parseInt(i)])).toFixed(2)
           );
-        if (value[i] > moneyPaid[i]) {
-          difference[i] = "+" + difference[i];
-          color[i] = "#66F9DA";
-        } else if (value[i] === moneyPaid[i]) color[i] = "#999EAF";
+        if (value[parseInt(i)] > moneyPaid[parseInt(i)]) {
+          difference[parseInt(i)] = "+" + difference[parseInt(i)];
+          color[parseInt(i)] = "#66F9DA";
+        } else if (value[parseInt(i)] === moneyPaid[parseInt(i)]) color[parseInt(i)] = "#999EAF";
         else {
-          difference[i] = "-" + difference[i];
-          color[i] = "#F45385";
+          difference[parseInt(i)] = "-" + difference[parseInt(i)];
+          color[parseInt(i)] = "#F45385";
         }
-        if (difference[i].includes("NaN")) {
-          difference[i] = "---";
-          color[i] = "#999EAF";
+        if (difference[parseInt(i)].includes("NaN")) {
+          difference[parseInt(i)] = "---";
+          color[parseInt(i)] = "#999EAF";
         }
-        if (change[i].split("")[1] === "-") {
-          let name = "" + change[i];
-          change[i] = "-$" + name.substr(2);
+        if (change[parseInt(i)].split("")[1] === "-") {
+          let name = "" + change[parseInt(i)];
+          change[parseInt(i)] = "-$" + name.substr(2);
         }
       });
   }
@@ -88,7 +88,7 @@ export default class portfolio extends React.Component {
             symbols.push(doc.data().symbol);
             shares.push(doc.data().shares);
             moneyPaid.push(doc.data().moneyPaid);
-            this.getLatestPrice(symbols[i], i);
+            this.getLatestPrice(symbols[parseInt(i)], i);
             i++;
           });
         } else {
@@ -174,9 +174,11 @@ export default class portfolio extends React.Component {
       .onSnapshot(
         function(doc) {
           if (doc.data() !== undefined)
+          {
             this.setState({
               funds: doc.data()["currentfunds"]
             });
+          }
         }.bind(this)
       );
     document.querySelector(".hamburger").addEventListener("click", (e) => {
@@ -235,15 +237,15 @@ export default class portfolio extends React.Component {
                   return (
                     <tr key={index}>
                       <td>{val}</td>
-                      <td>{shares[index]}</td>
-                      <td style={{color: color[index]}}>{difference[index]}</td>
-                      <td style={{color: color[index]}}>{change[index]}</td>
-                      <td>${value[index]}</td>
+                      <td>{shares[parseInt(index)]}</td>
+                      <td style={{color: color[parseInt(index)]}}>{difference[parseInt(index)]}</td>
+                      <td style={{color: color[parseInt(index)]}}>{change[parseInt(index)]}</td>
+                      <td>${value[parseInt(index)]}</td>
                       <td>
                         <svg
                           onClick={() => {
                             if (this.state.marketStatus)
-                              this.handleStockSell(position[index], index);
+                              this.handleStockSell(position[parseInt(index)], index);
                             else
                               this.setState({
                                 error: true

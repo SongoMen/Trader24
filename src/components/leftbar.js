@@ -14,9 +14,11 @@ export default class Leftbar extends React.Component {
     fetch("https://financialmodelingprep.com/api/v3/is-the-market-open")
       .then(res => res.json())
       .then(result => {
-        if (result.isTheStockMarketOpen)
+        if (result.isTheStockMarketOpen) {
           document.getElementById("panel__status").style.color = "#5efad7";
-        else document.getElementById("panel__status").style.color = "#eb5887";
+        } else {
+          document.getElementById("panel__status").style.color = "#eb5887";
+        }
         document.getElementById(
           "panel__status"
         ).innerHTML = result.isTheStockMarketOpen

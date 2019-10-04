@@ -50,7 +50,7 @@ function PublicRoute({ component: Component, authed, ...rest }) {
 }
 
 class App extends Component {
-  _isMounted = false
+  _isMounted = false;
   state = {
     authed: false,
     loading: true,
@@ -59,24 +59,23 @@ class App extends Component {
   componentDidMount() {
     this._isMounted = true;
     this.removeListener = firebaseAuth().onAuthStateChanged(user => {
-      if(this._isMounted){
-      if (user) {
-        this.setState({
-          authed: true,
-          loading: false
-        });
-      } else {
-        this.setState({
-          authed: false,
-          loading: false
-        });
+      if (this._isMounted) {
+        if (user) {
+          this.setState({
+            authed: true,
+            loading: false
+          });
+        } else {
+          this.setState({
+            authed: false,
+            loading: false
+          });
+        }
       }
-    }
     });
-  
   }
   componentWillUnmount() {
-    this._isMounted = false
+    this._isMounted = false;
     this.removeListener();
   }
 
@@ -87,14 +86,15 @@ class App extends Component {
         window.location.href.split("/").length - 1
       ] !== ""
     ) {
-      if (theme !== null)
+      if (theme !== null) {
         this.setState({
-          theme: theme
+          theme
         });
-      else
+      } else{
         this.setState({
           theme: "dark"
         });
+      }
     }
   }
 

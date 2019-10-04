@@ -1,6 +1,6 @@
 import React from "react";
 import { login } from "./auth";
-import LandingMenu from './LandingMenu'
+import LandingMenu from './LandingMenu';
 
 export default class Login extends React.Component {
   constructor(props) {
