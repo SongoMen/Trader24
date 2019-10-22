@@ -6,9 +6,8 @@
   <h1>Trader24</h1>
 </div>
 
+Application that allows people to trader US market stocks. Data provider is IEX.  
 <br>
-
-Application that allows people to trader US market stocks. Data provider is IEX.
 
 Technologie stack: 
 * React
