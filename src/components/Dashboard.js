@@ -473,6 +473,12 @@ class Dashboard extends React.Component {
     let user = firebase.auth().currentUser.uid;
     let i = 0;
 
+    portfolioStocks = [];
+    portfolioValue = [];
+    portfolioShares = [];
+    portfolioMoneyPaid = [];
+    portfolioDifference = [];
+    portfolioColor = [];
     firebase
       .firestore()
       .collection("users")

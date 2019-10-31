@@ -12,6 +12,7 @@ let allSymbols;
 let admin;
 
 export default class Topbar extends React.Component {
+  _isMounted = false;
   constructor(props) {
     super(props);
     this.state = {
@@ -58,7 +59,12 @@ export default class Topbar extends React.Component {
     return x.toLocaleString();
   }
 
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
   componentDidMount() {
+    this._isMounted = true;
     let user = firebase.auth().currentUser.uid;
     fetch(
       "https://cloud.iexapis.com/stable/ref-data/symbols?token=pk_1f989becf0bf4fd9a9547df1407aa290"
@@ -73,7 +79,7 @@ export default class Topbar extends React.Component {
       .doc(user)
       .onSnapshot(
         function(doc) {
-          if (typeof doc.data() !== "undefined") {
+          if (typeof doc.data() !== "undefined" && this._isMounted) {
             this.setState({
               funds:
                 "$" + this.numberWithCommas(Number(doc.data()["currentfunds"])),
@@ -85,13 +91,13 @@ export default class Topbar extends React.Component {
       );
     document.querySelector(".hamburger").addEventListener("click", e => {
       e.currentTarget.classList.toggle("is-active");
-      if (!this.state.menuActive) {
+      if (!this.state.menuActive && this._isMounted) {
         document.getElementById("mobileMenu").style.display = "flex";
         this.setState({ menuActive: true });
         setTimeout(() => {
           document.getElementById("mobileMenu").style.left = "0px";
         }, 200);
-      } else {
+      } else if (this._isMounted) {
         document.getElementById("mobileMenu").style.left = "-100%";
         this.setState({ menuActive: false });
         setTimeout(() => {
