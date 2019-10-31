@@ -33,7 +33,7 @@ class Register extends Component {
   render() {
     return (
       <div className="limiter">
-        <LandingMenu name="HOME" url="/" name2="LOGIN" url2="/login"/>
+        <LandingMenu name="HOME" url="/" name2="LOGIN" url2="/login" />
         <div className="container-register">
           <div className="wrap-register">
             <div className="register-pic js-tilt" data-tilt="">

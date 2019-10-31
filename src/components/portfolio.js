@@ -128,7 +128,9 @@ export default class portfolio extends React.Component {
         .delete()
         .then(
           function() {
-            console.log(Number(this.state.funds) + Number(value[parseInt(number)]))
+            console.log(
+              Number(this.state.funds) + Number(value[parseInt(number)])
+            );
             if (this._isMounted)
               this.setState({
                 funds:
