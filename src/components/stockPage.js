@@ -231,12 +231,7 @@ export default class stockPage extends React.Component {
               i--
             ) {
               chartData1.push(
-                parseFloat(
-                  result["Time Series (1min)"][
-                    Object.keys(result["Time Series (1min)"])[parseInt(i)]
-                  ]["4. close"]
-                ).toFixed(2)
-              );
+                parseFloat(result["Time Series (1min)"][Object.keys(result["Time Series (1min)"])[parseInt(i)]]["4. close"]).toFixed(2));
               labels.push(
                 Object.keys(result["Time Series (1min)"])[parseInt(i)].split(" ")[1].slice(0, -3)
               );
@@ -256,13 +251,8 @@ export default class stockPage extends React.Component {
                     i > 0;
                     i--
                   ) {
-                    chartData1.push(
-                      parseFloat(
-                        result["Time Series (1min)"][Object.keys(result["Time Series (1min)"])[parseInt(i)]]["4. close"]).toFixed(2)
-                    );
-                    labels.push(
-                      Object.keys(result["Time Series (1min)"])[parseInt(i)].split(" ")[1].slice(0, -3)
-                    );
+                    chartData1.push(parseFloat(result["Time Series (1min)"][Object.keys(result["Time Series (1min)"])[parseInt(i)]]["4. close"]).toFixed(2));
+                    labels.push(Object.keys(result["Time Series (1min)"])[parseInt(i)].split(" ")[1].slice(0, -3));
                   }
                 });
             }, 500);
@@ -334,7 +324,7 @@ export default class stockPage extends React.Component {
       const stockApi = `https://cloud.iexapis.com/beta/stock/${symbol}/batch?token=pk_1f989becf0bf4fd9a9547df1407aa290&types=chart,quote&range=1y`;
       fetch(stockApi)
         .then(res => res.json())
-        .then((result) => {
+        .then(result => {
           for (let i = 0; i < result.chart.length; i++) {
             if (result.chart[parseInt(i)].average !== null) {
               chartData1.push(result.chart[parseInt(i)].close.toFixed(2));
@@ -810,12 +800,11 @@ export default class stockPage extends React.Component {
                     document.getElementById("buy-input").value *
                       this.state.latestPrice <=
                     this.state.fundsWithoutCommas
-                  ){
+                  ) {
                     this.handleBuyStock(
                       document.getElementById("buy-input").value
                     );
-                  }
-                  else if (this._isMounted) {
+                  } else if (this._isMounted) {
                     this.setState({
                       buyConfirmation: false
                     });
@@ -838,6 +827,13 @@ export default class stockPage extends React.Component {
               </button>
             </div>
           </div>
+        )}
+        {this.state.valid === "" && (
+          <ul className="loader">
+            <li />
+            <li />
+            <li />
+          </ul>
         )}
         {this.state.valid && (
           <div style={{ display: "flex", height: "100%" }}>
@@ -945,11 +941,11 @@ export default class stockPage extends React.Component {
                               this.state.fundsWithoutCommas &&
                             this.state.marketStatus &&
                             this._isMounted
-                          ){
+                          ) {
                             this.setState({
                               buyConfirmation: true
-                            });}
-                          else {
+                            });
+                          } else {
                             document.getElementById("buy-input").style.border =
                               "solid 1px #f45485";
                           }
@@ -983,7 +979,9 @@ export default class stockPage extends React.Component {
                     {keyData.map((val, index) => {
                       return (
                         <div className="data__info" key={index}>
-                          <h4 className="data__label">{keyDataLabel[parseInt(index)]}</h4>
+                          <h4 className="data__label">
+                            {keyDataLabel[parseInt(index)]}
+                          </h4>
                           <h3>{val}</h3>
                         </div>
                       );
@@ -1061,7 +1059,7 @@ export default class stockPage extends React.Component {
                   onKeyUp={this.searchStocks}
                   placeholder="Search by symbol"
                   onFocus={() => {
-                    if (document.getElementById("results").firstChild){
+                    if (document.getElementById("results").firstChild) {
                       document.getElementById("results").style.display = "flex";
                     }
                     document.getElementById(
