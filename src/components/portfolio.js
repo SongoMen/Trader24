@@ -253,10 +253,11 @@ export default class portfolio extends React.Component {
                                 index
                               );
                             } else {
-                              if (this._isMounted)
+                              if (this._isMounted){
                                 this.setState({
                                   error: true
                                 });
+                              }
                             }
                           }}
                           xmlns="http://www.w3.org/2000/svg"
