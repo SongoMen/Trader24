@@ -14,7 +14,7 @@ Technologie stack:
 * Chartjs 2
 * Firebase
 * react-router
-* node-sass
+* Sass
 * Jest
 
 Using Codacy for refactoring and error fixes.
