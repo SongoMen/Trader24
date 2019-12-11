@@ -57,6 +57,24 @@ class App extends Component {
   };
   componentDidMount() {
     this._isMounted = true;
+
+    let theme = localStorage.getItem("theme");
+    if (
+      window.location.href.split("/")[
+        window.location.href.split("/").length - 1
+      ] !== ""
+    ) {
+      if (theme !== null) {
+        this.setState({
+          theme
+        });
+      } else{
+        this.setState({
+          theme: "dark"
+        });
+      }
+    }
+
     this.removeListener = firebaseAuth().onAuthStateChanged(user => {
       if (this._isMounted) {
         if (user) {
@@ -76,25 +94,6 @@ class App extends Component {
   componentWillUnmount() {
     this._isMounted = false;
     this.removeListener();
-  }
-
-  componentWillMount() {
-    let theme = localStorage.getItem("theme");
-    if (
-      window.location.href.split("/")[
-        window.location.href.split("/").length - 1
-      ] !== ""
-    ) {
-      if (theme !== null) {
-        this.setState({
-          theme
-        });
-      } else{
-        this.setState({
-          theme: "dark"
-        });
-      }
-    }
   }
 
   render() {

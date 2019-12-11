@@ -20,7 +20,7 @@ export default class Login extends React.Component {
   }
   render() {
     return (
-      <div className="limiter">
+      <section className="limiter">
         <LandingMenu name="HOME" url="/" name2="REGISTER" url2="/register"/>
         <div className="container-register">
           <div className="wrap-register">
@@ -85,7 +85,7 @@ export default class Login extends React.Component {
           <p>Test Account:</p>
           test12@test.com pw: test123
         </div>
-      </div>
+      </section>
     );
   }
 }

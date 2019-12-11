@@ -109,7 +109,7 @@ export default class Topbar extends React.Component {
   render() {
     let user = firebase.auth().currentUser.displayName;
     return (
-      <div style={{ display: "flex", alignItems: "center" }}>
+      <nav style={{ display: "flex", alignItems: "center" }}>
         <div className="mobileMenu" id="mobileMenu">
           <Leftbar></Leftbar>
         </div>
@@ -196,7 +196,7 @@ export default class Topbar extends React.Component {
             </div>
           </div>
         </div>
-      </div>
+      </nav>
     );
   }
 }

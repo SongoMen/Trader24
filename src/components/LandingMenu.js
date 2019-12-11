@@ -15,7 +15,7 @@ function LandingMenu(props) {
   }
   userCheck();
   return (
-    <header className="header">
+    <nav className="header">
       <div className="header__logo">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
           <g>
@@ -51,7 +51,7 @@ function LandingMenu(props) {
           </button>
         </Link>
       )}
-    </header>
+    </nav>
   );
 }
 

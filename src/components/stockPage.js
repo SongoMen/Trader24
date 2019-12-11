@@ -774,7 +774,7 @@ export default class stockPage extends React.Component {
 
   render() {
     return (
-      <div className="stock">
+      <section className="stock">
         {this.state.buyConfirmation === true && <div className="black-bg" />}
         {this.state.buyConfirmation === true && (
           <div className="buyConfirmation">
@@ -1087,7 +1087,7 @@ export default class stockPage extends React.Component {
             </h3>
           </div>
         )}
-      </div>
+      </section>
     );
   }
 }

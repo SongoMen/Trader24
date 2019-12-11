@@ -32,7 +32,7 @@ class Register extends Component {
   }
   render() {
     return (
-      <div className="limiter">
+      <section className="limiter">
         <LandingMenu name="HOME" url="/" name2="LOGIN" url2="/login" />
         <div className="container-register">
           <div className="wrap-register">
@@ -105,7 +105,7 @@ class Register extends Component {
             </form>
           </div>
         </div>
-      </div>
+      </section>
     );
   }
 }
