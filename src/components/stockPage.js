@@ -696,7 +696,7 @@ export default class stockPage extends React.Component {
       .then(res => res.json())
       .then(result => {
         for (let i = 0; i < 3; i++) {
-          let date = Date(result[parseInt(i)].datetime).toString().split(" ")
+          let date = Date(result[parseInt(i)].datetime).toString().split(" ");
           newsDate[parseInt(i)] =`${date[1]} ${date[2]}`;
           newsHeadline[parseInt(i)] = result[parseInt(i)].headline;
           newsUrl[parseInt(i)] = result[parseInt(i)].url;
