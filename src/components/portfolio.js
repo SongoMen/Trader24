@@ -201,10 +201,11 @@ export default class portfolio extends React.Component {
               style={{ margin: "20px" }}
               className="stockPage__buy-button"
               onClick={() => {
-                if (this._isMounted)
+                if (this._isMounted){
                   this.setState({
                     error: false
                   });
+                }
               }}
             >
               CONFIRM
