@@ -48,7 +48,7 @@ export default class portfolio extends React.Component {
             ).toFixed(2)
           );
         if (value[parseInt(i)] > moneyPaid[parseInt(i)]) {
-          difference[parseInt(i)] = "+" + difference[parseInt(i)];
+          difference[parseInt(i)] = `+ ${difference[parseInt(i)}]`;
           color[parseInt(i)] = "#66F9DA";
         } else if (value[parseInt(i)] === moneyPaid[parseInt(i)]) {
           color[parseInt(i)] = "#999EAF";
