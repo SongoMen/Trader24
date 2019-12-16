@@ -26,7 +26,7 @@ export default class Topbar extends React.Component {
     let b = 0;
     let filter = document.getElementById("searchBar").value.toUpperCase();
     if (e.key === "Enter") {
-      window.location = "/stocks/" + filter;
+      window.location = `/stocks/${filter}`;
     }
     if (filter.length === 0) {
       document.getElementById("results").innerHTML = "";
@@ -82,7 +82,7 @@ export default class Topbar extends React.Component {
           if (typeof doc.data() !== "undefined" && this._isMounted) {
             this.setState({
               funds:
-                "$" + this.numberWithCommas(Number(doc.data()["currentfunds"])),
+                `$${this.numberWithCommas(Number(doc.data()["currentfunds"]))}`,
               fundsLoader: true
             });
             admin = doc.data()["admin"];
