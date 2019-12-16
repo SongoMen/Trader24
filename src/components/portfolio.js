@@ -48,12 +48,12 @@ export default class portfolio extends React.Component {
             ).toFixed(2)
           );
         if (value[parseInt(i)] > moneyPaid[parseInt(i)]) {
-          difference[parseInt(i)] = `+ ${difference[parseInt(i)}]`;
+          difference[parseInt(i)] = `+${difference[parseInt(i)]}`;
           color[parseInt(i)] = "#66F9DA";
         } else if (value[parseInt(i)] === moneyPaid[parseInt(i)]) {
           color[parseInt(i)] = "#999EAF";
         } else {
-          difference[parseInt(i)] = "-" + difference[parseInt(i)];
+          difference[parseInt(i)] = `-${difference[parseInt(i)]}`;
           color[parseInt(i)] = "#F45385";
         }
         if (difference[parseInt(i)].includes("NaN")) {
@@ -62,7 +62,7 @@ export default class portfolio extends React.Component {
         }
         if (change[parseInt(i)].split("")[1] === "-") {
           let name = "" + change[parseInt(i)];
-          change[parseInt(i)] = "-$" + name.substr(2);
+          change[parseInt(i)] = `-$${name.substr(2)}`;
         }
       });
   }
@@ -169,7 +169,7 @@ export default class portfolio extends React.Component {
       });
     let user = firebase.auth().currentUser.uid;
 
-    document.title = document.title + " - Portfolio";
+    document.title = `${document.title} - Portfolio`;
     this.getPositions();
     firebase
       .firestore()
