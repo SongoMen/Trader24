@@ -1,12 +1,12 @@
-import React from 'react';
-import {Line} from 'react-chartjs-2';
-import firebase from 'firebase/app';
-import 'firebase/firestore';
-import $ from 'jquery';
-import {Link} from 'react-router-dom';
-import Leftbar from './leftbar';
-import Topbar from './topbar';
-import {relDiff,numberWithCommas} from './helpers.js';
+import React from "react";
+import {Line} from "react-chartjs-2";
+import firebase from "firebase/app";
+import "firebase/firestore";
+import $ from "jquery";
+import {Link} from "react-router-dom";
+import Leftbar from "./leftbar";
+import Topbar from "./topbar";
+import {relDiff, numberWithCommas} from "./helpers.js";
 
 const db = firebase.firestore();
 
@@ -53,18 +53,18 @@ var options = {
       radius: 0,
     },
     line: {
-      borderCapStyle: 'round',
-      borderJoinStyle: 'round',
+      borderCapStyle: "round",
+      borderJoinStyle: "round",
       tension: 1,
     },
   },
 };
 
 const apiKeys = [
-  'OYMIDLPTGY6CAMP0',
-  'TVARN7J9F191IFLB',
-  'NOBPQ2OPX7E1XRT3',
-  '7V0Q0N46CBIPHA2K',
+  "OYMIDLPTGY6CAMP0",
+  "TVARN7J9F191IFLB",
+  "NOBPQ2OPX7E1XRT3",
+  "7V0Q0N46CBIPHA2K",
 ];
 
 // CHARTS
@@ -106,8 +106,8 @@ let portfolioStocks = [],
 
 function Alert() {
   if (
-    sessionStorage.getItem('alert') === 'true' ||
-    sessionStorage.getItem('alert') === null
+    sessionStorage.getItem("alert") === "true" ||
+    sessionStorage.getItem("alert") === null
   ) {
     return (
       <div className="alertMessage" id="alertMessage">
@@ -119,8 +119,8 @@ function Alert() {
         </p>
         <button
           onClick={() => {
-            document.getElementById('alertMessage').outerHTML = '';
-            sessionStorage.setItem('alert', 'false');
+            document.getElementById("alertMessage").outerHTML = "";
+            sessionStorage.setItem("alert", "false");
           }}
           className="alertMessage__button">
           OK
@@ -137,14 +137,14 @@ class Dashboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loader1: '',
-      loader2: '',
-      loader3: '',
-      portfolioLoader: '',
-      fundsWithoutCommas: '',
-      accountValue: '',
-      marketStatus: '',
-      theme: '',
+      loader1: "",
+      loader2: "",
+      loader3: "",
+      portfolioLoader: "",
+      fundsWithoutCommas: "",
+      accountValue: "",
+      marketStatus: "",
+      theme: "",
     };
     this.componentDidMount = this.componentDidMount.bind(this);
     this.getAccountInfo = this.getAccountInfo.bind(this);
@@ -157,9 +157,9 @@ class Dashboard extends React.Component {
     function labelGen(length) {
       let result = 0;
       for (let i = 1; i < length; i++) {
-        result = result + ',' + i;
+        result = result + "," + i;
       }
-      return result.split(',');
+      return result.split(",");
     }
 
     /*
@@ -167,18 +167,18 @@ class Dashboard extends React.Component {
      */
 
     this.data1 = canvas => {
-      const ctx = canvas.getContext('2d');
+      const ctx = canvas.getContext("2d");
       const gradient = ctx.createLinearGradient(0, 0, 600, 10);
-      gradient.addColorStop(0, '#7c83ff');
-      gradient.addColorStop(1, '#7cf4ff');
+      gradient.addColorStop(0, "#7c83ff");
+      gradient.addColorStop(1, "#7cf4ff");
       let gradientFill = ctx.createLinearGradient(0, 0, 0, 100);
-      gradientFill.addColorStop(0.1, 'rgba(124, 131, 255,.3)');
-      if (this.state.theme === 'dark') {
-        gradientFill.addColorStop(0.8, 'rgba(55, 58, 70, 0)');
-      } else if (this.state.theme === 'light') {
-        gradientFill.addColorStop(0.8, 'rgba(255, 255, 255, 0)');
+      gradientFill.addColorStop(0.1, "rgba(124, 131, 255,.3)");
+      if (this.state.theme === "dark") {
+        gradientFill.addColorStop(0.8, "rgba(55, 58, 70, 0)");
+      } else if (this.state.theme === "light") {
+        gradientFill.addColorStop(0.8, "rgba(255, 255, 255, 0)");
       }
-      ctx.shadowColor = 'rgba(124, 131, 255,.3)';
+      ctx.shadowColor = "rgba(124, 131, 255,.3)";
       ctx.shadowBlur = 5;
       ctx.shadowOffsetX = 0;
       ctx.shadowOffsetY = 4;
@@ -187,7 +187,7 @@ class Dashboard extends React.Component {
         datasets: [
           {
             lineTension: 0.3,
-            label: '',
+            label: "",
             pointBorderWidth: 0,
             pointHoverRadius: 0,
             borderColor: gradient,
@@ -201,18 +201,18 @@ class Dashboard extends React.Component {
       };
     };
     this.data2 = canvas => {
-      const ctx = canvas.getContext('2d');
+      const ctx = canvas.getContext("2d");
       const gradient = ctx.createLinearGradient(0, 0, 600, 10);
-      gradient.addColorStop(0, '#7c83ff');
-      gradient.addColorStop(1, '#7cf4ff');
+      gradient.addColorStop(0, "#7c83ff");
+      gradient.addColorStop(1, "#7cf4ff");
       let gradientFill = ctx.createLinearGradient(0, 0, 0, 100);
-      gradientFill.addColorStop(0.1, 'rgba(124, 131, 255,.3)');
-      if (this.state.theme === 'dark') {
-        gradientFill.addColorStop(0.8, 'rgba(55, 58, 70, 0)');
-      } else if (this.state.theme === 'light') {
-        gradientFill.addColorStop(0.8, 'rgba(255, 255, 255, 0)');
+      gradientFill.addColorStop(0.1, "rgba(124, 131, 255,.3)");
+      if (this.state.theme === "dark") {
+        gradientFill.addColorStop(0.8, "rgba(55, 58, 70, 0)");
+      } else if (this.state.theme === "light") {
+        gradientFill.addColorStop(0.8, "rgba(255, 255, 255, 0)");
       }
-      ctx.shadowColor = 'rgba(124, 131, 255,.3)';
+      ctx.shadowColor = "rgba(124, 131, 255,.3)";
       ctx.shadowBlur = 5;
       ctx.shadowOffsetX = 0;
       ctx.shadowOffsetY = 4;
@@ -221,7 +221,7 @@ class Dashboard extends React.Component {
         datasets: [
           {
             lineTension: 0.3,
-            label: '',
+            label: "",
             pointBorderWidth: 0,
             pointHoverRadius: 0,
             borderColor: gradient,
@@ -250,24 +250,24 @@ class Dashboard extends React.Component {
       .then(res => res.json())
       .then(result => {
         if (
-          typeof result['Note'] === 'undefined' &&
-          Object.keys(result['Time Series (1min)']).length > 1
+          typeof result["Note"] === "undefined" &&
+          Object.keys(result["Time Series (1min)"]).length > 1
         ) {
           for (
-            let i = Object.keys(result['Time Series (1min)']).length - 1;
+            let i = Object.keys(result["Time Series (1min)"]).length - 1;
             i > 0 || callback();
             i--
           ) {
             dataChart.push(
               parseFloat(
-                result['Time Series (1min)'][
-                  Object.keys(result['Time Series (1min)'])[parseInt(i)]
-                ]['4. close'],
+                result["Time Series (1min)"][
+                  Object.keys(result["Time Series (1min)"])[parseInt(i)]
+                ]["4. close"],
               ).toFixed(2),
             );
           }
         } else {
-          if (typeof result['Note'] === 'undefined') {
+          if (typeof result["Note"] === "undefined") {
             b++;
             const stockApi = `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=1min&apikey=${
               apiKeys[parseInt(b)]
@@ -276,27 +276,27 @@ class Dashboard extends React.Component {
               .then(res => res.json())
               .then(result => {
                 if (
-                  typeof result['Note'] === 'undefined' &&
+                  typeof result["Note"] === "undefined" &&
                   result.length > 1
                 ) {
                   for (
                     let i =
-                      Object.keys(result['Time Series (1min)']).length - 1;
+                      Object.keys(result["Time Series (1min)"]).length - 1;
                     i > 0 || callback();
                     i--
                   ) {
                     dataChart.push(
                       parseFloat(
-                        result['Time Series (1min)'][
-                          Object.keys(result['Time Series (1min)'])[parseInt(i)]
-                        ]['4. close'],
+                        result["Time Series (1min)"][
+                          Object.keys(result["Time Series (1min)"])[parseInt(i)]
+                        ]["4. close"],
                       ).toFixed(2),
                     );
                   }
                 }
               });
           } else {
-            if (typeof result['Note'] === 'undefined' && result.length > 1) {
+            if (typeof result["Note"] === "undefined" && result.length > 1) {
               b++;
               const stockApi = `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=1min&apikey=${
                 apiKeys[parseInt(b)]
@@ -306,15 +306,15 @@ class Dashboard extends React.Component {
                 .then(result => {
                   for (
                     let i =
-                      Object.keys(result['Time Series (1min)']).length - 1;
+                      Object.keys(result["Time Series (1min)"]).length - 1;
                     i > 0 || callback();
                     i--
                   ) {
                     dataChart.push(
                       parseFloat(
-                        result['Time Series (1min)'][
-                          Object.keys(result['Time Series (1min)'])[parseInt(i)]
-                        ]['4. close'],
+                        result["Time Series (1min)"][
+                          Object.keys(result["Time Series (1min)"])[parseInt(i)]
+                        ]["4. close"],
                       ).toFixed(2),
                     );
                   }
@@ -326,7 +326,7 @@ class Dashboard extends React.Component {
   }
   getStockInfo(symbol, dataChart, changeStash, priceStash, num, callback) {
     const percentageChange = `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_1f989becf0bf4fd9a9547df1407aa290`;
-    if (typeof symbol !== 'undefined') {
+    if (typeof symbol !== "undefined") {
       fetch(percentageChange)
         .then(res => res.json())
         .then(result => {
@@ -346,12 +346,12 @@ class Dashboard extends React.Component {
   }
   getStocksList() {
     const stocks =
-      'https://cloud.iexapis.com/stable/stock/market/list/mostactive?token=pk_1f989becf0bf4fd9a9547df1407aa290';
+      "https://cloud.iexapis.com/stable/stock/market/list/mostactive?token=pk_1f989becf0bf4fd9a9547df1407aa290";
     fetch(stocks)
       .then(res => res.json())
       .then(result => {
         const gainers =
-          'https://cloud.iexapis.com/stable/stock/market/list/gainers?token=pk_1f989becf0bf4fd9a9547df1407aa290';
+          "https://cloud.iexapis.com/stable/stock/market/list/gainers?token=pk_1f989becf0bf4fd9a9547df1407aa290";
         let counter = 0;
         fetch(gainers)
           .then(res => res.json())
@@ -368,7 +368,7 @@ class Dashboard extends React.Component {
           })
           .then(() => {
             for (let i = 0; i < 9; i++) {
-              if (typeof result[parseInt(i)] !== 'undefined') {
+              if (typeof result[parseInt(i)] !== "undefined") {
                 if (
                   this.isInArray(
                     stockSymbols,
@@ -397,7 +397,7 @@ class Dashboard extends React.Component {
                 const percentageChange = `https://cloud.iexapis.com/stable/stock/${
                   stockListTickers[parseInt(i)]
                 }/quote?displayPercent=true&token=pk_1f989becf0bf4fd9a9547df1407aa290`;
-                if (typeof stockListTickers[parseInt(i)] !== 'undefined') {
+                if (typeof stockListTickers[parseInt(i)] !== "undefined") {
                   fetch(percentageChange)
                     .then(res => res.json())
                     .then(result => {
@@ -405,26 +405,26 @@ class Dashboard extends React.Component {
                         result.changePercent,
                       ).toFixed(2);
                       if (Math.sign(stockListChange[parseInt(i)]) === -1) {
-                        stockListChangeColors[parseInt(i)] = 'rgb(244,84,133';
+                        stockListChangeColors[parseInt(i)] = "rgb(244,84,133";
                       } else if (
                         Math.sign(stockListChange[parseInt(i)]) === 1
                       ) {
-                        stockListChangeColors[parseInt(i)] = 'rgb(102,249,218';
+                        stockListChangeColors[parseInt(i)] = "rgb(102,249,218";
                         stockListChange[parseInt(i)] =
-                          '+' + stockListChange[parseInt(i)];
+                          "+" + stockListChange[parseInt(i)];
                         if (
-                          stockListChange[parseInt(i)].charAt(0) === '+' &&
-                          stockListChange[parseInt(i)].charAt(1) === '+'
+                          stockListChange[parseInt(i)].charAt(0) === "+" &&
+                          stockListChange[parseInt(i)].charAt(1) === "+"
                         ) {
                           stockListChange[parseInt(i)] = stockListChange[
                             parseInt(i)
                           ].substr(1);
                         }
                       } else {
-                        stockListChangeColors[parseInt(i)] = 'rgb(153,158,175';
+                        stockListChangeColors[parseInt(i)] = "rgb(153,158,175";
                       }
                       stockListChange[parseInt(i)] =
-                        stockListChange[parseInt(i)] + '%';
+                        stockListChange[parseInt(i)] + "%";
                     })
                     .then(() => {
                       setTimeout(() => {
@@ -462,23 +462,23 @@ class Dashboard extends React.Component {
           relDiff(
             parseFloat(portfolioValue[parseInt(i)]),
             parseFloat(portfolioMoneyPaid[parseInt(i)]),
-          ).toFixed(2) + '%';
+          ).toFixed(2) + "%";
         if (portfolioValue[parseInt(i)] > portfolioMoneyPaid[parseInt(i)]) {
           portfolioDifference[parseInt(i)] =
-            '+' + portfolioDifference[parseInt(i)];
-          portfolioColor[parseInt(i)] = '#66F9DA';
+            "+" + portfolioDifference[parseInt(i)];
+          portfolioColor[parseInt(i)] = "#66F9DA";
         } else if (
           portfolioValue[parseInt(i)] === portfolioMoneyPaid[parseInt(i)]
         ) {
-          portfolioColor[parseInt(i)] = '#999EAF';
+          portfolioColor[parseInt(i)] = "#999EAF";
         } else {
           portfolioDifference[parseInt(i)] =
-            '-' + portfolioDifference[parseInt(i)];
-          portfolioColor[parseInt(i)] = '#F45385';
+            "-" + portfolioDifference[parseInt(i)];
+          portfolioColor[parseInt(i)] = "#F45385";
         }
-        if (portfolioDifference[parseInt(i)].includes('NaN')) {
-          portfolioDifference[parseInt(i)] = '---';
-          portfolioColor[parseInt(i)] = '#999EAF';
+        if (portfolioDifference[parseInt(i)].includes("NaN")) {
+          portfolioDifference[parseInt(i)] = "---";
+          portfolioColor[parseInt(i)] = "#999EAF";
         }
       });
   }
@@ -499,9 +499,9 @@ class Dashboard extends React.Component {
     portfolioColor = [];
     firebase
       .firestore()
-      .collection('users')
+      .collection("users")
       .doc(user)
-      .collection('stocks')
+      .collection("stocks")
       .get()
       .then(snapshot => {
         if (snapshot.docs.length !== 0 && portfolioDifference.length === 0) {
@@ -516,13 +516,13 @@ class Dashboard extends React.Component {
           });
         } else if (this._isMounted && portfolioStocks.length === 0) {
           this.setState({
-            portfolioLoader: 'nothing',
+            portfolioLoader: "nothing",
           });
         }
       })
       .then(() => {
-        if ($('#portfolio').length && portfolioStocks.length > 0) {
-          document.getElementById('portfolio').style.display = 'block';
+        if ($("#portfolio").length && portfolioStocks.length > 0) {
+          document.getElementById("portfolio").style.display = "block";
         }
       })
       .then(() => {
@@ -531,7 +531,7 @@ class Dashboard extends React.Component {
           if (this._isMounted) {
             this.setState({
               accountValue:
-                '$' +
+                "$" +
                 numberWithCommas(
                   Number(val) + Number(this.state.fundsWithoutCommas),
                 ),
@@ -556,7 +556,7 @@ class Dashboard extends React.Component {
         }, 10000);
       })
       .catch(error => {
-        console.log('Error getting document:', error);
+        console.log("Error getting document:", error);
         if (this._isMounted) {
           this.setState({
             portfolioLoader: false,
@@ -583,11 +583,11 @@ class Dashboard extends React.Component {
      */
 
     setInterval(() => {
-      let theme = localStorage.getItem('theme');
+      let theme = localStorage.getItem("theme");
       if (theme !== null && this._isMounted) {
         this.setState({theme});
       } else if (this._isMounted) {
-        this.setState({theme: 'dark'});
+        this.setState({theme: "dark"});
       }
     }, 500);
 
@@ -596,7 +596,7 @@ class Dashboard extends React.Component {
      */
 
     if (this._isMounted) {
-      fetch('https://financialmodelingprep.com/api/v3/is-the-market-open')
+      fetch("https://financialmodelingprep.com/api/v3/is-the-market-open")
         .then(res => res.json())
         .then(result => {
           if (this._isMounted) {
@@ -612,13 +612,13 @@ class Dashboard extends React.Component {
 
       let user = firebase.auth().currentUser.uid;
 
-      db.collection('users')
+      db.collection("users")
         .doc(user)
         .onSnapshot(
           function(doc) {
-            if (typeof doc.data() !== 'undefined' && this._isMounted) {
+            if (typeof doc.data() !== "undefined" && this._isMounted) {
               this.setState({
-                fundsWithoutCommas: doc.data()['currentfunds'],
+                fundsWithoutCommas: doc.data()["currentfunds"],
               });
             }
           }.bind(this),
@@ -632,12 +632,12 @@ class Dashboard extends React.Component {
       chartData2 = [];
 
       const gainers =
-        'https://cloud.iexapis.com/stable/stock/market/list/gainers?token=pk_1f989becf0bf4fd9a9547df1407aa290';
+        "https://cloud.iexapis.com/stable/stock/market/list/gainers?token=pk_1f989becf0bf4fd9a9547df1407aa290";
       fetch(gainers)
         .then(res => res.json())
         .then(result => {
           for (let i = 0; i < 4; i++) {
-            if (typeof result[parseInt(i)] !== 'undefined') {
+            if (typeof result[parseInt(i)] !== "undefined") {
               stockSymbols.push(result[parseInt(i)].symbol);
             }
           }
@@ -648,26 +648,26 @@ class Dashboard extends React.Component {
             stockPrices,
             0,
             () => {
-              if ($('#chartFirst').length) {
+              if ($("#chartFirst").length) {
                 setTimeout(() => {
                   if (
-                    typeof stockChanges[0] !== 'undefined' &&
-                    typeof stockPrices[0] !== 'undefined' &&
+                    typeof stockChanges[0] !== "undefined" &&
+                    typeof stockPrices[0] !== "undefined" &&
                     chartData1.length >= 2 &&
-                    $('#chartFirst').length &&
+                    $("#chartFirst").length &&
                     this._isMounted
                   ) {
                     this.setState({
                       loader1: true,
                     });
-                    document.getElementById('chartFirst').href =
-                      '/stocks/' + stockSymbols[0];
+                    document.getElementById("chartFirst").href =
+                      "/stocks/" + stockSymbols[0];
                   } else if (this._isMounted) {
                     this.setState({
                       loader1: false,
                     });
-                    if ($('#chartFirst').length) {
-                      document.getElementById('chartFirst').href = '#';
+                    if ($("#chartFirst").length) {
+                      document.getElementById("chartFirst").href = "#";
                     }
                   }
                 }, 800);
@@ -682,23 +682,23 @@ class Dashboard extends React.Component {
             1,
             () => {
               setTimeout(() => {
-                if ($('#chartSecond').length) {
+                if ($("#chartSecond").length) {
                   if (
-                    typeof stockChanges[1] !== 'undefined' &&
-                    typeof stockPrices[1] !== 'undefined' &&
+                    typeof stockChanges[1] !== "undefined" &&
+                    typeof stockPrices[1] !== "undefined" &&
                     chartData2.length >= 2 &&
                     this._isMounted
                   ) {
                     this.setState({
                       loader2: true,
                     });
-                    document.getElementById('chartSecond').href =
-                      '/stocks/' + stockSymbols[1];
+                    document.getElementById("chartSecond").href =
+                      "/stocks/" + stockSymbols[1];
                   } else if (this._isMounted) {
                     this.setState({
                       loader2: false,
                     });
-                    document.getElementById('chartSecond').href = '#';
+                    document.getElementById("chartSecond").href = "#";
                   }
                 }
               }, 800);
@@ -706,7 +706,7 @@ class Dashboard extends React.Component {
           );
         });
 
-      document.title = 'Trader24 - Dashboard';
+      document.title = "Trader24 - Dashboard";
 
       // STOCK LIST
       this.getStocksList();
@@ -719,43 +719,43 @@ class Dashboard extends React.Component {
        */
 
       setTimeout(() => {
-        if ($('#chartSecond').length && $('#chartFirst').length) {
+        if ($("#chartSecond").length && $("#chartFirst").length) {
           if (this.state.portfolioLoader !== true) {
             this.getAccountInfo();
           }
           if (
-            typeof stockChanges[1] !== 'undefined' &&
-            typeof stockPrices[1] !== 'undefined' &&
+            typeof stockChanges[1] !== "undefined" &&
+            typeof stockPrices[1] !== "undefined" &&
             chartData2.length >= 2 &&
             this._isMounted
           ) {
             this.setState({
               loader2: true,
             });
-            document.getElementById('chartSecond').href =
-              '/stocks/' + stockSymbols[1];
+            document.getElementById("chartSecond").href =
+              "/stocks/" + stockSymbols[1];
           } else if (this._isMounted) {
             this.setState({
               loader2: false,
             });
-            document.getElementById('chartSecond').href = '#';
+            document.getElementById("chartSecond").href = "#";
           }
           if (
-            typeof stockChanges[0] !== 'undefined' &&
-            typeof stockPrices[0] !== 'undefined' &&
+            typeof stockChanges[0] !== "undefined" &&
+            typeof stockPrices[0] !== "undefined" &&
             chartData1.length >= 2 &&
             this._isMounted
           ) {
             this.setState({
               loader1: true,
             });
-            document.getElementById('chartFirst').href =
-              '/stocks/' + stockSymbols[0];
+            document.getElementById("chartFirst").href =
+              "/stocks/" + stockSymbols[0];
           } else if (this._isMounted) {
             this.setState({
               loader1: false,
             });
-            document.getElementById('chartFirst').href = '#';
+            document.getElementById("chartFirst").href = "#";
           }
           if (stockListChange.length < 3 && this._isMounted) {
             this.setState({
@@ -767,12 +767,12 @@ class Dashboard extends React.Component {
               loader3: false,
             });
           }
-          if (this.state.loader1 === '' && this._isMounted) {
+          if (this.state.loader1 === "" && this._isMounted) {
             this.setState({
               loader1: false,
             });
           }
-          if (this.state.loader2 === '' && this._isMounted) {
+          if (this.state.loader2 === "" && this._isMounted) {
             this.setState({
               loader2: false,
             });
@@ -793,43 +793,43 @@ class Dashboard extends React.Component {
 
     for (let i = 0; i < stockSymbols.length; i++) {
       if (Math.sign(stockChanges[parseInt(i)]) === -1) {
-        changesColors[parseInt(i)] = '#f45485';
+        changesColors[parseInt(i)] = "#f45485";
       } else if (Math.sign(stockChanges[parseInt(i)]) === 1) {
-        changesColors[parseInt(i)] = '#66f9da';
-        stockChanges[parseInt(i)] = '+' + stockChanges[parseInt(i)];
+        changesColors[parseInt(i)] = "#66f9da";
+        stockChanges[parseInt(i)] = "+" + stockChanges[parseInt(i)];
         if (
-          stockChanges[parseInt(i)].charAt(0) === '+' &&
-          stockChanges[parseInt(i)].charAt(1) === '+'
+          stockChanges[parseInt(i)].charAt(0) === "+" &&
+          stockChanges[parseInt(i)].charAt(1) === "+"
         ) {
           stockChanges[parseInt(i)] = stockChanges[parseInt(i)].substr(1);
         }
       } else {
-        changesColors[parseInt(i)] = '#999eaf';
+        changesColors[parseInt(i)] = "#999eaf";
       }
     }
     /*
      * change box shadow when search bar is active
      */
 
-    if (document.getElementById('searchBar') === document.activeElement) {
-      document.getElementById('topbar__searchbar').style.boxShadow =
-        '0px 0px 30px 0px rgba(0,0,0,0.10)';
-      document.getElementById('results').style.boxShadow =
-        '0px 30px 20px 0px rgba(0,0,0,0.10)';
+    if (document.getElementById("searchBar") === document.activeElement) {
+      document.getElementById("topbar__searchbar").style.boxShadow =
+        "0px 0px 30px 0px rgba(0,0,0,0.10)";
+      document.getElementById("results").style.boxShadow =
+        "0px 30px 20px 0px rgba(0,0,0,0.10)";
     }
 
     return (
       <section className="Dashboard" id="dashboard">
         <Alert />
-        <div style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
-          <div style={{display: 'flex', height: '100%'}}>
+        <div style={{display: "flex", flexDirection: "column", width: "100%"}}>
+          <div style={{display: "flex", height: "100%"}}>
             <Leftbar />
             <div className="panel">
               <Topbar />
               <div className="panel__container">
                 <div className="panel__top">
                   <div className="panel__title">
-                    <div style={{display: 'flex', alignItems: 'center'}}>
+                    <div style={{display: "flex", alignItems: "center"}}>
                       <svg
                         className="panel__popular"
                         xmlns="http://www.w3.org/2000/svg"
@@ -848,9 +848,9 @@ class Dashboard extends React.Component {
                     </div>
                     <div
                       style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        width: '33%',
+                        display: "flex",
+                        alignItems: "center",
+                        width: "33%",
                       }}>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -864,10 +864,10 @@ class Dashboard extends React.Component {
                       <h3>Portfolio</h3>
                     </div>
                   </div>
-                  <div className="panel__topCharts" style={{display: 'flex'}}>
+                  <div className="panel__topCharts" style={{display: "flex"}}>
                     <a id="chartFirst" href="/" className="chartLink">
                       <div className="stockChart">
-                        {this.state.loader1 === '' && (
+                        {this.state.loader1 === "" && (
                           <ul className="loader">
                             <li />
                             <li />
@@ -915,7 +915,7 @@ class Dashboard extends React.Component {
                     </a>
                     <a id="chartSecond" href="/" className="chartLink">
                       <div className="stockChart">
-                        {this.state.loader2 === '' ? (
+                        {this.state.loader2 === "" ? (
                           <ul className="loader">
                             <li />
                             <li />
@@ -963,14 +963,14 @@ class Dashboard extends React.Component {
                     </a>
                     <div className="panel__portfolio-section">
                       <div className="panel__portfolio" id="portfolio">
-                        {this.state.portfolioLoader === '' && (
+                        {this.state.portfolioLoader === "" && (
                           <ul className="loader">
                             <li />
                             <li />
                             <li />
                           </ul>
                         )}
-                        {this.state.portfolioLoader === 'nothing' && (
+                        {this.state.portfolioLoader === "nothing" && (
                           <div className="errorMsg">
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -1068,7 +1068,7 @@ class Dashboard extends React.Component {
                               <li key={index}>
                                 <Link
                                   to={
-                                    'stocks/' +
+                                    "stocks/" +
                                     stockListTickers[parseInt(index)]
                                   }>
                                   <span className="panel__fullname">
@@ -1082,14 +1082,14 @@ class Dashboard extends React.Component {
                                         color:
                                           stockListChangeColors[
                                             parseInt(index)
-                                          ] + ')',
-                                        margin: '5px 0 0 0',
+                                          ] + ")",
+                                        margin: "5px 0 0 0",
                                         textShadow:
-                                          '0px 0px 7px ' +
+                                          "0px 0px 7px " +
                                           stockListChangeColors[
                                             parseInt(index)
                                           ] +
-                                          ',0.5)',
+                                          ",0.5)",
                                       }}>
                                       {stockListChange[parseInt(index)]}
                                     </h5>
@@ -1098,7 +1098,7 @@ class Dashboard extends React.Component {
                               </li>
                             );
                           } else {
-                            return '';
+                            return "";
                           }
                         })}
                       </ul>
@@ -1111,7 +1111,7 @@ class Dashboard extends React.Component {
                               <li key={index}>
                                 <Link
                                   to={
-                                    'stocks/' +
+                                    "stocks/" +
                                     stockListTickers[parseInt(index)]
                                   }>
                                   <span className="panel__fullname">
@@ -1125,14 +1125,14 @@ class Dashboard extends React.Component {
                                         color:
                                           stockListChangeColors[
                                             parseInt(index)
-                                          ] + ')',
-                                        margin: '5px 0 0 0',
+                                          ] + ")",
+                                        margin: "5px 0 0 0",
                                         textShadow:
-                                          '0px 0px 7px ' +
+                                          "0px 0px 7px " +
                                           stockListChangeColors[
                                             parseInt(index)
                                           ] +
-                                          ',0.5)',
+                                          ",0.5)",
                                       }}>
                                       {stockListChange[parseInt(index)]}
                                     </h5>
@@ -1141,7 +1141,7 @@ class Dashboard extends React.Component {
                               </li>
                             );
                           } else {
-                            return '';
+                            return "";
                           }
                         })}
                       </ul>
@@ -1154,7 +1154,7 @@ class Dashboard extends React.Component {
                               <li key={index}>
                                 <Link
                                   to={
-                                    'stocks/' +
+                                    "stocks/" +
                                     stockListTickers[parseInt(index)]
                                   }>
                                   <span className="panel__fullname">
@@ -1168,14 +1168,14 @@ class Dashboard extends React.Component {
                                         color:
                                           stockListChangeColors[
                                             parseInt(index)
-                                          ] + ')',
-                                        margin: '5px 0 0 0',
+                                          ] + ")",
+                                        margin: "5px 0 0 0",
                                         textShadow:
-                                          '0px 0px 7px ' +
+                                          "0px 0px 7px " +
                                           stockListChangeColors[
                                             parseInt(index)
                                           ] +
-                                          ',0.5)',
+                                          ",0.5)",
                                       }}>
                                       {stockListChange[parseInt(index)]}
                                     </h5>
@@ -1184,14 +1184,14 @@ class Dashboard extends React.Component {
                               </li>
                             );
                           } else {
-                            return '';
+                            return "";
                           }
                         })}
                       </ul>
                     </div>
                   </div>
-                )}{' '}
-                {this.state.loader3 === '' && (
+                )}{" "}
+                {this.state.loader3 === "" && (
                   <ul className="loader">
                     <li />
                     <li />

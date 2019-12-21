@@ -1,8 +1,8 @@
-import React from 'react';
-import Leftbar from './leftbar';
-import Topbar from './topbar';
-import firebase from 'firebase/app';
-import {relDiff} from './helpers.js';
+import React from "react";
+import Leftbar from "./leftbar";
+import Topbar from "./topbar";
+import firebase from "firebase/app";
+import {relDiff} from "./helpers.js";
 
 let difference = [],
   moneyPaid = [],
@@ -18,11 +18,11 @@ export default class portfolio extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loader1: '',
-      confirmation: '',
-      funds: '',
-      marketStatus: '',
-      error: '',
+      loader1: "",
+      confirmation: "",
+      funds: "",
+      marketStatus: "",
+      error: "",
     };
     this.handleStockSell = this.handleStockSell.bind(this);
   }
@@ -47,9 +47,9 @@ export default class portfolio extends React.Component {
           relDiff(
             parseFloat(value[parseInt(i)]),
             parseFloat(moneyPaid[parseInt(i)]),
-          ).toFixed(2) + '%';
+          ).toFixed(2) + "%";
         change[parseInt(i)] =
-          '$' +
+          "$" +
           parseFloat(
             parseFloat(
               value[parseInt(i)] - parseFloat(moneyPaid[parseInt(i)]),
@@ -57,19 +57,19 @@ export default class portfolio extends React.Component {
           );
         if (value[parseInt(i)] > moneyPaid[parseInt(i)]) {
           difference[parseInt(i)] = `+${difference[parseInt(i)]}`;
-          color[parseInt(i)] = '#66F9DA';
+          color[parseInt(i)] = "#66F9DA";
         } else if (value[parseInt(i)] === moneyPaid[parseInt(i)]) {
-          color[parseInt(i)] = '#999EAF';
+          color[parseInt(i)] = "#999EAF";
         } else {
           difference[parseInt(i)] = `-${difference[parseInt(i)]}`;
-          color[parseInt(i)] = '#F45385';
+          color[parseInt(i)] = "#F45385";
         }
-        if (difference[parseInt(i)].includes('NaN')) {
-          difference[parseInt(i)] = '---';
-          color[parseInt(i)] = '#999EAF';
+        if (difference[parseInt(i)].includes("NaN")) {
+          difference[parseInt(i)] = "---";
+          color[parseInt(i)] = "#999EAF";
         }
-        if (change[parseInt(i)].split('')[1] === '-') {
-          let name = '' + change[parseInt(i)];
+        if (change[parseInt(i)].split("")[1] === "-") {
+          let name = "" + change[parseInt(i)];
           change[parseInt(i)] = `-$${name.substr(2)}`;
         }
       });
@@ -82,7 +82,7 @@ export default class portfolio extends React.Component {
   getPositions() {
     if (this._isMounted)
       this.setState({
-        loader1: '',
+        loader1: "",
       });
     symbols = [];
     position = [];
@@ -92,9 +92,9 @@ export default class portfolio extends React.Component {
     let i = 0;
     firebase
       .firestore()
-      .collection('users')
+      .collection("users")
       .doc(user)
-      .collection('stocks')
+      .collection("stocks")
       .get()
       .then(snapshot => {
         if (snapshot.docs.length !== 0) {
@@ -109,7 +109,7 @@ export default class portfolio extends React.Component {
         } else {
           if (this._isMounted)
             this.setState({
-              loader1: 'nothing',
+              loader1: "nothing",
             });
         }
       })
@@ -126,7 +126,7 @@ export default class portfolio extends React.Component {
   /*
    * closes position
    * @param {position} name of position
-   * @param {number} index of 'value' array 
+   * @param {number} index of 'value' array
    */
 
   handleStockSell(position, number) {
@@ -138,9 +138,9 @@ export default class portfolio extends React.Component {
       });
       firebase
         .firestore()
-        .collection('users')
+        .collection("users")
         .doc(user)
-        .collection('stocks')
+        .collection("stocks")
         .doc(position)
         .delete()
         .then(
@@ -152,7 +152,7 @@ export default class portfolio extends React.Component {
               });
             firebase
               .firestore()
-              .collection('users')
+              .collection("users")
               .doc(user)
               .update({
                 currentfunds: this.state.funds,
@@ -174,11 +174,11 @@ export default class portfolio extends React.Component {
   componentDidMount() {
     this._isMounted = true;
 
-  /*
-   * check if market opened 
-   */
+    /*
+     * check if market opened
+     */
 
-    fetch('https://financialmodelingprep.com/api/v3/is-the-market-open')
+    fetch("https://financialmodelingprep.com/api/v3/is-the-market-open")
       .then(res => res.json())
       .then(result => {
         if (this._isMounted)
@@ -187,26 +187,25 @@ export default class portfolio extends React.Component {
           });
       });
 
-
     let user = firebase.auth().currentUser.uid;
 
     document.title = `${document.title} - Portfolio`;
     this.getPositions();
     firebase
       .firestore()
-      .collection('users')
+      .collection("users")
       .doc(user)
       .onSnapshot(
         function(doc) {
-          if (typeof doc.data() !== 'undefined' && this._isMounted) {
+          if (typeof doc.data() !== "undefined" && this._isMounted) {
             this.setState({
-              funds: doc.data()['currentfunds'],
+              funds: doc.data()["currentfunds"],
             });
           }
         }.bind(this),
       );
-    document.querySelector('.hamburger').addEventListener('click', e => {
-      e.currentTarget.classList.toggle('is-active');
+    document.querySelector(".hamburger").addEventListener("click", e => {
+      e.currentTarget.classList.toggle("is-active");
     });
   }
   componentWillUnmount() {
@@ -217,9 +216,9 @@ export default class portfolio extends React.Component {
       <div className="portfolio">
         {this.state.error === true && (
           <div className="alertMessage">
-            Market is currently closed{' '}
+            Market is currently closed{" "}
             <button
-              style={{margin: '20px'}}
+              style={{margin: "20px"}}
               className="stockPage__buy-button"
               onClick={() => {
                 if (this._isMounted) {
@@ -235,7 +234,7 @@ export default class portfolio extends React.Component {
         <Leftbar />
         <div className="portfolio__container">
           <Topbar />
-          {this.state.loader1 === '' && (
+          {this.state.loader1 === "" && (
             <ul className="loader">
               <li />
               <li />
@@ -295,7 +294,7 @@ export default class portfolio extends React.Component {
               </tbody>
             </table>
           )}
-          {this.state.loader1 === 'nothing' && (
+          {this.state.loader1 === "nothing" && (
             <div className="errorMsg">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <g>
