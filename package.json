@@ -8,7 +8,7 @@
     "chart.js": "^2.9.3",
     "chartjs-plugin-annotation": "^0.5.7",
     "firebase": "^5.11.1",
-    "firebase-tools": "^7.2.2",
+    "firebase-tools": "^7.9.0",
     "jquery": "^3.4.1",
     "node-sass": "^4.13.0",
     "react": "^16.12.0",

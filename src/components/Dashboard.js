@@ -344,7 +344,7 @@ getStocksList() {
                      tempStocksSymbols.push(result[parseInt(i)].symbol);
                      tempStockName.push(result[parseInt(i)].companyName);
                      tempStockPrice.push(
-                        "$" + result[parseInt(i)].latestPrice.toFixed(2)
+                        `$${result[parseInt(i)].latestPrice.toFixed(2)}`
                      );
                   }
                }
@@ -367,7 +367,7 @@ getStocksList() {
                      } else {
                         stockList[parseInt(i)] = result[parseInt(i)].companyName;
                         stockListPrices[parseInt(i)] =
-                           "$" + result[parseInt(i)].latestPrice.toFixed(2);
+                           `$${result[parseInt(i)].latestPrice.toFixed(2)}`;
                         stockListTickers[parseInt(i)] = result[parseInt(i)].symbol;
                      }
                   }

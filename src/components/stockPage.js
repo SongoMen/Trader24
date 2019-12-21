@@ -26,7 +26,7 @@ var options = {
     intersect: false,
     callbacks: {
       label(tooltipItems, data) {
-        return "$" + tooltipItems.yLabel;
+        return `$${tooltipItems.yLabel}`;
       }
     },
     displayColors: false
@@ -170,7 +170,7 @@ export default class stockPage extends React.Component {
     let b = 0;
     let filter = document.getElementById("searchBar").value.toUpperCase();
     if (e.key === "Enter") {
-      window.location = "/stocks/" + filter;
+      window.location = `/stocks/${filter}`;
     }
     if (filter.length === 0) {
       document.getElementById("results").innerHTML = "";
@@ -562,7 +562,7 @@ export default class stockPage extends React.Component {
           }
         }.bind(this)
       );
-    document.title = "Trader24 - " + symbol;
+    document.title = `Trader24 - ${symbol}`;
     fetch(
       `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_1f989becf0bf4fd9a9547df1407aa290`
     )
@@ -696,21 +696,11 @@ export default class stockPage extends React.Component {
       .then(res => res.json())
       .then(result => {
         for (let i = 0; i < 3; i++) {
-          newsDate[parseInt(i)] =
-            Date(result[parseInt(i)].datetime)
-              .toString()
-              .split(" ")[1] +
-            " " +
-            Date(result[parseInt(i)].datetime)
-              .toString()
-              .split(" ")[2];
+          let date = Date(result[parseInt(i)].datetime).toString().split(" ");
+          newsDate[parseInt(i)] =`${date[1]} ${date[2]}`;
           newsHeadline[parseInt(i)] = result[parseInt(i)].headline;
           newsUrl[parseInt(i)] = result[parseInt(i)].url;
-          newsSummary[parseInt(i)] =
-            result[parseInt(i)].summary
-              .split(" ")
-              .splice(-result[parseInt(i)].summary.split(" ").length, 17)
-              .join(" ") + " ...";
+          newsSummary[parseInt(i)] =`${result[parseInt(i)].summary.split(" ").splice(-result[parseInt(i)].summary.split(" ").length, 17).join(" ")} ...`;
           newsRelated[parseInt(i)] = result[parseInt(i)].related;
           newsImage[parseInt(i)] = result[parseInt(i)].image;
         }
