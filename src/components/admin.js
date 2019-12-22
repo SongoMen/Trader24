@@ -19,6 +19,9 @@ export default class Admin extends React.Component {
       loaded: false
     };
   }
+    /*
+     *  loads all users from db
+     */
   loadUsers() {
     firebase
       .firestore()
@@ -55,13 +58,6 @@ export default class Admin extends React.Component {
     this.loadUsers();
   }
 
-  numberWithCommas(x) {
-    if (typeof x !== "undefined") {
-      return x.toLocaleString();
-    } else {
-      return "";
-    }
-  }
   editFunds({ target }) {
     console.log(target.value);
   }
