@@ -21,6 +21,12 @@ export default class Topbar extends React.Component {
       menuActive: false
     };
   }
+
+  /*
+   * searches stocks
+   * @param {e} value to search for
+   */
+
   searchStocks(e) {
     document.getElementById("results").innerHTML = "";
     let b = 0;
