@@ -55,6 +55,7 @@ class App extends Component {
     loading: true,
     theme: ""
   };
+
   componentDidMount() {
     this._isMounted = true;
 
@@ -91,6 +92,7 @@ class App extends Component {
       }
     });
   }
+
   componentWillUnmount() {
     this._isMounted = false;
     this.removeListener();
