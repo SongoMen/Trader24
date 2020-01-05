@@ -18,3 +18,17 @@ Technologie stack:
 * Jest
 
 Using Codacy for refactoring and error fixes.
+
+## Running
+
+
+1. Go to project directory and run:
+```
+$ npm install
+```
+
+2. Start the app:
+```
+$ npm start
+```
+3. Open web browser to: http://localhost:3000/
