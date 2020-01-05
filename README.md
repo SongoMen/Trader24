@@ -21,7 +21,6 @@ Using Codacy for refactoring and error fixes.
 
 ## Running
 
-
 1. Go to project directory and run:
 ```
 $ npm install
