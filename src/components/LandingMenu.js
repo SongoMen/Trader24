@@ -25,7 +25,7 @@ function LandingMenu(props) {
         </svg>
         <h3>TRADER24</h3>
         <span className="header__line" />
-        <h6>PRE-ALPHA</h6>
+        <h6>ALPHA</h6>
       </div>
       {logged === false ? (
         <ul className="header__menu">
