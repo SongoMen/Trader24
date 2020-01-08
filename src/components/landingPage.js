@@ -11,7 +11,7 @@ const LandingPage = () => {
         url2="/register"
       />
       <div className="landing">
-        <h1>MEET THE NEW STANDARTS FOR MARKET TRADING</h1>
+        <h1>MEET THE NEW STANDARDS FOR MARKET TRADING</h1>
         <img src={require("../images/mockup.png")} alt="preview" />
       </div>
       <div className="background">
