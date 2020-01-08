@@ -2,11 +2,11 @@
 
 
 <div>
-  <img align="left" widt="70px" height="70px" src="https://github.com/SongoMen/react-stock-app/blob/master/public/favicon.ico"> 
+  <img align="left" width="70px" height="70px" src="https://github.com/SongoMen/react-stock-app/blob/master/public/favicon.ico"> 
   <h1>Trader24</h1>
 </div>
 
-Application that allows people to trader US market stocks. Data provider is IEX.  
+Application that allows people to trade US market stocks. Most data is provided by IEX.  
 <br>
 
 Technologie stack: 
