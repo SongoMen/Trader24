@@ -105,7 +105,8 @@ let portfolioStocks = [],
 // INFORMING USERS ABOUT ALPHA
 
 function Alert() {
-  if (
+    /*
+    if (
     sessionStorage.getItem("alert") === "true" ||
     sessionStorage.getItem("alert") === null
   ) {
@@ -130,6 +131,8 @@ function Alert() {
   } else {
     return <div />;
   }
+*/
+return <div/>
 }
 
 class Dashboard extends React.Component {
