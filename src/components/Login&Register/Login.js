@@ -1,12 +1,12 @@
 import React from "react";
-import { login } from "./auth";
-import LandingMenu from "./LandingMenu";
+import {login} from "../auth";
+import LandingMenu from "../LandingPage/LandingMenu";
 
 export default class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      msg: ""
+      msg: "",
     };
     this.handleClick = this.handleClick.bind(this);
   }
@@ -14,18 +14,18 @@ export default class Login extends React.Component {
     e.preventDefault();
     login(this.email.value, this.password.value).catch(error => {
       this.setState({
-        msg: "Wrong Email or password"
+        msg: "Wrong Email or password",
       });
     });
   }
   render() {
     return (
       <section className="limiter">
-        <LandingMenu name="HOME" url="/" name2="REGISTER" url2="/register"/>
+        <LandingMenu name="HOME" url="/" name2="REGISTER" url2="/register" />
         <div className="container-register">
           <div className="wrap-register">
             <div className="register-pic js-tilt" data-tilt="">
-              <img src={require("../images/img-01.png")} alt="IMG" />
+              <img src={require("../../images/img-01.png")} alt="IMG" />
             </div>
 
             <form className="register-form validate-form">
@@ -57,8 +57,7 @@ export default class Login extends React.Component {
                 <button
                   type="submit"
                   className="register-form-btn"
-                  onClick={event => this.handleClick(event)}
-                >
+                  onClick={event => this.handleClick(event)}>
                   Login
                 </button>
               </div>

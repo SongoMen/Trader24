@@ -7,12 +7,12 @@ import {
 } from "react-router-dom";
 import { firebaseAuth } from "./auth";
 
-import LandingPage from "./landingPage";
-import Dashboard from "./Dashboard";
-import Register from "./Register";
-import Login from "./Login";
-import stockPage from "./stockPage";
-import portfolio from "./portfolio";
+import LandingPage from "./LandingPage/landingPage";
+import Dashboard from "./Dashboard/Dashboard";
+import Register from "./Login&Register/Register";
+import Login from "./Login&Register/Login";
+import stockPage from "./SymbolPage/stockPage";
+import portfolio from "./Portfolio/portfolio";
 import page404 from "./404";
 import Admin from "./admin";
 

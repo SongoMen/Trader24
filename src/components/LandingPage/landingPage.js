@@ -12,7 +12,7 @@ const LandingPage = () => {
       />
       <div className="landing">
         <h1>MEET THE NEW STANDARDS FOR MARKET TRADING</h1>
-        <img src={require("../images/mockup.png")} alt="preview" />
+        <img src={require("../../images/mockup.png")} alt="preview" />
       </div>
       <div className="background">
         <svg width="100%" height="100">

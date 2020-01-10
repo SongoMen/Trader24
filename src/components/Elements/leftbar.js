@@ -1,5 +1,5 @@
 import React from "react";
-import {logout} from "./auth";
+import {logout} from "../auth";
 import {Link} from "react-router-dom";
 import $ from "jquery";
 

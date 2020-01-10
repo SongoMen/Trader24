@@ -1,8 +1,8 @@
 import React from "react";
-import Leftbar from "./leftbar";
-import Topbar from "./topbar";
+import Leftbar from "../Elements/leftbar";
+import Topbar from "../Elements/topbar";
 import firebase from "firebase/app";
-import {relDiff} from "./helpers.js";
+import {relDiff} from "../helpers.js";
 
 let difference = [],
   moneyPaid = [],
@@ -115,11 +115,11 @@ export default class portfolio extends React.Component {
       })
       .then(() => {
         setTimeout(() => {
-          if (this._isMounted)
+          if (this._isMounted && symbols.length > 0)
             this.setState({
               loader1: true,
             });
-        }, 1500);
+        }, 1000);
       });
   }
 

@@ -4,9 +4,9 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import $ from "jquery";
 import {Link} from "react-router-dom";
-import Leftbar from "./leftbar";
-import Topbar from "./topbar";
-import {relDiff, numberWithCommas} from "./helpers.js";
+import Leftbar from "../Elements/leftbar";
+import Topbar from "../Elements/topbar";
+import {relDiff, numberWithCommas} from "../helpers.js";
 
 const db = firebase.firestore();
 
@@ -404,9 +404,13 @@ class Dashboard extends React.Component {
                   fetch(percentageChange)
                     .then(res => res.json())
                     .then(result => {
-                      stockListChange[parseInt(i)] = parseFloat(
-                        result.changePercent,
-                      ).toFixed(2);
+                      if (result.changePercent !== null) {
+                        stockListChange[parseInt(i)] = parseFloat(
+                          result.changePercent,
+                        ).toFixed(2);
+                      } else {
+                        stockListChange[parseInt(i)] = "---";
+                      }
                       if (Math.sign(stockListChange[parseInt(i)]) === -1) {
                         stockListChangeColors[parseInt(i)] = "rgb(244,84,133";
                       } else if (
@@ -426,8 +430,10 @@ class Dashboard extends React.Component {
                       } else {
                         stockListChangeColors[parseInt(i)] = "rgb(153,158,175";
                       }
-                      stockListChange[parseInt(i)] =
-                        stockListChange[parseInt(i)] + "%";
+                      if (stockListChange[parseInt(i)] !== "---") {
+                        stockListChange[parseInt(i)] =
+                          stockListChange[parseInt(i)] + "%";
+                      }
                     })
                     .then(() => {
                       setTimeout(() => {

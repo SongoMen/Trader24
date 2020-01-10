@@ -1,13 +1,13 @@
-import React, { Component } from "react";
-import { auth } from "./auth";
+import React, {Component} from "react";
+import {auth} from "../auth";
 import "firebase/firestore";
-import LandingMenu from "./LandingMenu";
+import LandingMenu from "../LandingPage/LandingMenu";
 
 class Register extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      msg: ""
+      msg: "",
     };
     this.handleClickRegisterUser = this.handleClickRegisterUser.bind(this);
   }
@@ -20,7 +20,7 @@ class Register extends Component {
       localStorage.setItem("user", this.username.value);
       auth(this.email.value, this.password.value, this.username.value);
       this.setState({
-        msg: "Register Successful"
+        msg: "Register Successful",
       });
     }
     if (this.password.value.length < 6) {
@@ -37,7 +37,7 @@ class Register extends Component {
         <div className="container-register">
           <div className="wrap-register">
             <div className="register-pic js-tilt" data-tilt="">
-              <img src={require("../images/img-02.png")} alt="IMG" />
+              <img src={require("../../images/img-02.png")} alt="IMG" />
             </div>
 
             <form className="register-form validate-form">
@@ -82,8 +82,7 @@ class Register extends Component {
                   className="register-form-btn"
                   onClick={event =>
                     this.handleClickRegisterUser(event, this.props.role)
-                  }
-                >
+                  }>
                   Register
                 </button>
               </div>
@@ -98,7 +97,7 @@ class Register extends Component {
                 </span>
               </div>
               {this.state.msg !== "" ? (
-                <h3 style={{ color: "green" }}>{this.state.msg}</h3>
+                <h3 style={{color: "green"}}>{this.state.msg}</h3>
               ) : (
                 <div />
               )}

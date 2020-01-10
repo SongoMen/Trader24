@@ -1,17 +1,17 @@
 {
   "name": "my-app",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "homepage": "https://stocks-af048.web.app/",
   "dependencies": {
-    "@firebase/performance": "^0.2.27",
+    "@firebase/performance": "^0.2.29",
     "chart.js": "^2.9.3",
     "chartjs-plugin-annotation": "^0.5.7",
     "firebase": "^5.11.1",
-    "firebase-tools": "^7.9.0",
+    "firebase-tools": "^7.11.0",
     "jquery": "^3.4.1",
     "node-sass": "^4.13.0",
-    "npm": "^6.13.4",
+    "npm": "^6.13.6",
     "react": "^16.12.0",
     "react-chartjs-2": "^2.8.0",
     "react-dom": "^16.12.0",
@@ -19,7 +19,7 @@
     "react-scripts": "^3.3.0",
     "react-test-renderer": "^16.12.0",
     "react-wait": "^0.3.0",
-    "serve": "^11.2.0"
+    "serve": "^11.3.0"
   },
   "scripts": {
     "start": "react-scripts start",
