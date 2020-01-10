@@ -17,7 +17,7 @@ Technologie stack:
 * Sass
 * Jest
 
-Using Codacy for refactoring and error fixes.
+Using Codacy for code quality.
 
 ## Running
 
