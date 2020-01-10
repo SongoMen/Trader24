@@ -115,10 +115,11 @@ export default class portfolio extends React.Component {
       })
       .then(() => {
         setTimeout(() => {
-          if (this._isMounted && symbols.length > 0)
+          if (this._isMounted && symbols.length > 0) {
             this.setState({
               loader1: true,
             });
+          }
         }, 1000);
       });
   }
@@ -181,10 +182,11 @@ export default class portfolio extends React.Component {
     fetch("https://financialmodelingprep.com/api/v3/is-the-market-open")
       .then(res => res.json())
       .then(result => {
-        if (this._isMounted)
+        if (this._isMounted) {
           this.setState({
             marketStatus: result.isTheStockMarketOpen,
           });
+        }
       });
 
     let user = firebase.auth().currentUser.uid;

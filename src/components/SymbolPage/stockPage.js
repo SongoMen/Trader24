@@ -6,6 +6,7 @@ import {Link} from "react-router-dom";
 import "chartjs-plugin-annotation";
 import $ from "jquery";
 
+import News from "./News.js"
 import Leftbar from "../Elements/leftbar";
 import Topbar from "../Elements/topbar";
 
@@ -107,13 +108,6 @@ let oneMonthLabels = [];
 
 let oneDay = [];
 let oneDayLabels = [];
-
-let newsDate = [];
-let newsHeadline = [];
-let newsImage = [];
-let newsSummary = [];
-let newsUrl = [];
-let newsRelated = [];
 
 export default class stockPage extends React.Component {
   _isMounted = false;
@@ -636,7 +630,6 @@ export default class stockPage extends React.Component {
     }, 1000);
 
     this.getYTDChart();
-    this.getLatestNews();
     if (document.querySelector(".hamburger")) {
       document.querySelector(".hamburger").addEventListener("click", e => {
         e.currentTarget.classList.toggle("is-active");
@@ -720,39 +713,6 @@ export default class stockPage extends React.Component {
       })
       .catch(function(error) {
         console.log("Error getting document:", error);
-      });
-  }
-
-  getLatestNews() {
-    fetch(
-      `https://cloud.iexapis.com/stable/stock/${symbol}/news?token=pk_95c4a35c80274553987b93e74bb825d7`,
-    )
-      .then(res => res.json())
-      .then(result => {
-        for (let i = 0; i < 3; i++) {
-          let date = Date(result[parseInt(i)].datetime)
-            .toString()
-            .split(" ");
-          newsDate[parseInt(i)] = `${date[1]} ${date[2]}`;
-          newsHeadline[parseInt(i)] = result[parseInt(i)].headline;
-          newsUrl[parseInt(i)] = result[parseInt(i)].url;
-          newsSummary[parseInt(i)] = `${result[parseInt(i)].summary
-            .split(" ")
-            .splice(-result[parseInt(i)].summary.split(" ").length, 17)
-            .join(" ")} ...`;
-          newsRelated[parseInt(i)] = result[parseInt(i)].related;
-          newsImage[parseInt(i)] = result[parseInt(i)].image;
-        }
-      })
-      .then(() => {
-        setTimeout(() => {
-          for (let i = 0; i < newsUrl.length; i++) {
-            $("#img" + i).css(
-              "background-image",
-              "url(" + newsImage[parseInt(i)] + ")",
-            );
-          }
-        }, 1500);
       });
   }
 
@@ -1019,28 +979,7 @@ export default class stockPage extends React.Component {
                     </svg>
                     Latest News
                   </h3>
-                  <div className="news__articles">
-                    {newsHeadline.map((val, indx) => {
-                      return (
-                        <a
-                          href={newsUrl[parseInt(indx)]}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          key={indx}>
-                          <div className="article">
-                            <div className="article__image" id={"img" + indx} />
-                            <div className="article__content">
-                              <div className="article__top">
-                                <h4>{val}</h4>
-                                <h6>{newsDate[parseInt(indx)]}</h6>
-                              </div>
-                              <h5>{newsSummary[parseInt(indx)]}</h5>
-                            </div>
-                          </div>
-                        </a>
-                      );
-                    })}
-                  </div>
+                  <News symbol={symbol}/>
                 </div>
               </div>
             </div>

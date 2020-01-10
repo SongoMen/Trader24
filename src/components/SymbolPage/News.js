@@ -32,14 +32,14 @@ class News extends React.Component {
       .then(() => {
         setTimeout(() => {
           for (let i = 0; i < newsUrl.length; i++) {
-            $("#img" + i).css(
-              "background-image",
-              "url(" + newsImage[parseInt(i)] + ")",
-            );
+            document.querySelector("#img" + i).style =`background-image:url(${newsImage[parseInt(i)]})`;
           }
         }, 1500);
       });
   }
+    componentDidMount(){
+this.getLatestNews()
+    }
   render() {
     return (
       <div className="news__articles">
@@ -67,3 +67,4 @@ class News extends React.Component {
     );
   }
 }
+export default News
