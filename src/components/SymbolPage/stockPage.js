@@ -6,7 +6,7 @@ import {Link} from "react-router-dom";
 import "chartjs-plugin-annotation";
 import $ from "jquery";
 
-import News from "./News.js"
+import News from "./News.js";
 import Leftbar from "../Elements/leftbar";
 import Topbar from "../Elements/topbar";
 
@@ -482,41 +482,34 @@ export default class stockPage extends React.Component {
 
   changeFocus(option) {
     setTimeout(function() {
-      if (option === 1) {
-        document.getElementById("1d").classList.add("active");
-        document.getElementById("1m").className = "";
-        document.getElementById("ytd").className = "";
-        document.getElementById("1y").className = "";
-        document.getElementById("2y").className = "";
-      }
+      var elems = document.querySelectorAll(".stockPage__option");
 
-      if (option === 2) {
-        document.getElementById("1m").classList.add("active");
-        document.getElementById("1d").className = "";
-        document.getElementById("ytd").className = "";
-        document.getElementById("1y").className = "";
-        document.getElementById("2y").className = "";
-      }
-      if (option === 3) {
-        document.getElementById("1y").classList.add("active");
-        document.getElementById("1d").className = "";
-        document.getElementById("ytd").className = "";
-        document.getElementById("1m").className = "";
-        document.getElementById("2y").className = "";
-      }
-      if (option === 4) {
-        document.getElementById("2y").classList.add("active");
-        document.getElementById("1d").className = "";
-        document.getElementById("ytd").className = "";
-        document.getElementById("1m").className = "";
-        document.getElementById("1y").className = "";
-      }
-      if (option === 5) {
-        document.getElementById("ytd").classList.add("active");
-        document.getElementById("1d").className = "";
-        document.getElementById("2y").className = "";
-        document.getElementById("1m").className = "";
-        document.getElementById("1y").className = "";
+      [].forEach.call(elems, function(el) {
+        el.classList.remove("active");
+      });
+      switch (option) {
+        case 1:
+          document.getElementById("1d").classList.add("active");
+          break;
+
+        case 2:
+          document.getElementById("1m").classList.add("active");
+          break;
+
+        case 3:
+          document.getElementById("1y").classList.add("active");
+          break;
+
+        case 4:
+          document.getElementById("2y").classList.add("active");
+          break;
+
+        case 5:
+          document.getElementById("ytd").classList.add("active");
+          break;
+        default:
+          document.getElementById("ytd").classList.add("active");
+          break;
       }
     }, 200);
   }
@@ -829,11 +822,12 @@ export default class stockPage extends React.Component {
               <Topbar />
               {this.state.loaded ? (
                 <div className="stockPage__top">
-                  <div className="stock__chart">
+                  <div className="stockPage__chart">
                     <div className="stock__info">{stockData.companyName}</div>
                     <Line data={this.data1} options={options} />
                     <div className="stockPage__timers">
                       <h6
+                        className="stockPage__option"
                         id="2y"
                         onClick={() => {
                           this.getTwoYearChart();
@@ -842,6 +836,7 @@ export default class stockPage extends React.Component {
                         2Y
                       </h6>
                       <h6
+                        className="stockPage__option"
                         id="1y"
                         onClick={() => {
                           this.getOneYearChart();
@@ -851,8 +846,8 @@ export default class stockPage extends React.Component {
                       </h6>
 
                       <h6
+                        className="active stockPage__option"
                         id="ytd"
-                        className="active"
                         onClick={() => {
                           this.classList = "active";
                           this.changeFocus(5);
@@ -861,6 +856,7 @@ export default class stockPage extends React.Component {
                         YTD
                       </h6>
                       <h6
+                        className="stockPage__option"
                         id="1m"
                         onClick={function() {
                           this.changeFocus(2);
@@ -869,6 +865,7 @@ export default class stockPage extends React.Component {
                         1M
                       </h6>
                       <h6
+                        className="stockPage__option"
                         id="1d"
                         onClick={() => {
                           this.changeFocus(1);
@@ -979,7 +976,7 @@ export default class stockPage extends React.Component {
                     </svg>
                     Latest News
                   </h3>
-                  <News symbol={symbol}/>
+                  <News symbol={symbol} />
                 </div>
               </div>
             </div>
