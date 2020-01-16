@@ -328,7 +328,7 @@ class Dashboard extends React.Component {
       });
   }
   getStockInfo(symbol, dataChart, changeStash, priceStash, num, callback) {
-    const percentageChange = `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_c4db94f67a0b42a1884238b690ab06db`;
+    const percentageChange = `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=${process.env.REACT_APP_API_KEY_1}`;
     if (typeof symbol !== "undefined") {
       fetch(percentageChange)
         .then(res => res.json())
@@ -348,13 +348,11 @@ class Dashboard extends React.Component {
     }
   }
   getStocksList() {
-    const stocks =
-      "https://cloud.iexapis.com/stable/stock/market/list/mostactive?token=pk_c4db94f67a0b42a1884238b690ab06db";
+    const stocks = `https://cloud.iexapis.com/stable/stock/market/list/mostactive?token=${process.env.REACT_APP_API_KEY_1}`;
     fetch(stocks)
       .then(res => res.json())
       .then(result => {
-        const gainers =
-          "https://cloud.iexapis.com/stable/stock/market/list/gainers?token=pk_c4db94f67a0b42a1884238b690ab06db";
+        const gainers = `https://cloud.iexapis.com/stable/stock/market/list/gainers?token=${process.env.REACT_APP_API_KEY_1}`;
         let counter = 0;
         fetch(gainers)
           .then(res => res.json())
@@ -399,7 +397,9 @@ class Dashboard extends React.Component {
               for (let i = 0; i < 9; i++) {
                 const percentageChange = `https://cloud.iexapis.com/stable/stock/${
                   stockListTickers[parseInt(i)]
-                }/quote?displayPercent=true&token=pk_c4db94f67a0b42a1884238b690ab06db`;
+                }/quote?displayPercent=true&token=${
+                  process.env.REACT_APP_API_KEY_1
+                }`;
                 if (typeof stockListTickers[parseInt(i)] !== "undefined") {
                   fetch(percentageChange)
                     .then(res => res.json())
@@ -458,7 +458,7 @@ class Dashboard extends React.Component {
    */
 
   getLatestPrice(symbol, i) {
-    const lastPrice = `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=pk_c4db94f67a0b42a1884238b690ab06db`;
+    const lastPrice = `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=${process.env.REACT_APP_API_KEY_1}`;
     fetch(lastPrice)
       .then(res => res.json())
       .then(result => {
@@ -640,8 +640,7 @@ class Dashboard extends React.Component {
       chartData1 = [];
       chartData2 = [];
 
-      const gainers =
-        "https://cloud.iexapis.com/stable/stock/market/list/gainers?token=pk_c4db94f67a0b42a1884238b690ab06db";
+      const gainers = `https://cloud.iexapis.com/stable/stock/market/list/gainers?token=${process.env.REACT_APP_API_KEY_1}`;
       fetch(gainers)
         .then(res => res.json())
         .then(result => {
