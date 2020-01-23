@@ -127,6 +127,12 @@ export default class stockPage extends React.Component {
     this.buyInput = React.createRef() 
     this.searchBar = React.createRef() 
     this.searchBarEl = React.createRef() 
+    this.day = React.createRef()
+    this.month = React.createRef()
+    this.year = React.createRef()
+    this.years = React.createRef()
+    this.ytd = React.createRef()
+
     this.searchStocks = this.searchStocks.bind(this);
 
     this.data1 = canvas => {
@@ -493,26 +499,27 @@ export default class stockPage extends React.Component {
       });
       switch (option) {
         case 1:
-          document.getElementById("1d").classList.add("active");
+          this.day.current.classList.add("active");
           break;
 
         case 2:
-          document.getElementById("1m").classList.add("active");
+          this.month.current.classList.add("active");
           break;
 
         case 3:
-          document.getElementById("1y").classList.add("active");
+          this.year.current.classList.add("active");
           break;
 
         case 4:
-          document.getElementById("2y").classList.add("active");
+          this.years.current.classList.add("active");
           break;
 
         case 5:
-          document.getElementById("ytd").classList.add("active");
+          this.ytd.current.classList.add("active");
           break;
+
         default:
-          document.getElementById("ytd").classList.add("active");
+          this.ytd.current.classList.add("active");
           break;
       }
     }, 200);
@@ -832,6 +839,7 @@ export default class stockPage extends React.Component {
                     <div className="stockPage__timers">
                       <h6
                         className="stockPage__option"
+                        ref={this.years}
                         id="2y"
                         onClick={() => {
                           this.getTwoYearChart();
@@ -841,6 +849,7 @@ export default class stockPage extends React.Component {
                       </h6>
                       <h6
                         className="stockPage__option"
+                        ref={this.year}
                         id="1y"
                         onClick={() => {
                           this.getOneYearChart();
@@ -851,6 +860,7 @@ export default class stockPage extends React.Component {
 
                       <h6
                         className="active stockPage__option"
+                        ref={this.ytd}
                         id="ytd"
                         onClick={() => {
                           this.classList = "active";
@@ -861,6 +871,7 @@ export default class stockPage extends React.Component {
                       </h6>
                       <h6
                         className="stockPage__option"
+                        ref={this.month}
                         id="1m"
                         onClick={function() {
                           this.changeFocus(2);
@@ -870,6 +881,7 @@ export default class stockPage extends React.Component {
                       </h6>
                       <h6
                         className="stockPage__option"
+                        ref={this.day}
                         id="1d"
                         onClick={() => {
                           this.changeFocus(1);
