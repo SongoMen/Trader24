@@ -1,9 +1,7 @@
 import React from "react";
 import firebase from "firebase/app";
-import $ from "jquery";
 import "firebase/firestore";
-import { Link } from "react-router-dom";
-
+import {Link} from "react-router-dom";
 import Leftbar from "./leftbar";
 
 const db = firebase.firestore();
@@ -18,8 +16,15 @@ export default class Topbar extends React.Component {
     this.state = {
       fundsLoader: "",
       funds: "",
-      menuActive: false
+      menuActive: false,
     };
+
+    this.mobileMenu = React.createRef();
+    this.hamburger = React.createRef();
+    this.results = React.createRef();
+    this.searchBar = React.createRef();
+    this.searchBarEl = React.createRef();
+    this.searchStocks = this.searchStocks.bind(this);
   }
 
   /*
@@ -28,15 +33,16 @@ export default class Topbar extends React.Component {
    */
 
   searchStocks(e) {
-    document.getElementById("results").innerHTML = "";
+    let results = this.results.current;
+    results.innerHTML = "";
     let b = 0;
-    let filter = document.getElementById("searchBar").value.toUpperCase();
+    let filter = this.searchBarEl.current.value.toUpperCase();
     if (e.key === "Enter") {
       window.location = `/stocks/${filter}`;
     }
     if (filter.length === 0) {
-      document.getElementById("results").innerHTML = "";
-      document.getElementById("results").style.display = "none";
+      results.innerHTML = "";
+      results.style.display = "none";
     } else {
       for (let i = 0; i < allSymbols.length; i++) {
         let splitSymbol = allSymbols[parseInt(i)].symbol.split("");
@@ -47,10 +53,14 @@ export default class Topbar extends React.Component {
             splitSymbol[parseInt(a)] === splitFilter[parseInt(a)]
           ) {
             if (a === 0) {
-              document.getElementById("results").style.display = "flex";
-              $("#results").append(
-                `<li><a href="/stocks/${allSymbols[parseInt(i)].symbol}"><h4>${allSymbols[parseInt(i)].symbol}</h4><h6>${allSymbols[parseInt(i)].name}</h6></a></li>`
-              );
+              results.style.display = "flex";
+              let el = document.createElement("li");
+              el.innerHTML = `<li><a href="/stocks/${
+                allSymbols[parseInt(i)].symbol
+              }"><h4>${allSymbols[parseInt(i)].symbol}</h4><h6>${
+                allSymbols[parseInt(i)].name
+              }</h6></a></li>`;
+              results.appendChild(el);
               b++;
             }
           }
@@ -61,6 +71,7 @@ export default class Topbar extends React.Component {
       }
     }
   }
+
   numberWithCommas(x) {
     return x.toLocaleString();
   }
@@ -73,7 +84,7 @@ export default class Topbar extends React.Component {
     this._isMounted = true;
     let user = firebase.auth().currentUser.uid;
     fetch(
-      "https://cloud.iexapis.com/stable/ref-data/symbols?token=pk_95c4a35c80274553987b93e74bb825d7"
+      "https://cloud.iexapis.com/stable/ref-data/symbols?token=pk_95c4a35c80274553987b93e74bb825d7",
     )
       .then(res => res.json())
       .then(result => {
@@ -87,27 +98,30 @@ export default class Topbar extends React.Component {
         function(doc) {
           if (typeof doc.data() !== "undefined" && this._isMounted) {
             this.setState({
-              funds:
-                `$${this.numberWithCommas(Number(doc.data()["currentfunds"]))}`,
-              fundsLoader: true
+              funds: `$${this.numberWithCommas(
+                Number(doc.data()["currentfunds"]),
+              )}`,
+              fundsLoader: true,
             });
             admin = doc.data()["admin"];
           }
-        }.bind(this)
+        }.bind(this),
       );
-    document.querySelector(".hamburger").addEventListener("click", e => {
+    let mobileMenu = this.mobileMenu.current;
+    let hamburger = this.hamburger.current;
+    hamburger.addEventListener("click", e => {
       e.currentTarget.classList.toggle("is-active");
       if (!this.state.menuActive && this._isMounted) {
-        document.getElementById("mobileMenu").style.display = "flex";
-        this.setState({ menuActive: true });
+        mobileMenu.style.display = "flex";
+        this.setState({menuActive: true});
         setTimeout(() => {
-          document.getElementById("mobileMenu").style.left = "0px";
+          mobileMenu.style.left = "0px";
         }, 200);
       } else if (this._isMounted) {
-        document.getElementById("mobileMenu").style.left = "-100%";
-        this.setState({ menuActive: false });
+        mobileMenu.style.left = "-100%";
+        this.setState({menuActive: false});
         setTimeout(() => {
-          document.getElementById("mobileMenu").style.display = "none";
+          mobileMenu.style.display = "none";
         }, 400);
       }
     });
@@ -115,32 +129,33 @@ export default class Topbar extends React.Component {
   render() {
     let user = firebase.auth().currentUser.displayName;
     return (
-      <nav style={{ display: "flex", alignItems: "center" }}>
-        <div className="mobileMenu" id="mobileMenu">
+      <nav style={{display: "flex", alignItems: "center"}}>
+        <div ref={this.mobileMenu} className="mobileMenu" id="mobileMenu">
           <Leftbar></Leftbar>
         </div>
         <div className="topbar">
-          <div className="hamburger">
+          <div className="hamburger" ref={this.hamburger}>
             <div className="hamburger__container">
               <div className="hamburger__inner" />
               <div className="hamburger__hidden" />
             </div>
           </div>
-          <div className="topbar__searchbar" id="topbar__searchbar">
+          <div
+            className="topbar__searchbar"
+            ref={this.searchBar}
+            id="topbar__searchbar">
             <div
               style={{
                 display: "flex",
                 alignItems: "center",
-                width: "100%"
-              }}
-            >
+                width: "100%",
+              }}>
               <svg
                 enableBackground="new 0 0 250.313 250.313"
                 version="1.1"
                 viewBox="0 0 250.313 250.313"
                 xmlSpace="preserve"
-                xmlns="http://www.w3.org/2000/svg"
-              >
+                xmlns="http://www.w3.org/2000/svg">
                 <path
                   d="m244.19 214.6l-54.379-54.378c-0.289-0.289-0.628-0.491-0.93-0.76 10.7-16.231 16.945-35.66 16.945-56.554 0-56.837-46.075-102.91-102.91-102.91s-102.91 46.075-102.91 102.91c0 56.835 46.074 102.91 102.91 102.91 20.895 0 40.323-6.245 56.554-16.945 0.269 0.301 0.47 0.64 0.759 0.929l54.38 54.38c8.169 8.168 21.413 8.168 29.583 0 8.168-8.169 8.168-21.413 0-29.582zm-141.28-44.458c-37.134 0-67.236-30.102-67.236-67.235 0-37.134 30.103-67.236 67.236-67.236 37.132 0 67.235 30.103 67.235 67.236s-30.103 67.235-67.235 67.235z"
                   clipRule="evenodd"
@@ -153,30 +168,30 @@ export default class Topbar extends React.Component {
                 spellCheck="false"
                 type="text"
                 id="searchBar"
+                ref={this.searchBarEl}
                 onKeyUp={this.searchStocks}
                 placeholder="Search by symbol"
                 onFocus={() => {
-                  if (document.getElementById("results").firstChild) {
-                    document.getElementById("results").style.display = "flex";
+                  if (this.results.current.firstChild) {
+                    this.results.current.style.display = "flex";
                   }
-                  document.getElementById("topbar__searchbar").style.boxShadow =
+                  this.searchBar.current.style.boxShadow =
                     "0px 0px 30px 0px rgba(0,0,0,0.10)";
-                  document.getElementById("results").style.boxShadow =
+                  this.results.current.style.boxShadow =
                     "0px 30px 20px 0px rgba(0,0,0,0.10)";
                 }}
                 onBlur={() => {
                   setTimeout(() => {
-                    if ($("#results").length) {
-                      document.getElementById("results").style.display = "none";
+                    if (this.results.current.length) {
+                      this.results.current.style.display = "none";
                     }
                   }, 300);
-                  document.getElementById("topbar__searchbar").style.boxShadow =
-                    "none";
+                  this.searchBar.current.style.boxShadow = "none";
                 }}
                 autoComplete="off"
               />
             </div>
-            <ul className="topbar__results" id="results" />
+            <ul className="topbar__results" id="results" ref={this.results} />
           </div>
           <div className="topbar__container">
             <div className="topbar__user">

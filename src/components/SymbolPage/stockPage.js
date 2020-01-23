@@ -4,7 +4,6 @@ import {Line} from "react-chartjs-2";
 import {defaults} from "react-chartjs-2";
 import {Link} from "react-router-dom";
 import "chartjs-plugin-annotation";
-import $ from "jquery";
 
 import News from "./News.js";
 import Leftbar from "../Elements/leftbar";
@@ -124,6 +123,12 @@ export default class stockPage extends React.Component {
       latestPrice: "",
       buyConfirmation: "",
     };
+    this.results = React.createRef() 
+    this.buyInput = React.createRef() 
+    this.searchBar = React.createRef() 
+    this.searchBarEl = React.createRef() 
+    this.searchStocks = this.searchStocks.bind(this);
+
     this.data1 = canvas => {
       const ctx = canvas.getContext("2d");
       const gradient = ctx.createLinearGradient(0, 0, 600, 10);
@@ -165,15 +170,16 @@ export default class stockPage extends React.Component {
    */
 
   searchStocks(e) {
-    document.getElementById("results").innerHTML = "";
+    let results = this.results.current
+    results.innerHTML = "";
     let b = 0;
-    let filter = document.getElementById("searchBar").value.toUpperCase();
+    let filter = this.searchBarEl.current.value.toUpperCase();
     if (e.key === "Enter") {
       window.location = `/stocks/${filter}`;
     }
     if (filter.length === 0) {
-      document.getElementById("results").innerHTML = "";
-      document.getElementById("results").style.display = "none";
+      results.innerHTML = "";
+      results.style.display = "none";
     } else {
       for (let i = 0; i < allSymbols.length; i++) {
         let splitSymbol = allSymbols[parseInt(i)].symbol.split("");
@@ -184,12 +190,10 @@ export default class stockPage extends React.Component {
             splitSymbol[parseInt(a)] === splitFilter[parseInt(a)]
           ) {
             if (a === 0) {
-              document.getElementById("results").style.display = "flex";
-              $("#results").append(
-                `<li><a href="/stocks/${allSymbols[parseInt(i)].symbol}"><h4>${
-                  allSymbols[parseInt(i)].symbol
-                }</h4><h6>${allSymbols[parseInt(i)].name}</h6></a></li>`,
-              );
+              results.style.display = "flex";
+              let el = document.createElement("li")
+              el.innerHTML = `<li><a href="/stocks/${allSymbols[parseInt(i)].symbol}"><h4>${allSymbols[parseInt(i)].symbol}</h4><h6>${allSymbols[parseInt(i)].name}</h6></a></li>`
+              results.appendChild(el) 
               b++;
             }
           }
@@ -613,12 +617,12 @@ export default class stockPage extends React.Component {
         }
       });
     setTimeout(() => {
-      if (!this.state.marketStatus && $("#buy-input").length) {
-        document.getElementById("buy-input").disabled = true;
-        document.getElementById("buy-input").placeholder = "MARKET CLOSED";
-      } else if ($("#buy-input").length) {
-        document.getElementById("buy-input").disabled = false;
-        document.getElementById("buy-input").placeholder = "QUANTITY";
+      if (!this.state.marketStatus && this.buyInput.current) {
+        this.buyInput.current.disabled = true;
+        this.buyInput.current.placeholder = "MARKET CLOSED";
+      } else if (this.buyInput.current) {
+        this.buyInput.current.disabled = false;
+        this.buyInput.current.placeholder = "QUANTITY";
       }
     }, 1000);
 
@@ -762,12 +766,12 @@ export default class stockPage extends React.Component {
           <div className="buyConfirmation">
             <h3>
               Are you sure you want to buy{" "}
-              {document.getElementById("buy-input").value} shares of {symbol}{" "}
+              {this.buyInput.current.value} shares of {symbol}{" "}
               for{" "}
               <span style={{fontWeight: "bold"}}>
                 {parseFloat(
                   (
-                    document.getElementById("buy-input").value *
+                    this.buyInput.current.value *
                     this.state.latestPrice
                   ).toFixed(2),
                 )}
@@ -779,12 +783,12 @@ export default class stockPage extends React.Component {
                 className="stockPage__buy-button"
                 onClick={() => {
                   if (
-                    document.getElementById("buy-input").value *
+                    this.buyInput.current.value *
                       this.state.latestPrice <=
                     this.state.fundsWithoutCommas
                   ) {
                     this.handleBuyStock(
-                      document.getElementById("buy-input").value,
+                      this.buyInput.current.value,
                     );
                   } else if (this._isMounted) {
                     this.setState({
@@ -904,6 +908,7 @@ export default class stockPage extends React.Component {
                         autoCapitalize="off"
                         spellCheck="false"
                         className="stockPage__buy-input"
+                        ref={this.buyInput}
                         id="buy-input"
                         type="number"
                         disabled
@@ -911,7 +916,7 @@ export default class stockPage extends React.Component {
 
                       <button
                         onClick={function() {
-                          let value = document.getElementById("buy-input")
+                          let value = this.buyInput.current
                             .value;
                           if (
                             value.length > 0 &&
@@ -925,7 +930,7 @@ export default class stockPage extends React.Component {
                               buyConfirmation: true,
                             });
                           } else {
-                            document.getElementById("buy-input").style.border =
+                            this.buyInput.current.style.border =
                               "solid 1px #f45485";
                           }
                         }.bind(this)}
@@ -985,55 +990,58 @@ export default class stockPage extends React.Component {
         {this.state.valid === false && (
           <div className="wrongSymbol">
             <h1>Unknown Symbol</h1>
-            <div className="topbar__searchbar" id="topbar__searchbar">
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  width: "100%",
-                }}>
-                <svg
-                  enableBackground="new 0 0 250.313 250.313"
-                  version="1.1"
-                  viewBox="0 0 250.313 250.313"
-                  xmlSpace="preserve"
-                  xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="m244.19 214.6l-54.379-54.378c-0.289-0.289-0.628-0.491-0.93-0.76 10.7-16.231 16.945-35.66 16.945-56.554 0-56.837-46.075-102.91-102.91-102.91s-102.91 46.075-102.91 102.91c0 56.835 46.074 102.91 102.91 102.91 20.895 0 40.323-6.245 56.554-16.945 0.269 0.301 0.47 0.64 0.759 0.929l54.38 54.38c8.169 8.168 21.413 8.168 29.583 0 8.168-8.169 8.168-21.413 0-29.582zm-141.28-44.458c-37.134 0-67.236-30.102-67.236-67.235 0-37.134 30.103-67.236 67.236-67.236 37.132 0 67.235 30.103 67.235 67.236s-30.103 67.235-67.235 67.235z"
-                    clipRule="evenodd"
-                    fillRule="evenodd"
-                  />
-                </svg>
-                <input
-                  autoCorrect="off"
-                  autoCapitalize="off"
-                  spellCheck="false"
-                  type="text"
-                  id="searchBar"
-                  onKeyUp={this.searchStocks}
-                  placeholder="Search by symbol"
-                  onFocus={() => {
-                    if (document.getElementById("results").firstChild) {
-                      document.getElementById("results").style.display = "flex";
-                    }
-                    document.getElementById(
-                      "topbar__searchbar",
-                    ).style.boxShadow = "0px 0px 30px 0px rgba(0,0,0,0.10)";
-                    document.getElementById("results").style.boxShadow =
-                      "0px 30px 20px 0px rgba(0,0,0,0.10)";
-                  }}
-                  onBlur={() => {
-                    setTimeout(() => {
-                      document.getElementById("results").style.display = "none";
-                    }, 400);
-                    document.getElementById(
-                      "topbar__searchbar",
-                    ).style.boxShadow = "none";
-                  }}
-                  autoComplete="off"
+          <div className="topbar__searchbar" ref={this.searchBar} id="topbar__searchbar">
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                width: "100%"
+              }}
+            >
+              <svg
+                enableBackground="new 0 0 250.313 250.313"
+                version="1.1"
+                viewBox="0 0 250.313 250.313"
+                xmlSpace="preserve"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="m244.19 214.6l-54.379-54.378c-0.289-0.289-0.628-0.491-0.93-0.76 10.7-16.231 16.945-35.66 16.945-56.554 0-56.837-46.075-102.91-102.91-102.91s-102.91 46.075-102.91 102.91c0 56.835 46.074 102.91 102.91 102.91 20.895 0 40.323-6.245 56.554-16.945 0.269 0.301 0.47 0.64 0.759 0.929l54.38 54.38c8.169 8.168 21.413 8.168 29.583 0 8.168-8.169 8.168-21.413 0-29.582zm-141.28-44.458c-37.134 0-67.236-30.102-67.236-67.235 0-37.134 30.103-67.236 67.236-67.236 37.132 0 67.235 30.103 67.235 67.236s-30.103 67.235-67.235 67.235z"
+                  clipRule="evenodd"
+                  fillRule="evenodd"
                 />
-              </div>
-              <ul className="topbar__results" id="results" />
+              </svg>
+              <input
+                autoCorrect="off"
+                autoCapitalize="off"
+                spellCheck="false"
+                type="text"
+                id="searchBar"
+                ref={this.searchBarEl}
+                onKeyUp={this.searchStocks}
+                placeholder="Search by symbol"
+                onFocus={() => {
+                  if (this.results.current.firstChild) {
+                    this.results.current.style.display = "flex";
+                  }
+                  this.searchBar.current.style.boxShadow =
+                    "0px 0px 30px 0px rgba(0,0,0,0.10)";
+                  this.results.current.style.boxShadow =
+                    "0px 30px 20px 0px rgba(0,0,0,0.10)";
+                }}
+                onBlur={() => {
+                  setTimeout(() => {
+                    if (this.results.current) {
+                      this.results.current.style.display = "none";
+                    }
+                  }, 300);
+                  this.searchBar.current.style.boxShadow =
+                    "none";
+                }}
+                autoComplete="off"
+              />
+            </div>
+            <ul className="topbar__results" id="results" ref={this.results} />
             </div>
             <h2>OR</h2>
             <h3>

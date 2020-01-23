@@ -2,7 +2,6 @@ import React from "react";
 import {Line} from "react-chartjs-2";
 import firebase from "firebase/app";
 import "firebase/firestore";
-import $ from "jquery";
 import {Link} from "react-router-dom";
 import Leftbar from "../Elements/leftbar";
 import Topbar from "../Elements/topbar";
@@ -151,6 +150,9 @@ class Dashboard extends React.Component {
     };
     this.componentDidMount = this.componentDidMount.bind(this);
     this.getAccountInfo = this.getAccountInfo.bind(this);
+    this.portfolio = React.createRef()
+    this.chartFirst = React.createRef()
+    this.chartSecond = React.createRef()
 
     /*
      * GENERATING LABALS FOR DASHBOARD CHARTS
@@ -530,8 +532,8 @@ class Dashboard extends React.Component {
         }
       })
       .then(() => {
-        if ($("#portfolio").length && portfolioStocks.length > 0) {
-          document.getElementById("portfolio").style.display = "block";
+        if (this.portfolio.current && portfolioStocks.length > 0) {
+          this.portfolio.current.style.display = "block";
         }
       })
       .then(() => {
@@ -656,26 +658,27 @@ class Dashboard extends React.Component {
             stockPrices,
             0,
             () => {
-              if ($("#chartFirst").length) {
+              let firstChart = this.chartFirst.current
+              if (firstChart) {
                 setTimeout(() => {
                   if (
                     typeof stockChanges[0] !== "undefined" &&
                     typeof stockPrices[0] !== "undefined" &&
                     chartData1.length >= 2 &&
-                    $("#chartFirst").length &&
+                    firstChart &&
                     this._isMounted
                   ) {
                     this.setState({
                       loader1: true,
                     });
-                    document.getElementById("chartFirst").href =
+                    firstChart.href =
                       "/stocks/" + stockSymbols[0];
                   } else if (this._isMounted) {
                     this.setState({
                       loader1: false,
                     });
-                    if ($("#chartFirst").length) {
-                      document.getElementById("chartFirst").href = "#";
+                    if (firstChart) {
+                      firstChart.href = "#";
                     }
                   }
                 }, 800);
@@ -689,8 +692,9 @@ class Dashboard extends React.Component {
             stockPrices,
             1,
             () => {
+              let secondChart = this.chartSecond.current
               setTimeout(() => {
-                if ($("#chartSecond").length) {
+                if (secondChart) {
                   if (
                     typeof stockChanges[1] !== "undefined" &&
                     typeof stockPrices[1] !== "undefined" &&
@@ -700,13 +704,13 @@ class Dashboard extends React.Component {
                     this.setState({
                       loader2: true,
                     });
-                    document.getElementById("chartSecond").href =
+                    secondChart.href =
                       "/stocks/" + stockSymbols[1];
                   } else if (this._isMounted) {
                     this.setState({
                       loader2: false,
                     });
-                    document.getElementById("chartSecond").href = "#";
+                    secondChart.href = "#";
                   }
                 }
               }, 800);
@@ -727,26 +731,26 @@ class Dashboard extends React.Component {
        */
 
       setTimeout(() => {
-        if ($("#chartSecond").length && $("#chartFirst").length) {
+        if (this.chartSecond.current && this.chartFirst.current) {
           if (this.state.portfolioLoader !== true) {
             this.getAccountInfo();
           }
           if (
             typeof stockChanges[1] !== "undefined" &&
             typeof stockPrices[1] !== "undefined" &&
-            chartData2.length >= 2 &&
+            chartData2 >= 2 &&
             this._isMounted
           ) {
             this.setState({
               loader2: true,
             });
-            document.getElementById("chartSecond").href =
+            this.chartSecond.current.href =
               "/stocks/" + stockSymbols[1];
           } else if (this._isMounted) {
             this.setState({
               loader2: false,
             });
-            document.getElementById("chartSecond").href = "#";
+            this.chartSecond.current.href = "#";
           }
           if (
             typeof stockChanges[0] !== "undefined" &&
@@ -757,15 +761,15 @@ class Dashboard extends React.Component {
             this.setState({
               loader1: true,
             });
-            document.getElementById("chartFirst").href =
+            this.chartFirst.current.href =
               "/stocks/" + stockSymbols[0];
           } else if (this._isMounted) {
             this.setState({
               loader1: false,
             });
-            document.getElementById("chartFirst").href = "#";
+            this.chartFirst.current.href = "#";
           }
-          if (stockListChange.length < 3 && this._isMounted) {
+          if (stockListChange < 3 && this._isMounted) {
             this.setState({
               loader3: false,
             });
@@ -815,16 +819,6 @@ class Dashboard extends React.Component {
         changesColors[parseInt(i)] = "#999eaf";
       }
     }
-    /*
-     * change box shadow when search bar is active
-     */
-
-    if (document.getElementById("searchBar") === document.activeElement) {
-      document.getElementById("topbar__searchbar").style.boxShadow =
-        "0px 0px 30px 0px rgba(0,0,0,0.10)";
-      document.getElementById("results").style.boxShadow =
-        "0px 30px 20px 0px rgba(0,0,0,0.10)";
-    }
 
     return (
       <section className="Dashboard" id="dashboard">
@@ -873,7 +867,7 @@ class Dashboard extends React.Component {
                     </div>
                   </div>
                   <div className="panel__topCharts" style={{display: "flex"}}>
-                    <a id="chartFirst" href="/" className="chartLink">
+                    <a ref={this.chartFirst} id="chartFirst" href="/" className="chartLink">
                       <div className="stockChart">
                         {this.state.loader1 === "" && (
                           <ul className="loader">
@@ -921,7 +915,7 @@ class Dashboard extends React.Component {
                         )}
                       </div>
                     </a>
-                    <a id="chartSecond" href="/" className="chartLink">
+                    <a ref={this.chartSecond} id="chartSecond" href="/" className="chartLink">
                       <div className="stockChart">
                         {this.state.loader2 === "" ? (
                           <ul className="loader">
@@ -970,7 +964,7 @@ class Dashboard extends React.Component {
                       </div>
                     </a>
                     <div className="panel__portfolio-section">
-                      <div className="panel__portfolio" id="portfolio">
+                      <div className="panel__portfolio" ref={this.portfolio} id="portfolio">
                         {this.state.portfolioLoader === "" && (
                           <ul className="loader">
                             <li />

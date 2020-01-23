@@ -1,7 +1,6 @@
 import React from "react";
 import {logout} from "../auth";
 import {Link} from "react-router-dom";
-import $ from "jquery";
 
 export default class Leftbar extends React.Component {
   constructor() {
@@ -9,6 +8,8 @@ export default class Leftbar extends React.Component {
     this.state = {
       theme: "dark",
     };
+    this.svg1 = React.createRef()
+    this.svg2 = React.createRef()
   }
   componentDidMount() {
     let theme = localStorage.getItem("theme");
@@ -36,9 +37,9 @@ export default class Leftbar extends React.Component {
       window.location.href.split("/").length - 1
     ];
     if (section === "dashboard" || section === "Dashboard") {
-      $(".leftbar__menu a:nth-child(1) svg").css("fill", "#5eb5f8 ");
+      this.svg1.current.style.fill = "#5eb5f"
     } else if (section === "portfolio" || section === "Portfolio") {
-      $(".leftbar__menu a:nth-child(2) svg").css("fill", "#5eb5f8 ");
+      this.svg2.current.style.fill = "#5eb5f"
     }
   }
 
@@ -58,6 +59,7 @@ export default class Leftbar extends React.Component {
           <Link to="/dashboard">
             <li>
               <svg
+                ref={this.svg1}
                 xmlns="http://www.w3.org/2000/svg"
                 xmlnsXlink="http://www.w3.org/1999/xlink"
                 version="1.1"
@@ -72,6 +74,7 @@ export default class Leftbar extends React.Component {
           <Link to="/portfolio">
             <li>
               <svg
+                ref={this.svg2}
                 xmlns="http://www.w3.org/2000/svg"
                 xmlnsXlink="http://www.w3.org/1999/xlink"
                 version="1.1"
