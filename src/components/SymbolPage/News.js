@@ -10,7 +10,7 @@ let newsRelated = [];
 class News extends React.Component {
   getLatestNews() {
     fetch(
-      `https://cloud.iexapis.com/stable/stock/${this.props.symbol}/news?token=pk_95c4a35c80274553987b93e74bb825d7`,
+      `https://cloud.iexapis.com/stable/stock/${this.props.symbol}/news?token=${process.env.REACT_APP_API_KEY_2}`,
     )
       .then(res => res.json())
       .then(result => {

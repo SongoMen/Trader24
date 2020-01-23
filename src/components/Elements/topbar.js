@@ -84,7 +84,7 @@ export default class Topbar extends React.Component {
     this._isMounted = true;
     let user = firebase.auth().currentUser.uid;
     fetch(
-      "https://cloud.iexapis.com/stable/ref-data/symbols?token=pk_95c4a35c80274553987b93e74bb825d7",
+      `https://cloud.iexapis.com/stable/ref-data/symbols?token=${process.env.REACT_APP_API_KEY_2}`
     )
       .then(res => res.json())
       .then(result => {
@@ -182,7 +182,7 @@ export default class Topbar extends React.Component {
                 }}
                 onBlur={() => {
                   setTimeout(() => {
-                    if (this.results.current.length) {
+                    if (this.results.current) {
                       this.results.current.style.display = "none";
                     }
                   }, 300);

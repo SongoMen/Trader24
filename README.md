@@ -19,6 +19,8 @@ Technologie stack:
 
 Using Codacy for code quality.
 
+## Live version: https://stocks-af048.web.app/
+<br>
 ## Running
 
 1. Go to project directory and run:

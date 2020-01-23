@@ -738,7 +738,7 @@ class Dashboard extends React.Component {
           if (
             typeof stockChanges[1] !== "undefined" &&
             typeof stockPrices[1] !== "undefined" &&
-            chartData2 >= 2 &&
+            chartData2.length >= 2 &&
             this._isMounted
           ) {
             this.setState({
@@ -818,6 +818,16 @@ class Dashboard extends React.Component {
       } else {
         changesColors[parseInt(i)] = "#999eaf";
       }
+    /*
+     * change box shadow when search bar is active
+     */
+
+    if (document.getElementById("searchBar") === document.activeElement) {
+      document.getElementById("topbar__searchbar").style.boxShadow =
+        "0px 0px 30px 0px rgba(0,0,0,0.10)";
+      document.getElementById("results").style.boxShadow =
+        "0px 30px 20px 0px rgba(0,0,0,0.10)";
+    }
     }
 
     return (
