@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import firebase from "firebase/app";
 import "firebase/firestore";
+import Loader from "./Elements/Loader";
 
 let usersInfo = {
   username: [],
@@ -19,9 +20,9 @@ export default class Admin extends React.Component {
       loaded: false
     };
   }
-    /*
-     *  loads all users from db
-     */
+  /*
+   *  loads all users from db
+   */
   loadUsers() {
     firebase
       .firestore()
@@ -103,11 +104,7 @@ export default class Admin extends React.Component {
               </tbody>
             </table>
           ) : (
-            <ul className="loader">
-              <li />
-              <li />
-              <li />
-            </ul>
+            <Loader />
           )}
         </div>
       </div>

@@ -1,13 +1,14 @@
 import React from "react";
 import firebase from "firebase/app";
-import {Line} from "react-chartjs-2";
-import {defaults} from "react-chartjs-2";
-import {Link} from "react-router-dom";
+import { Line } from "react-chartjs-2";
+import { defaults } from "react-chartjs-2";
+import { Link } from "react-router-dom";
 import "chartjs-plugin-annotation";
 
 import News from "./News.js";
 import Leftbar from "../Elements/leftbar";
 import Topbar from "../Elements/topbar";
+import Loader from "../Elements/Loader.js";
 
 defaults.global.defaultFontStyle = "Bold";
 defaults.global.defaultFontFamily = "Quantico";
@@ -18,8 +19,8 @@ var options = {
   layout: {
     padding: {
       right: 25,
-      left: 25,
-    },
+      left: 25
+    }
   },
   tooltips: {
     mode: "index",
@@ -27,57 +28,57 @@ var options = {
     callbacks: {
       label(tooltipItems, data) {
         return `$${tooltipItems.yLabel}`;
-      },
+      }
     },
-    displayColors: false,
+    displayColors: false
   },
   hover: {
     mode: "index",
-    intersect: false,
+    intersect: false
   },
   maintainAspectRatio: false,
   responsive: true,
   legend: {
-    display: false,
+    display: false
   },
   scales: {
     xAxes: [
       {
-        display: false,
-      },
+        display: false
+      }
     ],
     fontStyle: "bold",
     yAxes: [
       {
         gridLines: {
-          color: "rgba(0, 0, 0, 0)",
+          color: "rgba(0, 0, 0, 0)"
         },
         fontStyle: "bold",
 
         ticks: {
           callback(value) {
             return "$" + value.toFixed(2);
-          },
-        },
-      },
-    ],
+          }
+        }
+      }
+    ]
   },
   elements: {
     point: {
-      radius: 0,
+      radius: 0
     },
     line: {
       borderCapStyle: "round",
-      borderJoinStyle: "round",
-    },
-  },
+      borderJoinStyle: "round"
+    }
+  }
 };
 
 const apiKeys = [
   "SAOS0Y8B63XM4DPK",
   "4LPH6E70R1XQR2L5",
   "NOBPQ2OPX7E1XRT3",
-  "7V0Q0N46CBIPHA2K",
+  "7V0Q0N46CBIPHA2K"
 ];
 
 let symbol;
@@ -121,17 +122,17 @@ export default class stockPage extends React.Component {
       marketStatus: "",
       valid: "",
       latestPrice: "",
-      buyConfirmation: "",
+      buyConfirmation: ""
     };
-    this.results = React.createRef() 
-    this.buyInput = React.createRef() 
-    this.searchBar = React.createRef() 
-    this.searchBarEl = React.createRef() 
-    this.day = React.createRef()
-    this.month = React.createRef()
-    this.year = React.createRef()
-    this.years = React.createRef()
-    this.ytd = React.createRef()
+    this.results = React.createRef();
+    this.buyInput = React.createRef();
+    this.searchBar = React.createRef();
+    this.searchBarEl = React.createRef();
+    this.day = React.createRef();
+    this.month = React.createRef();
+    this.year = React.createRef();
+    this.years = React.createRef();
+    this.ytd = React.createRef();
 
     this.searchStocks = this.searchStocks.bind(this);
 
@@ -160,9 +161,9 @@ export default class stockPage extends React.Component {
             pointBackgroundColor: gradient,
             fill: true,
             borderWidth: 2,
-            data: chartData1,
-          },
-        ],
+            data: chartData1
+          }
+        ]
       };
     };
   }
@@ -176,7 +177,7 @@ export default class stockPage extends React.Component {
    */
 
   searchStocks(e) {
-    let results = this.results.current
+    let results = this.results.current;
     results.innerHTML = "";
     let b = 0;
     let filter = this.searchBarEl.current.value.toUpperCase();
@@ -197,9 +198,13 @@ export default class stockPage extends React.Component {
           ) {
             if (a === 0) {
               results.style.display = "flex";
-              let el = document.createElement("li")
-              el.innerHTML = `<li><a href="/stocks/${allSymbols[parseInt(i)].symbol}"><h4>${allSymbols[parseInt(i)].symbol}</h4><h6>${allSymbols[parseInt(i)].name}</h6></a></li>`
-              results.appendChild(el) 
+              let el = document.createElement("li");
+              el.innerHTML = `<li><a href="/stocks/${
+                allSymbols[parseInt(i)].symbol
+              }"><h4>${allSymbols[parseInt(i)].symbol}</h4><h6>${
+                allSymbols[parseInt(i)].name
+              }</h6></a></li>`;
+              results.appendChild(el);
               b++;
             }
           }
@@ -222,9 +227,9 @@ export default class stockPage extends React.Component {
           scaleID: "y-axis-0",
           value: closePrice,
           borderColor: "#676976",
-          borderWidth: 1,
-        },
-      ],
+          borderWidth: 1
+        }
+      ]
     };
     labels = [];
     chartData1 = [];
@@ -244,13 +249,13 @@ export default class stockPage extends React.Component {
                 parseFloat(
                   result["Time Series (1min)"][
                     Object.keys(result["Time Series (1min)"])[parseInt(i)]
-                  ]["4. close"],
-                ).toFixed(2),
+                  ]["4. close"]
+                ).toFixed(2)
               );
               labels.push(
                 Object.keys(result["Time Series (1min)"])
                   [parseInt(i)].split(" ")[1]
-                  .slice(0, -3),
+                  .slice(0, -3)
               );
             }
           } else {
@@ -272,13 +277,13 @@ export default class stockPage extends React.Component {
                       parseFloat(
                         result["Time Series (1min)"][
                           Object.keys(result["Time Series (1min)"])[parseInt(i)]
-                        ]["4. close"],
-                      ).toFixed(2),
+                        ]["4. close"]
+                      ).toFixed(2)
                     );
                     labels.push(
                       Object.keys(result["Time Series (1min)"])
                         [parseInt(i)].split(" ")[1]
-                        .slice(0, -3),
+                        .slice(0, -3)
                     );
                   }
                 });
@@ -289,7 +294,7 @@ export default class stockPage extends React.Component {
           setTimeout(() => {
             if (this._isMounted) {
               this.setState({
-                loaded: true,
+                loaded: true
               });
               chartData1.map(val => oneDay.push(val));
               labels.map(val => oneDayLabels.push(val));
@@ -301,7 +306,7 @@ export default class stockPage extends React.Component {
       chartData1 = oneDay;
       if (this._isMounted) {
         this.setState({
-          loaded: true,
+          loaded: true
         });
       }
     }
@@ -326,7 +331,7 @@ export default class stockPage extends React.Component {
         .then(() => {
           if (this._isMounted) {
             this.setState({
-              loaded: true,
+              loaded: true
             });
 
             chartData1.map(val => ytdChart.push(val));
@@ -338,7 +343,7 @@ export default class stockPage extends React.Component {
       chartData1 = ytdChart;
       if (this._isMounted) {
         this.setState({
-          loaded: true,
+          loaded: true
         });
       }
     }
@@ -364,7 +369,7 @@ export default class stockPage extends React.Component {
         .then(() => {
           if (this._isMounted) {
             this.setState({
-              loaded: true,
+              loaded: true
             });
           }
           chartData1.map(val => oneYear.push(val));
@@ -375,7 +380,7 @@ export default class stockPage extends React.Component {
       chartData1 = oneYear;
       if (this._isMounted) {
         this.setState({
-          loaded: true,
+          loaded: true
         });
       }
     }
@@ -400,7 +405,7 @@ export default class stockPage extends React.Component {
         .then(() => {
           if (this._isMounted) {
             this.setState({
-              loaded: true,
+              loaded: true
             });
           }
           chartData1.map(val => twoYears.push(val));
@@ -411,7 +416,7 @@ export default class stockPage extends React.Component {
       chartData1 = twoYears;
       if (this._isMounted) {
         this.setState({
-          loaded: true,
+          loaded: true
         });
       }
     }
@@ -436,7 +441,7 @@ export default class stockPage extends React.Component {
         .then(() => {
           if (this._isMounted) {
             this.setState({
-              loaded: true,
+              loaded: true
             });
           }
           chartData1.map(val => oneMonth.push(val));
@@ -447,7 +452,7 @@ export default class stockPage extends React.Component {
       chartData1 = oneMonth;
       if (this._isMounted) {
         this.setState({
-          loaded: true,
+          loaded: true
         });
       }
     }
@@ -527,7 +532,7 @@ export default class stockPage extends React.Component {
 
   rendering() {
     fetch(
-      `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=${process.env.REACT_APP_API_KEY_2}`,
+      `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=${process.env.REACT_APP_API_KEY_2}`
     )
       .then(res => res.json())
       .then(result => {
@@ -547,7 +552,7 @@ export default class stockPage extends React.Component {
         stockData.extendedChange = result.extendedChange;
         if (this._isMounted) {
           this.setState({
-            latestPrice: result.latestPrice.toFixed(2),
+            latestPrice: result.latestPrice.toFixed(2)
           });
         }
         keyData[0] = this.abbrNum(result.marketCap, 2);
@@ -576,33 +581,33 @@ export default class stockPage extends React.Component {
         function() {
           if (stockData.change > 0 && this._isMounted) {
             this.setState({
-              changeColor: "#3ae885",
+              changeColor: "#3ae885"
             });
           } else if (this._isMounted) {
             this.setState({
-              changeColor: "#F45385",
+              changeColor: "#F45385"
             });
           }
           if (stockData.extendedChange > 0 && this._isMounted) {
             this.setState({
-              extendedColor: "#66F9DA",
+              extendedColor: "#66F9DA"
             });
           } else if (this._isMounted) {
             this.setState({
-              extendedColor: "#F45385",
+              extendedColor: "#F45385"
             });
           }
-        }.bind(this),
+        }.bind(this)
       );
     document.title = `Trader24 - ${symbol}`;
     fetch(
-      `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=${process.env.REACT_APP_API_KEY_2}`,
+      `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=${process.env.REACT_APP_API_KEY_2}`
     )
       .then(res => res.json())
       .then(result => {
         if (this._isMounted) {
           this.setState({
-            latestPrice: result.latestPrice.toFixed(2),
+            latestPrice: result.latestPrice.toFixed(2)
           });
         }
       })
@@ -610,13 +615,13 @@ export default class stockPage extends React.Component {
         if (this.state.marketStatus) {
           setInterval(() => {
             fetch(
-              `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=${process.env.REACT_APP_API_KEY_2}`,
+              `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=${process.env.REACT_APP_API_KEY_2}`
             )
               .then(res => res.json())
               .then(result => {
                 if (this._isMounted) {
                   this.setState({
-                    latestPrice: result.latestPrice.toFixed(2),
+                    latestPrice: result.latestPrice.toFixed(2)
                   });
                 }
               });
@@ -660,10 +665,10 @@ export default class stockPage extends React.Component {
           .set({
             symbol,
             moneyPaid: (Number(num) * Number(this.state.latestPrice)).toFixed(
-              2,
+              2
             ),
             shares: num,
-            value: (Number(num) * Number(this.state.latestPrice)).toFixed(2),
+            value: (Number(num) * Number(this.state.latestPrice)).toFixed(2)
           })
           .catch(error => {
             console.log("Error getting document:", error);
@@ -679,7 +684,7 @@ export default class stockPage extends React.Component {
               Number(this.state.fundsWithoutCommas) -
               Number(num) * Number(this.state.latestPrice)
             ).toFixed(2),
-            positions: Number(positionsNumber) + 1,
+            positions: Number(positionsNumber) + 1
           })
           .catch(error => {
             console.log("Error getting document:", error);
@@ -689,7 +694,7 @@ export default class stockPage extends React.Component {
         this.getFunds();
         if (this._isMounted) {
           this.setState({
-            buyConfirmation: false,
+            buyConfirmation: false
           });
         }
       });
@@ -697,7 +702,7 @@ export default class stockPage extends React.Component {
   getFunds() {
     if (this._isMounted) {
       this.setState({
-        fundsWithoutCommas: "",
+        fundsWithoutCommas: ""
       });
     }
     let user = firebase.auth().currentUser.uid;
@@ -708,10 +713,10 @@ export default class stockPage extends React.Component {
       .then(doc => {
         if (this._isMounted) {
           this.setState({
-            funds: "$" + this.numberWithCommas(doc.data()["currentfunds"]),
+            funds: "$" + this.numberWithCommas(doc.data()["currentfunds"])
           });
           this.setState({
-            fundsWithoutCommas: doc.data()["currentfunds"],
+            fundsWithoutCommas: doc.data()["currentfunds"]
           });
         }
       })
@@ -727,12 +732,12 @@ export default class stockPage extends React.Component {
       .then(result => {
         if (this._isMounted) {
           this.setState({
-            marketStatus: result.isTheStockMarketOpen,
+            marketStatus: result.isTheStockMarketOpen
           });
         }
       });
     fetch(
-      `https://cloud.iexapis.com/stable/ref-data/symbols?token=${process.env.REACT_APP_API_KEY_2}`,
+      `https://cloud.iexapis.com/stable/ref-data/symbols?token=${process.env.REACT_APP_API_KEY_2}`
     )
       .then(res => res.json())
       .then(result => {
@@ -750,11 +755,11 @@ export default class stockPage extends React.Component {
         setTimeout(() => {
           if (this.isInArray(symbolsOnly, symbol)) {
             if (this._isMounted) {
-              this.setState({valid: true});
+              this.setState({ valid: true });
             }
             this.rendering();
           } else if (this._isMounted) {
-            this.setState({valid: false});
+            this.setState({ valid: false });
           }
         }, 1000);
       });
@@ -772,15 +777,13 @@ export default class stockPage extends React.Component {
         {this.state.buyConfirmation === true && (
           <div className="buyConfirmation">
             <h3>
-              Are you sure you want to buy{" "}
-              {this.buyInput.current.value} shares of {symbol}{" "}
-              for{" "}
-              <span style={{fontWeight: "bold"}}>
+              Are you sure you want to buy {this.buyInput.current.value} shares
+              of {symbol} for{" "}
+              <span style={{ fontWeight: "bold" }}>
                 {parseFloat(
                   (
-                    this.buyInput.current.value *
-                    this.state.latestPrice
-                  ).toFixed(2),
+                    this.buyInput.current.value * this.state.latestPrice
+                  ).toFixed(2)
                 )}
               </span>{" "}
               dollars
@@ -790,19 +793,17 @@ export default class stockPage extends React.Component {
                 className="stockPage__buy-button"
                 onClick={() => {
                   if (
-                    this.buyInput.current.value *
-                      this.state.latestPrice <=
+                    this.buyInput.current.value * this.state.latestPrice <=
                     this.state.fundsWithoutCommas
                   ) {
-                    this.handleBuyStock(
-                      this.buyInput.current.value,
-                    );
+                    this.handleBuyStock(this.buyInput.current.value);
                   } else if (this._isMounted) {
                     this.setState({
-                      buyConfirmation: false,
+                      buyConfirmation: false
                     });
                   }
-                }}>
+                }}
+              >
                 CONFIRM
               </button>
               <button
@@ -810,24 +811,19 @@ export default class stockPage extends React.Component {
                 onClick={() => {
                   if (this._isMounted) {
                     this.setState({
-                      buyConfirmation: false,
+                      buyConfirmation: false
                     });
                   }
-                }}>
+                }}
+              >
                 CANCEL
               </button>
             </div>
           </div>
         )}
-        {this.state.valid === "" && (
-          <ul className="loader">
-            <li />
-            <li />
-            <li />
-          </ul>
-        )}
+        {this.state.valid === "" && <Loader />}
         {this.state.valid && (
-          <div style={{display: "flex", height: "100%"}}>
+          <div style={{ display: "flex", height: "100%" }}>
             <Leftbar />
             <div className="stockPage">
               <Topbar />
@@ -844,7 +840,8 @@ export default class stockPage extends React.Component {
                         onClick={() => {
                           this.getTwoYearChart();
                           this.changeFocus(4);
-                        }}>
+                        }}
+                      >
                         2Y
                       </h6>
                       <h6
@@ -854,7 +851,8 @@ export default class stockPage extends React.Component {
                         onClick={() => {
                           this.getOneYearChart();
                           this.changeFocus(3);
-                        }}>
+                        }}
+                      >
                         1Y
                       </h6>
 
@@ -866,7 +864,8 @@ export default class stockPage extends React.Component {
                           this.classList = "active";
                           this.changeFocus(5);
                           this.getYTDChart();
-                        }}>
+                        }}
+                      >
                         YTD
                       </h6>
                       <h6
@@ -876,7 +875,8 @@ export default class stockPage extends React.Component {
                         onClick={function() {
                           this.changeFocus(2);
                           this.getOneMonthChart();
-                        }.bind(this)}>
+                        }.bind(this)}
+                      >
                         1M
                       </h6>
                       <h6
@@ -886,7 +886,8 @@ export default class stockPage extends React.Component {
                         onClick={() => {
                           this.changeFocus(1);
                           this.getOneDayChart();
-                        }}>
+                        }}
+                      >
                         1D
                       </h6>
                     </div>
@@ -896,7 +897,7 @@ export default class stockPage extends React.Component {
                       <h4>{stockData.name}</h4>
                       <div className="stockPage__trade-top">
                         <h2>${this.state.latestPrice}</h2>
-                        <h6 style={{color: this.state.changeColor}}>
+                        <h6 style={{ color: this.state.changeColor }}>
                           {stockData.change} ({stockData.changePercent}%)
                         </h6>
                       </div>
@@ -905,7 +906,7 @@ export default class stockPage extends React.Component {
                     (stockData.extendedChange !== null) ? (
                       <h6>
                         Extended Hours:{" "}
-                        <span style={{color: this.state.extendedColor}}>
+                        <span style={{ color: this.state.extendedColor }}>
                           ${stockData.extendedPrice} ({stockData.extendedChange}
                           )
                         </span>
@@ -928,8 +929,7 @@ export default class stockPage extends React.Component {
 
                       <button
                         onClick={function() {
-                          let value = this.buyInput.current
-                            .value;
+                          let value = this.buyInput.current.value;
                           if (
                             value.length > 0 &&
                             value > 0 &&
@@ -939,25 +939,22 @@ export default class stockPage extends React.Component {
                             this._isMounted
                           ) {
                             this.setState({
-                              buyConfirmation: true,
+                              buyConfirmation: true
                             });
                           } else {
                             this.buyInput.current.style.border =
                               "solid 1px #f45485";
                           }
                         }.bind(this)}
-                        className="stockPage__buy-button">
+                        className="stockPage__buy-button"
+                      >
                         BUY
                       </button>
                     </div>
                   </div>
                 </div>
               ) : (
-                <ul className="loader">
-                  <li />
-                  <li />
-                  <li />
-                </ul>
+                <Loader />
               )}
               <div className="stockPage__keyStats">
                 <div className="data">
@@ -1002,58 +999,61 @@ export default class stockPage extends React.Component {
         {this.state.valid === false && (
           <div className="wrongSymbol">
             <h1>Unknown Symbol</h1>
-          <div className="topbar__searchbar" ref={this.searchBar} id="topbar__searchbar">
             <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                width: "100%"
-              }}
+              className="topbar__searchbar"
+              ref={this.searchBar}
+              id="topbar__searchbar"
             >
-              <svg
-                enableBackground="new 0 0 250.313 250.313"
-                version="1.1"
-                viewBox="0 0 250.313 250.313"
-                xmlSpace="preserve"
-                xmlns="http://www.w3.org/2000/svg"
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  width: "100%"
+                }}
               >
-                <path
-                  d="m244.19 214.6l-54.379-54.378c-0.289-0.289-0.628-0.491-0.93-0.76 10.7-16.231 16.945-35.66 16.945-56.554 0-56.837-46.075-102.91-102.91-102.91s-102.91 46.075-102.91 102.91c0 56.835 46.074 102.91 102.91 102.91 20.895 0 40.323-6.245 56.554-16.945 0.269 0.301 0.47 0.64 0.759 0.929l54.38 54.38c8.169 8.168 21.413 8.168 29.583 0 8.168-8.169 8.168-21.413 0-29.582zm-141.28-44.458c-37.134 0-67.236-30.102-67.236-67.235 0-37.134 30.103-67.236 67.236-67.236 37.132 0 67.235 30.103 67.235 67.236s-30.103 67.235-67.235 67.235z"
-                  clipRule="evenodd"
-                  fillRule="evenodd"
-                />
-              </svg>
-              <input
-                autoCorrect="off"
-                autoCapitalize="off"
-                spellCheck="false"
-                type="text"
-                id="searchBar"
-                ref={this.searchBarEl}
-                onKeyUp={this.searchStocks}
-                placeholder="Search by symbol"
-                onFocus={() => {
-                  if (this.results.current.firstChild) {
-                    this.results.current.style.display = "flex";
-                  }
-                  this.searchBar.current.style.boxShadow =
-                    "0px 0px 30px 0px rgba(0,0,0,0.10)";
-                  this.results.current.style.boxShadow =
-                    "0px 30px 20px 0px rgba(0,0,0,0.10)";
-                }}
-                onBlur={() => {
-                  setTimeout(() => {
-                    if (this.results.current) {
-                      this.results.current.style.display = "none";
+                <svg
+                  enableBackground="new 0 0 250.313 250.313"
+                  version="1.1"
+                  viewBox="0 0 250.313 250.313"
+                  xmlSpace="preserve"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="m244.19 214.6l-54.379-54.378c-0.289-0.289-0.628-0.491-0.93-0.76 10.7-16.231 16.945-35.66 16.945-56.554 0-56.837-46.075-102.91-102.91-102.91s-102.91 46.075-102.91 102.91c0 56.835 46.074 102.91 102.91 102.91 20.895 0 40.323-6.245 56.554-16.945 0.269 0.301 0.47 0.64 0.759 0.929l54.38 54.38c8.169 8.168 21.413 8.168 29.583 0 8.168-8.169 8.168-21.413 0-29.582zm-141.28-44.458c-37.134 0-67.236-30.102-67.236-67.235 0-37.134 30.103-67.236 67.236-67.236 37.132 0 67.235 30.103 67.235 67.236s-30.103 67.235-67.235 67.235z"
+                    clipRule="evenodd"
+                    fillRule="evenodd"
+                  />
+                </svg>
+                <input
+                  autoCorrect="off"
+                  autoCapitalize="off"
+                  spellCheck="false"
+                  type="text"
+                  id="searchBar"
+                  ref={this.searchBarEl}
+                  onKeyUp={this.searchStocks}
+                  placeholder="Search by symbol"
+                  onFocus={() => {
+                    if (this.results.current.firstChild) {
+                      this.results.current.style.display = "flex";
                     }
-                  }, 300);
-                  this.searchBar.current.style.boxShadow =
-                    "none";
-                }}
-                autoComplete="off"
-              />
-            </div>
-            <ul className="topbar__results" id="results" ref={this.results} />
+                    this.searchBar.current.style.boxShadow =
+                      "0px 0px 30px 0px rgba(0,0,0,0.10)";
+                    this.results.current.style.boxShadow =
+                      "0px 30px 20px 0px rgba(0,0,0,0.10)";
+                  }}
+                  onBlur={() => {
+                    setTimeout(() => {
+                      if (this.results.current) {
+                        this.results.current.style.display = "none";
+                      }
+                    }, 300);
+                    this.searchBar.current.style.boxShadow = "none";
+                  }}
+                  autoComplete="off"
+                />
+              </div>
+              <ul className="topbar__results" id="results" ref={this.results} />
             </div>
             <h2>OR</h2>
             <h3>

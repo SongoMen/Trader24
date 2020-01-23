@@ -2,7 +2,8 @@ import React from "react";
 import Leftbar from "../Elements/leftbar";
 import Topbar from "../Elements/topbar";
 import firebase from "firebase/app";
-import {relDiff} from "../helpers.js";
+import { relDiff } from "../helpers.js";
+import Loader from "../Elements/Loader";
 
 let difference = [],
   moneyPaid = [],
@@ -22,7 +23,7 @@ export default class portfolio extends React.Component {
       confirmation: "",
       funds: "",
       marketStatus: "",
-      error: "",
+      error: ""
     };
     this.handleStockSell = this.handleStockSell.bind(this);
   }
@@ -39,21 +40,21 @@ export default class portfolio extends React.Component {
       .then(res => res.json())
       .then(result => {
         value[parseInt(i)] = parseFloat(
-          Number(shares[parseInt(i)] * result.latestPrice).toFixed(2),
+          Number(shares[parseInt(i)] * result.latestPrice).toFixed(2)
         );
       })
       .then(() => {
         difference[parseInt(i)] =
           relDiff(
             parseFloat(value[parseInt(i)]),
-            parseFloat(moneyPaid[parseInt(i)]),
+            parseFloat(moneyPaid[parseInt(i)])
           ).toFixed(2) + "%";
         change[parseInt(i)] =
           "$" +
           parseFloat(
             parseFloat(
-              value[parseInt(i)] - parseFloat(moneyPaid[parseInt(i)]),
-            ).toFixed(2),
+              value[parseInt(i)] - parseFloat(moneyPaid[parseInt(i)])
+            ).toFixed(2)
           );
         if (value[parseInt(i)] > moneyPaid[parseInt(i)]) {
           difference[parseInt(i)] = `+${difference[parseInt(i)]}`;
@@ -82,7 +83,7 @@ export default class portfolio extends React.Component {
   getPositions() {
     if (this._isMounted)
       this.setState({
-        loader1: "",
+        loader1: ""
       });
     symbols = [];
     position = [];
@@ -109,7 +110,7 @@ export default class portfolio extends React.Component {
         } else {
           if (this._isMounted)
             this.setState({
-              loader1: "nothing",
+              loader1: "nothing"
             });
         }
       })
@@ -117,7 +118,7 @@ export default class portfolio extends React.Component {
         setTimeout(() => {
           if (this._isMounted && symbols.length > 0) {
             this.setState({
-              loader1: true,
+              loader1: true
             });
           }
         }, 1000);
@@ -135,7 +136,7 @@ export default class portfolio extends React.Component {
     let user = firebase.auth().currentUser.uid;
     if (this.state.marketStatus && this._isMounted) {
       this.setState({
-        confirmation: true,
+        confirmation: true
       });
       firebase
         .firestore()
@@ -149,23 +150,23 @@ export default class portfolio extends React.Component {
             if (this._isMounted)
               this.setState({
                 funds:
-                  Number(this.state.funds) + Number(value[parseInt(number)]),
+                  Number(this.state.funds) + Number(value[parseInt(number)])
               });
             firebase
               .firestore()
               .collection("users")
               .doc(user)
               .update({
-                currentfunds: this.state.funds,
+                currentfunds: this.state.funds
               })
               .catch(() => {
                 if (this._isMounted)
                   this.setState({
-                    loader1: false,
+                    loader1: false
                   });
               });
             this.getPositions();
-          }.bind(this),
+          }.bind(this)
         )
         .catch(function(error) {
           console.error(error);
@@ -184,7 +185,7 @@ export default class portfolio extends React.Component {
       .then(result => {
         if (this._isMounted) {
           this.setState({
-            marketStatus: result.isTheStockMarketOpen,
+            marketStatus: result.isTheStockMarketOpen
           });
         }
       });
@@ -201,10 +202,10 @@ export default class portfolio extends React.Component {
         function(doc) {
           if (typeof doc.data() !== "undefined" && this._isMounted) {
             this.setState({
-              funds: doc.data()["currentfunds"],
+              funds: doc.data()["currentfunds"]
             });
           }
-        }.bind(this),
+        }.bind(this)
       );
     document.querySelector(".hamburger").addEventListener("click", e => {
       e.currentTarget.classList.toggle("is-active");
@@ -220,15 +221,16 @@ export default class portfolio extends React.Component {
           <div className="alertMessage">
             Market is currently closed{" "}
             <button
-              style={{margin: "20px"}}
+              style={{ margin: "20px" }}
               className="stockPage__buy-button"
               onClick={() => {
                 if (this._isMounted) {
                   this.setState({
-                    error: false,
+                    error: false
                   });
                 }
-              }}>
+              }}
+            >
               CONFIRM
             </button>
           </div>
@@ -236,13 +238,7 @@ export default class portfolio extends React.Component {
         <Leftbar />
         <div className="portfolio__container">
           <Topbar />
-          {this.state.loader1 === "" && (
-            <ul className="loader">
-              <li />
-              <li />
-              <li />
-            </ul>
-          )}
+          {this.state.loader1 === "" && <Loader />}
           {this.state.loader1 === true && symbols.length > 0 && (
             <table className="portfolio__list">
               <tbody>
@@ -259,10 +255,10 @@ export default class portfolio extends React.Component {
                     <tr key={index}>
                       <td>{val}</td>
                       <td>{shares[parseInt(index)]}</td>
-                      <td style={{color: color[parseInt(index)]}}>
+                      <td style={{ color: color[parseInt(index)] }}>
                         {difference[parseInt(index)]}
                       </td>
-                      <td style={{color: color[parseInt(index)]}}>
+                      <td style={{ color: color[parseInt(index)] }}>
                         {change[parseInt(index)]}
                       </td>
                       <td>${value[parseInt(index)]}</td>
@@ -272,18 +268,19 @@ export default class portfolio extends React.Component {
                             if (this.state.marketStatus) {
                               this.handleStockSell(
                                 position[parseInt(index)],
-                                index,
+                                index
                               );
                             } else {
                               if (this._isMounted) {
                                 this.setState({
-                                  error: true,
+                                  error: true
                                 });
                               }
                             }
                           }}
                           xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24">
+                          viewBox="0 0 24 24"
+                        >
                           <g>
                             <path fill="none" d="M0 0h24v24H0z" />
                             <path d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z" />

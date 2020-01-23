@@ -15,6 +15,7 @@ import stockPage from "./SymbolPage/stockPage";
 import portfolio from "./Portfolio/portfolio";
 import page404 from "./404";
 import Admin from "./admin";
+import Loader from "./Elements/Loader";
 
 function PrivateRoute({ component: Component, authed, ...rest }) {
   return (
@@ -69,7 +70,7 @@ class App extends Component {
         this.setState({
           theme
         });
-      } else{
+      } else {
         this.setState({
           theme: "dark"
         });
@@ -109,11 +110,7 @@ class App extends Component {
     }
     return this.state.loading ? (
       <div className="loader-background">
-        <ul className="loader">
-          <li />
-          <li />
-          <li />
-        </ul>
+        <Loader />
       </div>
     ) : (
       <Router>

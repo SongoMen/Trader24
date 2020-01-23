@@ -259,6 +259,7 @@ input[type=number]
         height: 100%    
         &__articles
             margin-top: -15px
+            position: relative
         &__articles a:last-child
             @media only screen and (max-width: 900px)
                 display: none
@@ -269,6 +270,19 @@ input[type=number]
         @media only screen and (max-height: 480px)
             a:nth-child(2)
                 display: none
+        &__nothing
+            display: flex
+            justify-content: center
+            align-items: center
+            height: 100%
+            flex-direction: column
+            width: 100%
+            h3
+                width: auto
+            svg
+                width: 30%
+                height: 30%
+                fill: $main-color
         .article
             width: 100%
             background-color: $elements-color

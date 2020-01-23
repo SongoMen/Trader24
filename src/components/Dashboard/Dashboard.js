@@ -6,6 +6,7 @@ import {Link} from "react-router-dom";
 import Leftbar from "../Elements/leftbar";
 import Topbar from "../Elements/topbar";
 import {relDiff, numberWithCommas} from "../helpers.js";
+import Loader from "../Elements/Loader"
 
 const db = firebase.firestore();
 
@@ -880,11 +881,7 @@ class Dashboard extends React.Component {
                     <a ref={this.chartFirst} id="chartFirst" href="/" className="chartLink">
                       <div className="stockChart">
                         {this.state.loader1 === "" && (
-                          <ul className="loader">
-                            <li />
-                            <li />
-                            <li />
-                          </ul>
+<Loader/>
                         )}
                         {this.state.loader1 === false && (
                           <div className="errorMsg">
@@ -927,14 +924,8 @@ class Dashboard extends React.Component {
                     </a>
                     <a ref={this.chartSecond} id="chartSecond" href="/" className="chartLink">
                       <div className="stockChart">
-                        {this.state.loader2 === "" ? (
-                          <ul className="loader">
-                            <li />
-                            <li />
-                            <li />
-                          </ul>
-                        ) : (
-                          <div />
+                        {this.state.loader2 === "" && (
+<Loader/>
                         )}
                         {this.state.loader2 === false && (
                           <div className="errorMsg">
@@ -976,11 +967,7 @@ class Dashboard extends React.Component {
                     <div className="panel__portfolio-section">
                       <div className="panel__portfolio" ref={this.portfolio} id="portfolio">
                         {this.state.portfolioLoader === "" && (
-                          <ul className="loader">
-                            <li />
-                            <li />
-                            <li />
-                          </ul>
+<Loader/>
                         )}
                         {this.state.portfolioLoader === "nothing" && (
                           <div className="errorMsg">
@@ -1204,11 +1191,7 @@ class Dashboard extends React.Component {
                   </div>
                 )}{" "}
                 {this.state.loader3 === "" && (
-                  <ul className="loader">
-                    <li />
-                    <li />
-                    <li />
-                  </ul>
+<Loader/>
                 )}
                 {this.state.loader3 === false && (
                   <div className="errorMsg">
