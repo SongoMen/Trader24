@@ -135,6 +135,7 @@ export default class stockPage extends React.Component {
     this.ytd = React.createRef();
 
     this.searchStocks = this.searchStocks.bind(this);
+    this.changeFocus = this.changeFocus.bind(this);
 
     this.data1 = canvas => {
       const ctx = canvas.getContext("2d");
@@ -527,7 +528,7 @@ export default class stockPage extends React.Component {
           this.ytd.current.classList.add("active");
           break;
       }
-    }, 200);
+    }.bind(this), 200);
   }
 
   rendering() {
