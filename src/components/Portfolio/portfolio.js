@@ -160,10 +160,11 @@ export default class portfolio extends React.Component {
                 currentfunds: this.state.funds
               })
               .catch(() => {
-                if (this._isMounted)
+                if (this._isMounted) {
                   this.setState({
                     loader1: false
                   });
+                }
               });
             this.getPositions();
           }.bind(this)
