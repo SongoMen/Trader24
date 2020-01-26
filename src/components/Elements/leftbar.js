@@ -35,10 +35,10 @@ export default class Leftbar extends React.Component {
     let section = window.location.href.split("/")[
       window.location.href.split("/").length - 1
     ];
-    if (section.toLocaleLowerCase() === "dashboard") {
-      this.svg1.current.style.fill = "#5eb5f";
-    } else if (section.toLocaleLowerCase() === "portfolio") {
-      this.svg2.current.style.fill = "#5eb5f";
+    if (section.toLowerCase() === "dashboard") {
+      this.svg1.current.style.fill = "#5eb5f8";
+    } else if (section.toLowerCase() === "portfolio") {
+      this.svg2.current.style.fill = "#5eb5f8";
     }
   }
 
