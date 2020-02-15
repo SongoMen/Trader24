@@ -24,13 +24,15 @@ Using Codacy for code quality.
 
 ## Running
 
-1. Go to project directory and run:
+1. Open .env file and enter your IEX Cloud api keys (both can be the same)
+
+2. Go to project directory and run:
 ```
 $ npm install
 ```
 
-2. Start the app:
+3. Start the app:
 ```
 $ npm start
 ```
-3. Open web browser to: http://localhost:3000/
+4. Open web browser to: http://localhost:3000/
