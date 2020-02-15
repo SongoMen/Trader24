@@ -3,8 +3,8 @@ import {login} from "../auth";
 import LandingMenu from "../LandingPage/LandingMenu";
 
 export default class Login extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
     this.state = {
       msg: "",
     };
