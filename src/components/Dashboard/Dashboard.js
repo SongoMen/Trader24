@@ -1,12 +1,13 @@
 import React from "react";
-import { Line } from "react-chartjs-2";
 import firebase from "firebase/app";
 import "firebase/firestore";
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
+
 import Leftbar from "../Elements/leftbar";
 import Topbar from "../Elements/topbar";
-import { relDiff, numberWithCommas } from "../helpers.js";
+import {relDiff, numberWithCommas} from "../helpers.js";
 import Loader from "../Elements/Loader";
+import Chart from "./Chart.js";
 
 const db = firebase.firestore();
 
@@ -26,45 +27,45 @@ var options = {
     },
     displayColors: false,
   },*/
-  tooltips: { enabled: false },
-  hover: { mode: null },
+  tooltips: {enabled: false},
+  hover: {mode: null},
   layout: {
     padding: {
-      bottom: 15
-    }
+      bottom: 15,
+    },
   },
   legend: {
-    display: false
+    display: false,
   },
   scales: {
     xAxes: [
       {
-        display: false
-      }
+        display: false,
+      },
     ],
     yAxes: [
       {
-        display: false
-      }
-    ]
+        display: false,
+      },
+    ],
   },
   elements: {
     point: {
-      radius: 0
+      radius: 0,
     },
     line: {
       borderCapStyle: "round",
       borderJoinStyle: "round",
-      tension: 1
-    }
-  }
+      tension: 1,
+    },
+  },
 };
 
 const apiKeys = [
   "OYMIDLPTGY6CAMP0",
   "TVARN7J9F191IFLB",
   "NOBPQ2OPX7E1XRT3",
-  "7V0Q0N46CBIPHA2K"
+  "7V0Q0N46CBIPHA2K",
 ];
 
 // CHARTS
@@ -147,7 +148,7 @@ class Dashboard extends React.Component {
       fundsWithoutCommas: "",
       accountValue: "",
       marketStatus: "",
-      theme: ""
+      theme: "",
     };
     this.componentDidMount = this.componentDidMount.bind(this);
     this.getAccountInfo = this.getAccountInfo.bind(this);
@@ -201,9 +202,9 @@ class Dashboard extends React.Component {
             pointBackgroundColor: gradient,
             fill: true,
             borderWidth: 2,
-            data: chartData1
-          }
-        ]
+            data: chartData1,
+          },
+        ],
       };
     };
     this.data2 = canvas => {
@@ -235,9 +236,9 @@ class Dashboard extends React.Component {
             pointBackgroundColor: gradient,
             fill: true,
             borderWidth: 2,
-            data: chartData2
-          }
-        ]
+            data: chartData2,
+          },
+        ],
       };
     };
   }
@@ -268,8 +269,8 @@ class Dashboard extends React.Component {
               parseFloat(
                 result["Time Series (1min)"][
                   Object.keys(result["Time Series (1min)"])[parseInt(i)]
-                ]["4. close"]
-              ).toFixed(2)
+                ]["4. close"],
+              ).toFixed(2),
             );
           }
         } else {
@@ -295,8 +296,8 @@ class Dashboard extends React.Component {
                       parseFloat(
                         result["Time Series (1min)"][
                           Object.keys(result["Time Series (1min)"])[parseInt(i)]
-                        ]["4. close"]
-                      ).toFixed(2)
+                        ]["4. close"],
+                      ).toFixed(2),
                     );
                   }
                 }
@@ -320,8 +321,8 @@ class Dashboard extends React.Component {
                       parseFloat(
                         result["Time Series (1min)"][
                           Object.keys(result["Time Series (1min)"])[parseInt(i)]
-                        ]["4. close"]
-                      ).toFixed(2)
+                        ]["4. close"],
+                      ).toFixed(2),
                     );
                   }
                 });
@@ -343,7 +344,7 @@ class Dashboard extends React.Component {
           }
           if (result.changePercent !== null) {
             changeStash[parseInt(num)] = parseFloat(
-              result.changePercent
+              result.changePercent,
             ).toFixed(2);
           }
         });
@@ -365,7 +366,7 @@ class Dashboard extends React.Component {
                 tempStocksSymbols.push(result[parseInt(i)].symbol);
                 tempStockName.push(result[parseInt(i)].companyName);
                 tempStockPrice.push(
-                  `$${result[parseInt(i)].latestPrice.toFixed(2)}`
+                  `$${result[parseInt(i)].latestPrice.toFixed(2)}`,
                 );
               }
             }
@@ -376,7 +377,7 @@ class Dashboard extends React.Component {
                 if (
                   this.isInArray(
                     stockSymbols,
-                    result[parseInt(i)].symbol.toString()
+                    result[parseInt(i)].symbol.toString(),
                   )
                 ) {
                   stockList[parseInt(i)] = tempStockName[parseInt(counter)];
@@ -409,7 +410,7 @@ class Dashboard extends React.Component {
                     .then(result => {
                       if (result.changePercent !== null) {
                         stockListChange[parseInt(i)] = parseFloat(
-                          result.changePercent
+                          result.changePercent,
                         ).toFixed(2);
                       } else {
                         stockListChange[parseInt(i)] = "---";
@@ -442,7 +443,7 @@ class Dashboard extends React.Component {
                       setTimeout(() => {
                         if (this._isMounted) {
                           this.setState({
-                            loader3: true
+                            loader3: true,
                           });
                         }
                       }, 900);
@@ -466,14 +467,14 @@ class Dashboard extends React.Component {
       .then(res => res.json())
       .then(result => {
         portfolioValue[parseInt(i)] = parseFloat(
-          Number(portfolioShares[parseInt(i)] * result.latestPrice).toFixed(2)
+          Number(portfolioShares[parseInt(i)] * result.latestPrice).toFixed(2),
         );
       })
       .then(() => {
         portfolioDifference[parseInt(i)] =
           relDiff(
             parseFloat(portfolioValue[parseInt(i)]),
-            parseFloat(portfolioMoneyPaid[parseInt(i)])
+            parseFloat(portfolioMoneyPaid[parseInt(i)]),
           ).toFixed(2) + "%";
         if (portfolioValue[parseInt(i)] > portfolioMoneyPaid[parseInt(i)]) {
           portfolioDifference[parseInt(i)] =
@@ -528,7 +529,7 @@ class Dashboard extends React.Component {
           });
         } else if (this._isMounted && portfolioStocks.length === 0) {
           this.setState({
-            portfolioLoader: "nothing"
+            portfolioLoader: "nothing",
           });
         }
       })
@@ -545,8 +546,8 @@ class Dashboard extends React.Component {
               accountValue:
                 "$" +
                 numberWithCommas(
-                  Number(val) + Number(this.state.fundsWithoutCommas)
-                )
+                  Number(val) + Number(this.state.fundsWithoutCommas),
+                ),
             });
           }
         }, 1300);
@@ -556,7 +557,7 @@ class Dashboard extends React.Component {
           setTimeout(() => {
             if (this._isMounted) {
               this.setState({
-                portfolioLoader: true
+                portfolioLoader: true,
               });
             }
           }, 1200);
@@ -571,7 +572,7 @@ class Dashboard extends React.Component {
         console.log("Error getting document:", error);
         if (this._isMounted) {
           this.setState({
-            portfolioLoader: false
+            portfolioLoader: false,
           });
         }
       });
@@ -597,9 +598,9 @@ class Dashboard extends React.Component {
     setInterval(() => {
       let theme = localStorage.getItem("theme");
       if (theme !== null && this._isMounted) {
-        this.setState({ theme });
+        this.setState({theme});
       } else if (this._isMounted) {
-        this.setState({ theme: "dark" });
+        this.setState({theme: "dark"});
       }
     }, 500);
 
@@ -613,7 +614,7 @@ class Dashboard extends React.Component {
         .then(result => {
           if (this._isMounted) {
             this.setState({
-              marketStatus: result.isTheStockMarketOpen
+              marketStatus: result.isTheStockMarketOpen,
             });
           }
         });
@@ -630,10 +631,10 @@ class Dashboard extends React.Component {
           function(doc) {
             if (typeof doc.data() !== "undefined" && this._isMounted) {
               this.setState({
-                fundsWithoutCommas: doc.data()["currentfunds"]
+                fundsWithoutCommas: doc.data()["currentfunds"],
               });
             }
-          }.bind(this)
+          }.bind(this),
         );
 
       /*
@@ -670,12 +671,12 @@ class Dashboard extends React.Component {
                     this._isMounted
                   ) {
                     this.setState({
-                      loader1: true
+                      loader1: true,
                     });
                     firstChart.href = "/stocks/" + stockSymbols[0];
                   } else if (this._isMounted) {
                     this.setState({
-                      loader1: false
+                      loader1: false,
                     });
                     if (firstChart) {
                       firstChart.href = "#";
@@ -683,7 +684,7 @@ class Dashboard extends React.Component {
                   }
                 }, 800);
               }
-            }
+            },
           );
           this.getStockInfo(
             stockSymbols[1],
@@ -702,18 +703,18 @@ class Dashboard extends React.Component {
                     this._isMounted
                   ) {
                     this.setState({
-                      loader2: true
+                      loader2: true,
                     });
                     secondChart.href = "/stocks/" + stockSymbols[1];
                   } else if (this._isMounted) {
                     this.setState({
-                      loader2: false
+                      loader2: false,
                     });
                     secondChart.href = "#";
                   }
                 }
               }, 800);
-            }
+            },
           );
         });
 
@@ -741,12 +742,12 @@ class Dashboard extends React.Component {
             this._isMounted
           ) {
             this.setState({
-              loader2: true
+              loader2: true,
             });
             this.chartSecond.current.href = "/stocks/" + stockSymbols[1];
           } else if (this._isMounted) {
             this.setState({
-              loader2: false
+              loader2: false,
             });
             this.chartSecond.current.href = "#";
           }
@@ -757,33 +758,33 @@ class Dashboard extends React.Component {
             this._isMounted
           ) {
             this.setState({
-              loader1: true
+              loader1: true,
             });
             this.chartFirst.current.href = "/stocks/" + stockSymbols[0];
           } else if (this._isMounted) {
             this.setState({
-              loader1: false
+              loader1: false,
             });
             this.chartFirst.current.href = "#";
           }
           if (stockListChange < 3 && this._isMounted) {
             this.setState({
-              loader3: false
+              loader3: false,
             });
           }
           if (this.state.loader3 !== true && this._isMounted) {
             this.setState({
-              loader3: false
+              loader3: false,
             });
           }
           if (this.state.loader1 === "" && this._isMounted) {
             this.setState({
-              loader1: false
+              loader1: false,
             });
           }
           if (this.state.loader2 === "" && this._isMounted) {
             this.setState({
-              loader2: false
+              loader2: false,
             });
           }
         }
@@ -830,17 +831,15 @@ class Dashboard extends React.Component {
     return (
       <section className="Dashboard" id="dashboard">
         <Alert />
-        <div
-          style={{ display: "flex", flexDirection: "column", width: "100%" }}
-        >
-          <div style={{ display: "flex", height: "100%" }}>
+        <div style={{display: "flex", flexDirection: "column", width: "100%"}}>
+          <div style={{display: "flex", height: "100%"}}>
             <Leftbar />
             <div className="panel">
               <Topbar />
               <div className="panel__container">
                 <div className="panel__top">
                   <div className="panel__title">
-                    <div style={{ display: "flex", alignItems: "center" }}>
+                    <div style={{display: "flex", alignItems: "center"}}>
                       <svg
                         className="panel__popular"
                         xmlns="http://www.w3.org/2000/svg"
@@ -851,8 +850,7 @@ class Dashboard extends React.Component {
                         stroke="#5eb5f8"
                         strokeWidth="2"
                         strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
+                        strokeLinejoin="round">
                         <path d="M3 3v18h18" />
                         <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3" />
                       </svg>
@@ -862,14 +860,12 @@ class Dashboard extends React.Component {
                       style={{
                         display: "flex",
                         alignItems: "center",
-                        width: "33%"
-                      }}
-                    >
+                        width: "33%",
+                      }}>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="panel__portfolio-title"
-                        viewBox="0 0 24 24"
-                      >
+                        viewBox="0 0 24 24">
                         <g>
                           <path fill="none" d="M0 0h24v24H0z" />
                           <path d="M4.873 3h14.254a1 1 0 0 1 .809.412l3.823 5.256a.5.5 0 0 1-.037.633L12.367 21.602a.5.5 0 0 1-.706.028c-.007-.006-3.8-4.115-11.383-12.329a.5.5 0 0 1-.037-.633l3.823-5.256A1 1 0 0 1 4.873 3zm.51 2l-2.8 3.85L12 19.05 21.417 8.85 18.617 5H5.383z" />
@@ -878,116 +874,48 @@ class Dashboard extends React.Component {
                       <h3>Portfolio</h3>
                     </div>
                   </div>
-                  <div className="panel__topCharts" style={{ display: "flex" }}>
+                  <div className="panel__topCharts" style={{display: "flex"}}>
                     <a
                       ref={this.chartFirst}
                       id="chartFirst"
                       href="/"
-                      className="chartLink"
-                    >
-                      <div className="stockChart">
-                        {this.state.loader1 === "" && <Loader />}
-                        {this.state.loader1 === false && (
-                          <div className="errorMsg">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 24 24"
-                            >
-                              <g>
-                                <path fill="none" d="M0 0h24v24H0z" />
-                                <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm-1-5h2v2h-2v-2zm0-8h2v6h-2V7z" />
-                              </g>
-                            </svg>
-                            <p>Couldn't load chart try again in few minutes</p>
-                          </div>
-                        )}
-                        {this.state.loader1 === true && (
-                          <div className="stockChart__chart">
-                            <Line data={this.data1} options={options} />
-                          </div>
-                        )}
-                        {this.state.loader1 ? (
-                          <div className="stockChart__info">
-                            <h3 className="stockChart__name">
-                              {stockSymbols[0]}
-                            </h3>
-                            <div className="stockChart__price-info">
-                              <h4
-                                className="stockChart__change"
-                                style={{ color: changesColors[0] }}
-                              >
-                                {stockChanges[0]}%
-                              </h4>
-                              <h3 className="stockChart__price">
-                                ${stockPrices[0]}
-                              </h3>
-                            </div>
-                          </div>
-                        ) : (
-                          <div />
-                        )}
-                      </div>
+                      className="chartLink">
+                      <Chart
+                        loader={this.state.loader1}
+                        options={options}
+                        data={this.data1}
+                        stockSymbol={stockSymbols[0]}
+                        stockPrice={stockPrices[0]}
+                        stockChange={stockChanges[0]}
+                        changesColor={changesColors[0]}
+                      />
                     </a>
                     <a
                       ref={this.chartSecond}
                       id="chartSecond"
                       href="/"
-                      className="chartLink"
-                    >
-                      <div className="stockChart">
-                        {this.state.loader2 === "" && <Loader />}
-                        {this.state.loader2 === false && (
-                          <div className="errorMsg">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 24 24"
-                            >
-                              <g>
-                                <path fill="none" d="M0 0h24v24H0z" />
-                                <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm-1-5h2v2h-2v-2zm0-8h2v6h-2V7z" />
-                              </g>
-                            </svg>
-                            <p>Couldn't load chart try again in few minutes</p>
-                          </div>
-                        )}
-                        {this.state.loader2 === true && (
-                          <div className="stockChart__chart">
-                            <Line data={this.data2} options={options} />
-                          </div>
-                        )}
-                        {this.state.loader2 === true && (
-                          <div className="stockChart__info">
-                            <h3 className="stockChart__name">
-                              {stockSymbols[1]}
-                            </h3>
-                            <div className="stockChart__price-info">
-                              <h4
-                                className="stockChart__change"
-                                style={{ color: changesColors[1] }}
-                              >
-                                {stockChanges[1]}%
-                              </h4>
-                              <h3 className="stockChart__price">
-                                ${stockPrices[1]}
-                              </h3>
-                            </div>
-                          </div>
-                        )}
-                      </div>
+                      className="chartLink">
+                      <Chart
+                        loader={this.state.loader1}
+                        options={options}
+                        data={this.data1}
+                        stockSymbol={stockSymbols[1]}
+                        stockPrice={stockPrices[1]}
+                        stockChange={stockChanges[1]}
+                        changesColor={changesColors[1]}
+                      />
                     </a>
                     <div className="panel__portfolio-section">
                       <div
                         className="panel__portfolio"
                         ref={this.portfolio}
-                        id="portfolio"
-                      >
+                        id="portfolio">
                         {this.state.portfolioLoader === "" && <Loader />}
                         {this.state.portfolioLoader === "nothing" && (
                           <div className="errorMsg">
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 24 24"
-                            >
+                              viewBox="0 0 24 24">
                               <g>
                                 <path fill="none" d="M0 0h24v24H0z" />
                                 <path d="M5.373 4.51A9.962 9.962 0 0 1 12 2c5.523 0 10 4.477 10 10a9.954 9.954 0 0 1-1.793 5.715L17.5 12H20A8 8 0 0 0 6.274 6.413l-.9-1.902zm13.254 14.98A9.962 9.962 0 0 1 12 22C6.477 22 2 17.523 2 12c0-2.125.663-4.095 1.793-5.715L6.5 12H4a8 8 0 0 0 13.726 5.587l.9 1.902zm-5.213-4.662L10.586 12l-2.829 2.828-1.414-1.414 4.243-4.242L13.414 12l2.829-2.828 1.414 1.414-4.243 4.242z" />
@@ -1000,8 +928,7 @@ class Dashboard extends React.Component {
                           <div className="errorMsg">
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 24 24"
-                            >
+                              viewBox="0 0 24 24">
                               <g>
                                 <path fill="none" d="M0 0h24v24H0z" />
                                 <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm-1-5h2v2h-2v-2zm0-8h2v6h-2V7z" />
@@ -1032,15 +959,15 @@ class Dashboard extends React.Component {
                                       </td>
                                       <td
                                         style={{
-                                          color: portfolioColor[parseInt(index)]
-                                        }}
-                                      >
+                                          color:
+                                            portfolioColor[parseInt(index)],
+                                        }}>
                                         {portfolioDifference[parseInt(index)]}
                                       </td>
                                       <td>
                                         $
                                         {numberWithCommas(
-                                          portfolioValue[parseInt(index)]
+                                          portfolioValue[parseInt(index)],
                                         )}
                                       </td>
                                     </tr>
@@ -1084,8 +1011,7 @@ class Dashboard extends React.Component {
                                   to={
                                     "stocks/" +
                                     stockListTickers[parseInt(index)]
-                                  }
-                                >
+                                  }>
                                   <span className="panel__fullname">
                                     <h4>{stockListTickers[parseInt(index)]}</h4>
                                     <h6 className="panel__name">{value}</h6>
@@ -1104,9 +1030,8 @@ class Dashboard extends React.Component {
                                           stockListChangeColors[
                                             parseInt(index)
                                           ] +
-                                          ",0.5)"
-                                      }}
-                                    >
+                                          ",0.5)",
+                                      }}>
                                       {stockListChange[parseInt(index)]}
                                     </h5>
                                   </div>
@@ -1129,8 +1054,7 @@ class Dashboard extends React.Component {
                                   to={
                                     "stocks/" +
                                     stockListTickers[parseInt(index)]
-                                  }
-                                >
+                                  }>
                                   <span className="panel__fullname">
                                     <h4>{stockListTickers[parseInt(index)]}</h4>
                                     <h6 className="panel__name">{value}</h6>
@@ -1149,9 +1073,8 @@ class Dashboard extends React.Component {
                                           stockListChangeColors[
                                             parseInt(index)
                                           ] +
-                                          ",0.5)"
-                                      }}
-                                    >
+                                          ",0.5)",
+                                      }}>
                                       {stockListChange[parseInt(index)]}
                                     </h5>
                                   </div>
@@ -1174,8 +1097,7 @@ class Dashboard extends React.Component {
                                   to={
                                     "stocks/" +
                                     stockListTickers[parseInt(index)]
-                                  }
-                                >
+                                  }>
                                   <span className="panel__fullname">
                                     <h4>{stockListTickers[parseInt(index)]}</h4>
                                     <h6 className="panel__name">{value}</h6>
@@ -1194,9 +1116,8 @@ class Dashboard extends React.Component {
                                           stockListChangeColors[
                                             parseInt(index)
                                           ] +
-                                          ",0.5)"
-                                      }}
-                                    >
+                                          ",0.5)",
+                                      }}>
                                       {stockListChange[parseInt(index)]}
                                     </h5>
                                   </div>
