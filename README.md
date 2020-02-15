@@ -24,7 +24,7 @@ Using Codacy for code quality.
 
 ## Running
 
-1. Open .env file and insert your IEX Cloud api keys (both can be the same)
+1. Open .env file and enter your IEX Cloud api keys (both can be the same)
 
 2. Go to project directory and run:
 ```
