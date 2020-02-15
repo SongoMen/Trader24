@@ -5,14 +5,14 @@
     &__searchbar input
       color: $light-inactive-color
     &__results
-      background-color: $light-panel-color
-      border-color: $light-panel-color
+      background-color: $light-panel-color!important
+      border-color: $light-panel-color!important
       border-top: 40px solid $light-panel-color !important
       li
         h4
           color: #3a1414
         &:hover
-          background-color: $light-elements-color
+          background-color: $light-elements-color!important
   .mobileMenu
     background-color: $light-panel-color
   .hamburger__inner
@@ -190,6 +190,7 @@
   @media only screen and (max-width: 600px) 
     display: none
   .topbar__results
+    transition: all .4s
     position: absolute
     left: 0
     width: 100%
@@ -198,8 +199,8 @@
     z-index: -1
     padding: 0
     top: 0
-    border-top: 40px solid $panel-color!important
     border: 15px solid $panel-color
+    border-top: 40px solid $panel-color
     border-radius: 5px 
     border-bottom-left-radius: 20px
     border-bottom-right-radius: 20px
@@ -248,10 +249,10 @@
   align-items: center
   bottom: 0
   .leftbar
-    display: flex!important
+    display: flex
     background-color: transparent
     height: 100%
     svg
       min-width: 50px
     &__logo
-      min-width: 80px!important
+      min-width: 80px
