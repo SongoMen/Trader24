@@ -4,11 +4,47 @@ import PropTypes from "prop-types";
 
 import Loader from "../Elements/Loader";
 
+var options = {
+  maintainAspectRatio: false,
+  responsive: true,
+  tooltips: {enabled: false},
+  hover: {mode: null},
+  layout: {
+    padding: {
+      bottom: 15,
+    },
+  },
+  legend: {
+    display: false,
+  },
+  scales: {
+    xAxes: [
+      {
+        display: false,
+      },
+    ],
+    yAxes: [
+      {
+        display: false,
+      },
+    ],
+  },
+  elements: {
+    point: {
+      radius: 0,
+    },
+    line: {
+      borderCapStyle: "round",
+      borderJoinStyle: "round",
+      tension: 1,
+    },
+  },
+};
+
 const Chart = ({
   loader,
   stockSymbol,
   stockChange,
-  options,
   data,
   stockPrice,
   changesColor,

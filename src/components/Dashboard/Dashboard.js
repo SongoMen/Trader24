@@ -11,56 +11,6 @@ import Chart from "./Chart.js";
 
 const db = firebase.firestore();
 
-var options = {
-  maintainAspectRatio: false,
-  responsive: true,
-  /*tooltips: {
-    mode: 'index',
-    intersect: false,
-    backgroundColor: '#373a46',
-    bodyFontSize: 15,
-    callbacks: {
-      label: function (tooltipItems, data) {
-        return '$' + tooltipItems.yLabel
-      },
-      title: function() {},
-    },
-    displayColors: false,
-  },*/
-  tooltips: {enabled: false},
-  hover: {mode: null},
-  layout: {
-    padding: {
-      bottom: 15,
-    },
-  },
-  legend: {
-    display: false,
-  },
-  scales: {
-    xAxes: [
-      {
-        display: false,
-      },
-    ],
-    yAxes: [
-      {
-        display: false,
-      },
-    ],
-  },
-  elements: {
-    point: {
-      radius: 0,
-    },
-    line: {
-      borderCapStyle: "round",
-      borderJoinStyle: "round",
-      tension: 1,
-    },
-  },
-};
-
 const apiKeys = [
   "OYMIDLPTGY6CAMP0",
   "TVARN7J9F191IFLB",
@@ -882,7 +832,6 @@ class Dashboard extends React.Component {
                       className="chartLink">
                       <Chart
                         loader={this.state.loader1}
-                        options={options}
                         data={this.data1}
                         stockSymbol={stockSymbols[0]}
                         stockPrice={stockPrices[0]}
@@ -897,7 +846,6 @@ class Dashboard extends React.Component {
                       className="chartLink">
                       <Chart
                         loader={this.state.loader1}
-                        options={options}
                         data={this.data1}
                         stockSymbol={stockSymbols[1]}
                         stockPrice={stockPrices[1]}
