@@ -1,4 +1,5 @@
 import React from "react";
+
 import Loader from "../Elements/Loader";
 
 let newsDate = [];
@@ -13,12 +14,12 @@ class News extends React.Component {
   constructor() {
     super();
     this.state = {
-      loading: true
+      loading: true,
     };
   }
   getLatestNews() {
     fetch(
-      `https://cloud.iexapis.com/stable/stock/${this.props.symbol}/news?token=${process.env.REACT_APP_API_KEY_2}`
+      `https://cloud.iexapis.com/stable/stock/${this.props.symbol}/news?token=${process.env.REACT_APP_API_KEY_2}`,
     )
       .then(res => res.json())
       .then(result => {
@@ -44,7 +45,7 @@ class News extends React.Component {
           for (let i = 0; i < newsUrl.length; i++) {
             if (document.querySelector("#img" + i) !== null) {
               document.querySelector(
-                "#img" + i
+                "#img" + i,
               ).style = `background-image:url(${newsImage[parseInt(i)]})`;
             }
           }
@@ -52,7 +53,7 @@ class News extends React.Component {
       })
       .then(() => {
         if (this._isMounted) {
-          this.setState({ loading: false });
+          this.setState({loading: false});
         }
       });
   }
@@ -72,8 +73,7 @@ class News extends React.Component {
               href={newsUrl[parseInt(indx)]}
               target="_blank"
               rel="noopener noreferrer"
-              key={indx}
-            >
+              key={indx}>
               <div className="article">
                 <div className="article__image" id={"img" + indx} />
                 <div className="article__content">
@@ -92,8 +92,7 @@ class News extends React.Component {
             <svg
               enableBackground="new 0 0 512 512"
               viewBox="0 0 512 512"
-              xmlns="http://www.w3.org/2000/svg"
-            >
+              xmlns="http://www.w3.org/2000/svg">
               <g>
                 <path d="m60 272h332v-152h-332zm30-122h272v92h-272z" />
                 <path d="m60 302h151v30h-151z" />
@@ -111,4 +110,9 @@ class News extends React.Component {
     );
   }
 }
+
+News.propTypes = {
+  symbol: PropTypes.string,
+};
+
 export default News;

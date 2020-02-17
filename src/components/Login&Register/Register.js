@@ -4,8 +4,8 @@ import "firebase/firestore";
 import LandingMenu from "../LandingPage/LandingMenu";
 
 class Register extends Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
     this.state = {
       msg: "",
     };

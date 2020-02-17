@@ -1,9 +1,11 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { firebaseAuth } from "../auth";
+import React, {useState} from "react";
+import {Link} from "react-router-dom";
+import {firebaseAuth} from "../auth";
+import PropTypes from "prop-types";
 
-function LandingMenu(props) {
+function LandingMenu({name, url, url2, name2}) {
   const [logged, setUser] = useState(null);
+
   function userCheck() {
     firebaseAuth().onAuthStateChanged(user => {
       if (user) {
@@ -13,7 +15,9 @@ function LandingMenu(props) {
       }
     });
   }
+
   userCheck();
+
   return (
     <nav className="header">
       <div className="header__logo">
@@ -29,17 +33,17 @@ function LandingMenu(props) {
       </div>
       {logged === false ? (
         <ul className="header__menu">
-          <Link to={props.url}>
+          <Link to={url}>
             <li>
               <button type="submit" className="header__button-login">
-                {props.name}
+                {name}
               </button>
             </li>
           </Link>
-          <Link to={props.url2}>
+          <Link to={url2}>
             <li>
               <button type="submit" className="header__button-register">
-                {props.name2}
+                {name2}
               </button>
             </li>
           </Link>
@@ -54,5 +58,11 @@ function LandingMenu(props) {
     </nav>
   );
 }
+LandingMenu.propTypes = {
+  url: PropTypes.string,
+  url2: PropTypes.string,
+  name: PropTypes.string,
+  name2: PropTypes.string,
+};
 
 export default LandingMenu;
