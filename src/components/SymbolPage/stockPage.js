@@ -584,19 +584,29 @@ export default class stockPage extends React.Component {
             this.setState({
               changeColor: "#3ae885"
             });
-          } else if (this._isMounted) {
+          } else if (stockData.change !== "0.00" && this._isMounted) {
             this.setState({
               changeColor: "#F45385"
             });
+          }
+          else if(this._isMounted){
+            this.setState({
+              changeColor: "#999eaf"
+            })
           }
           if (stockData.extendedChange > 0 && this._isMounted) {
             this.setState({
               extendedColor: "#66F9DA"
             });
-          } else if (this._isMounted) {
+          } else if (stockData.extendedChange !== "0.00" && this._isMounted) {
             this.setState({
               extendedColor: "#F45385"
             });
+          }
+          else if(this._isMounted){
+            this.setState({
+              extendedColor: "#999eaf"
+            })
           }
         }.bind(this)
       );
