@@ -512,14 +512,8 @@ class Dashboard extends React.Component {
             }
           }, 1200);
         }
-        setTimeout(() => {
-          if (this.state.marketStatus) {
-            this.getAccountInfo();
-          }
-        }, 10000);
       })
       .catch(error => {
-        console.log("Error getting document:", error);
         if (this._isMounted) {
           this.setState({
             portfolioLoader: false,
@@ -536,6 +530,89 @@ class Dashboard extends React.Component {
 
   isInArray(arr, val) {
     return arr.indexOf(val) > -1;
+  }
+
+  /*
+   * gets gainers stock from API and calling function getStockInfo, handles loaders for charts
+   */
+
+  getGainers() {
+    chartData1 = [];
+    chartData2 = [];
+
+    const gainers = `https://cloud.iexapis.com/stable/stock/market/list/gainers?token=${process.env.REACT_APP_API_KEY_1}`;
+    fetch(gainers)
+      .then(res => res.json())
+      .then(result => {
+        for (let i = 0; i < 4; i++) {
+          if (typeof result[parseInt(i)] !== "undefined") {
+            stockSymbols.push(result[parseInt(i)].symbol);
+          }
+        }
+        this.getStockInfo(
+          stockSymbols[0],
+          chartData1,
+          stockChanges,
+          stockPrices,
+          0,
+          () => {
+            let firstChart = this.chartFirst.current;
+            if (firstChart) {
+              setTimeout(() => {
+                if (
+                  typeof stockChanges[0] !== "undefined" &&
+                  typeof stockPrices[0] !== "undefined" &&
+                  chartData1.length >= 2 &&
+                  firstChart &&
+                  this._isMounted
+                ) {
+                  this.setState({
+                    loader1: true,
+                  });
+                  firstChart.href = "/stocks/" + stockSymbols[0];
+                } else if (this._isMounted) {
+                  this.setState({
+                    loader1: false,
+                  });
+                  if (firstChart) {
+                    firstChart.href = "#";
+                  }
+                }
+              }, 800);
+            }
+          },
+        );
+        this.getStockInfo(
+          stockSymbols[1],
+          chartData2,
+          stockChanges,
+          stockPrices,
+          1,
+          () => {
+            let secondChart = this.chartSecond.current;
+            setTimeout(() => {
+              if (secondChart) {
+                if (
+                  typeof stockChanges[1] !== "undefined" &&
+                  typeof stockPrices[1] !== "undefined" &&
+                  chartData2.length >= 2 &&
+                  this._isMounted
+                ) {
+                  this.setState({
+                    loader2: true,
+                  });
+                  secondChart.href = "/stocks/" + stockSymbols[1];
+                } else if (this._isMounted) {
+                  this.setState({
+                    loader2: false,
+                  });
+                  secondChart.href = "#";
+                }
+              }
+            }, 800);
+          },
+        );
+      });
   }
 
   componentDidMount() {
@@ -587,86 +664,7 @@ class Dashboard extends React.Component {
           }.bind(this),
         );
 
-      /*
-       * gets gainers stock from API and calling function getStockInfo, handles loaders for charts
-       */
-
-      chartData1 = [];
-      chartData2 = [];
-
-      const gainers = `https://cloud.iexapis.com/stable/stock/market/list/gainers?token=${process.env.REACT_APP_API_KEY_1}`;
-      fetch(gainers)
-        .then(res => res.json())
-        .then(result => {
-          for (let i = 0; i < 4; i++) {
-            if (typeof result[parseInt(i)] !== "undefined") {
-              stockSymbols.push(result[parseInt(i)].symbol);
-            }
-          }
-          this.getStockInfo(
-            stockSymbols[0],
-            chartData1,
-            stockChanges,
-            stockPrices,
-            0,
-            () => {
-              let firstChart = this.chartFirst.current;
-              if (firstChart) {
-                setTimeout(() => {
-                  if (
-                    typeof stockChanges[0] !== "undefined" &&
-                    typeof stockPrices[0] !== "undefined" &&
-                    chartData1.length >= 2 &&
-                    firstChart &&
-                    this._isMounted
-                  ) {
-                    this.setState({
-                      loader1: true,
-                    });
-                    firstChart.href = "/stocks/" + stockSymbols[0];
-                  } else if (this._isMounted) {
-                    this.setState({
-                      loader1: false,
-                    });
-                    if (firstChart) {
-                      firstChart.href = "#";
-                    }
-                  }
-                }, 800);
-              }
-            },
-          );
-          this.getStockInfo(
-            stockSymbols[1],
-            chartData2,
-            stockChanges,
-            stockPrices,
-            1,
-            () => {
-              let secondChart = this.chartSecond.current;
-              setTimeout(() => {
-                if (secondChart) {
-                  if (
-                    typeof stockChanges[1] !== "undefined" &&
-                    typeof stockPrices[1] !== "undefined" &&
-                    chartData2.length >= 2 &&
-                    this._isMounted
-                  ) {
-                    this.setState({
-                      loader2: true,
-                    });
-                    secondChart.href = "/stocks/" + stockSymbols[1];
-                  } else if (this._isMounted) {
-                    this.setState({
-                      loader2: false,
-                    });
-                    secondChart.href = "#";
-                  }
-                }
-              }, 800);
-            },
-          );
-        });
+      this.getGainers();
 
       document.title = "Trader24 - Dashboard";
 
@@ -766,6 +764,7 @@ class Dashboard extends React.Component {
       } else {
         changesColors[parseInt(i)] = "#999eaf";
       }
+
       /*
        * change box shadow when search bar is active
        */
@@ -777,7 +776,6 @@ class Dashboard extends React.Component {
           "0px 30px 20px 0px rgba(0,0,0,0.10)";
       }
     }
-
     return (
       <section className="Dashboard" id="dashboard">
         <Alert />
