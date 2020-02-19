@@ -49,7 +49,7 @@ input[type=number]
         &__top
             h6
                 color: $light-inactive-color
-    .data__info
+    .Key-info__info
         h4
             color: #3a1414!important
         h3
@@ -82,37 +82,37 @@ input[type=number]
     height: 45%
     @media only screen and (max-width: 900px)
         height: 60%
-    .stockPage__chart
-        width: 80%
-        height: 90%
-        padding: 10px
-        position: relative
-        @media only screen and (max-width: 900px)
-            width: 100%
-            height: 80%
-        @media only screen and (max-width: 900px)
-            width: 100%
-            height: 70%
-        .stock__info
-            width: 100%
-        .stockPage__timers
-            position: absolute
-            top: -20px
-            right: 20px
-            color: white
+.Chart
+    width: 80%
+    height: 90%
+    padding: 10px
+    position: relative
+    @media only screen and (max-width: 900px)
+        width: 100%
+        height: 80%
+    @media only screen and (max-width: 900px)
+        width: 100%
+        height: 70%
+    &__info
+        width: 100%
+    &__timers
+        position: absolute
+        top: -20px
+        right: 20px
+        color: white
+        transition: all .5s
+        cursor: pointer
+        display: flex
+        h6
+            padding: 5px 10px
+            border-radius: 10px
+            background-color: $elements-color
+            margin: 0 3px
             transition: all .5s
-            cursor: pointer
-            display: flex
-            h6
-                padding: 5px 10px
-                border-radius: 10px
-                background-color: $elements-color
-                margin: 0 3px
-                transition: all .5s
-                &:hover
-                    background-color: $inactive-color
-            .active
+            &:hover
                 background-color: $inactive-color
+        .active
+            background-color: $inactive-color
     
 .stockPage__trade
     width: 20%
@@ -208,7 +208,7 @@ input[type=number]
         justify-content: space-between
         h3:nth-child(2)
             margin-right: 200px
-    .data
+    .Key-info
         width: 50%
         height: 100%
         display: flex
@@ -218,13 +218,13 @@ input[type=number]
         @media only screen and (max-width: 900px)
             h3
                 margin-bottom: 0
-        .stockPage__columns
+        .Key-info__columns
             display: flex
             flex-wrap: wrap
             height: 100%
-        .data__label
+        .Key-info__label
             font-weight: 400
-        .data__info
+        .Key-info__info
             width: 33%
             @media only screen and (max-width: 600px)
                 display: flex

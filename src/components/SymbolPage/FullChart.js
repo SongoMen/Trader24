@@ -76,12 +76,12 @@ const FullChart = ({
   getOneMonthChart,
   getOneDayChart,
 }) => (
-  <div className="stockPage__chart">
+  <div className="Chart">
     <div className="stock__info">{stockData.companyName}</div>
     <Line data={data1} options={options} />
-    <div className="stockPage__timers">
+    <div className="Chart__timers">
       <h6
-        className="stockPage__option"
+        className="Chart__option"
         ref={years}
         id="2y"
         onClick={() => {
@@ -91,7 +91,7 @@ const FullChart = ({
         2Y
       </h6>
       <h6
-        className="stockPage__option"
+        className="Chart__option"
         ref={year}
         id="1y"
         onClick={() => {
@@ -102,7 +102,7 @@ const FullChart = ({
       </h6>
 
       <h6
-        className="active stockPage__option"
+        className="active Chart__option"
         ref={ytd}
         id="ytd"
         onClick={() => {
@@ -113,7 +113,7 @@ const FullChart = ({
         YTD
       </h6>
       <h6
-        className="stockPage__option"
+        className="Chart__option"
         ref={month}
         id="1m"
         onClick={() => {
@@ -123,7 +123,7 @@ const FullChart = ({
         1M
       </h6>
       <h6
-        className="stockPage__option"
+        className="Chart__option"
         ref={day}
         id="1d"
         onClick={() => {
@@ -135,6 +135,7 @@ const FullChart = ({
     </div>
   </div>
 );
+
 FullChart.propTypes = {
   changeFocus: PropTypes.func,
   getOneMonthChart: PropTypes.func,
@@ -150,4 +151,5 @@ FullChart.propTypes = {
   month: PropTypes.object,
   day: PropTypes.object,
 };
+
 export default FullChart;
