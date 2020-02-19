@@ -1,6 +1,5 @@
 import React from "react";
 import firebase from "firebase/app";
-import {Line} from "react-chartjs-2";
 import {defaults} from "react-chartjs-2";
 import {Link} from "react-router-dom";
 import "chartjs-plugin-annotation";
@@ -9,6 +8,7 @@ import News from "./News.js";
 import Leftbar from "../Elements/leftbar";
 import Topbar from "../Elements/topbar";
 import Loader from "../Elements/Loader.js";
+import FullChart from "./FullChart";
 
 defaults.global.defaultFontStyle = "Bold";
 defaults.global.defaultFontFamily = "Quantico";
@@ -137,6 +137,11 @@ export default class stockPage extends React.Component {
 
     this.searchStocks = this.searchStocks.bind(this);
     this.changeFocus = this.changeFocus.bind(this);
+    this.getYTDChart = this.getYTDChart.bind(this);
+    this.getOneMonthChart = this.getOneMonthChart.bind(this);
+    this.getOneYearChart = this.getOneYearChart.bind(this);
+    this.getTwoYearChart = this.getTwoYearChart.bind(this);
+    this.getOneDayChart = this.getOneDayChart.bind(this);
 
     this.data1 = canvas => {
       const ctx = canvas.getContext("2d");
@@ -349,7 +354,6 @@ export default class stockPage extends React.Component {
         });
       }
     }
-
     options.annotation = "";
   }
 
@@ -592,11 +596,10 @@ export default class stockPage extends React.Component {
             this.setState({
               changeColor: "#F45385",
             });
-          }
-          else if(this._isMounted){
+          } else if (this._isMounted) {
             this.setState({
-              changeColor: "#999eaf"
-            })
+              changeColor: "#999eaf",
+            });
           }
           if (stockData.extendedChange > 0 && this._isMounted) {
             this.setState({
@@ -606,13 +609,12 @@ export default class stockPage extends React.Component {
             this.setState({
               extendedColor: "#F45385",
             });
-          }
-          else if(this._isMounted){
+          } else if (this._isMounted) {
             this.setState({
-              extendedColor: "#999eaf"
-            })
+              extendedColor: "#999eaf",
+            });
           }
-        }.bind(this)
+        }.bind(this),
       );
     document.title = `Trader24 - ${symbol}`;
     fetch(
@@ -842,64 +844,21 @@ export default class stockPage extends React.Component {
               <Topbar />
               {this.state.loaded ? (
                 <div className="stockPage__top">
-                  <div className="stockPage__chart">
-                    <div className="stock__info">{stockData.companyName}</div>
-                    <Line data={this.data1} options={options} />
-                    <div className="stockPage__timers">
-                      <h6
-                        className="stockPage__option"
-                        ref={this.years}
-                        id="2y"
-                        onClick={() => {
-                          this.getTwoYearChart();
-                          this.changeFocus(4);
-                        }}>
-                        2Y
-                      </h6>
-                      <h6
-                        className="stockPage__option"
-                        ref={this.year}
-                        id="1y"
-                        onClick={() => {
-                          this.getOneYearChart();
-                          this.changeFocus(3);
-                        }}>
-                        1Y
-                      </h6>
-
-                      <h6
-                        className="active stockPage__option"
-                        ref={this.ytd}
-                        id="ytd"
-                        onClick={() => {
-                          this.classList = "active";
-                          this.changeFocus(5);
-                          this.getYTDChart();
-                        }}>
-                        YTD
-                      </h6>
-                      <h6
-                        className="stockPage__option"
-                        ref={this.month}
-                        id="1m"
-                        onClick={function() {
-                          this.changeFocus(2);
-                          this.getOneMonthChart();
-                        }.bind(this)}>
-                        1M
-                      </h6>
-                      <h6
-                        className="stockPage__option"
-                        ref={this.day}
-                        id="1d"
-                        onClick={() => {
-                          this.changeFocus(1);
-                          this.getOneDayChart();
-                        }}>
-                        1D
-                      </h6>
-                    </div>
-                  </div>
+                  <FullChart
+                    changeFocus={this.changeFocus}
+                    getOneMonthChart={this.getOneMonthChart}
+                    getOneYearChart={this.getOneYearChart}
+                    getTwoYearChart={this.getTwoYearChart}
+                    getYTDChart={this.getYTDChart}
+                    getOneDayChart={this.getOneDayChart}
+                    data1={this.data1}
+                    year={this.year}
+                    years={this.years}
+                    stockData={stockData}
+                    ytd={this.ytd}
+                    month={this.month}
+                    day={this.day}
+                  />
                   <div className="stockPage__trade">
                     <div className="stockPage__mobile">
                       <h4>{stockData.name}</h4>
