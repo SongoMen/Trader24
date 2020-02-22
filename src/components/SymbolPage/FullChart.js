@@ -77,7 +77,6 @@ const FullChart = ({
   getOneDayChart,
 }) => (
   <div className="Chart">
-    <div className="stock__info">{stockData.companyName}</div>
     <Line data={data1} options={options} />
     <div className="Chart__timers">
       <h6
