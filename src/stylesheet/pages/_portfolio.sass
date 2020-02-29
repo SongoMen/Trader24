@@ -34,6 +34,13 @@
             background-color: $elements-color
             height: 60px
             transition: all .2s
+            @media only screen and (max-width: 500px)
+              &:nth-child(1) th:nth-child(3)
+                display: none
+            @media only screen and (max-width: 760px)
+              font-size: 12px
+            @media only screen and (max-width: 400px)
+              font-size: 9px
             td:last-child svg
                 fill: white
                 width: 30px
@@ -57,6 +64,10 @@
         td
             text-align: center
             padding: 10px
+            @media only screen and (max-width: 500px)
+              &:nth-child(3)
+                display: none
+              padding: 5px;
         tr:first-child
             &:hover
                 background-color: $elements-color
