@@ -9,7 +9,7 @@
 Application that allows people to trade US market stocks. Data provider is IEX.  
 <br>
 
-Technologie stack: 
+Technology stack: 
 * React
 * Chartjs 2
 * Firebase
