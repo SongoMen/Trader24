@@ -1,7 +1,8 @@
 import React, {useState} from "react";
 import {Link} from "react-router-dom";
-import {firebaseAuth} from "../auth";
 import PropTypes from "prop-types";
+
+import {firebaseAuth} from "../auth";
 
 function LandingMenu({name, url, url2, name2}) {
   const [logged, setUser] = useState(null);

@@ -1,7 +1,8 @@
 import React from "react";
+import firebase from "firebase/app";
+
 import Leftbar from "../Elements/leftbar";
 import Topbar from "../Elements/topbar";
-import firebase from "firebase/app";
 import {relDiff} from "../helpers.js";
 import Loader from "../Elements/Loader";
 
@@ -116,7 +117,11 @@ export default class portfolio extends React.Component {
       })
       .then(() => {
         setTimeout(() => {
-          if (this._isMounted && symbols.length > 0) {
+          if (
+            this._isMounted &&
+            symbols.length > 0 &&
+            difference.length === symbols.length
+          ) {
             this.setState({
               loader1: true,
             });

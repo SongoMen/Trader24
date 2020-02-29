@@ -1,6 +1,7 @@
 import React, {Component} from "react";
-import {auth} from "../auth";
 import "firebase/firestore";
+
+import {auth} from "../auth";
 import LandingMenu from "../LandingPage/LandingMenu";
 
 class Register extends Component {
