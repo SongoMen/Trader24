@@ -19,7 +19,7 @@ class Register extends Component {
       re.test(String(this.email.value).toLowerCase())
     ) {
       localStorage.setItem("user", this.username.value);
-      auth(this.email.value, this.password.value, this.username.value);
+      auth(this.email.value, this.password.value);
       this.setState({
         msg: "Register Successful",
       });
