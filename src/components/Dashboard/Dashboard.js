@@ -844,7 +844,7 @@ class Dashboard extends React.Component {
                       className="chartLink">
                       <Chart
                         loader={this.state.loader1}
-                        data={this.data1}
+                        data={this.data2}
                         stockSymbol={stockSymbols[1]}
                         stockPrice={stockPrices[1]}
                         stockChange={stockChanges[1]}
