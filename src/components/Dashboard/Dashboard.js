@@ -5,7 +5,7 @@ import {Link} from "react-router-dom";
 
 import Leftbar from "../Elements/leftbar";
 import Topbar from "../Elements/topbar";
-import {relDiff, numberWithCommas} from "../helpers.js";
+import { relDiff, numberWithCommas } from "../helpers.js";
 import Loader from "../Elements/Loader";
 import Chart from "./Chart.js";
 
