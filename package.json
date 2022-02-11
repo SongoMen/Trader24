@@ -9,7 +9,7 @@
     "chartjs-plugin-annotation": "^0.5.7",
     "firebase": "^5.11.1",
     "firebase-tools": "^7.16.2",
-    "node-sass": "^4.13.1",
+    "node-sass": "^7.0.0",
     "npm": "^6.14.4",
     "react": "^16.13.1",
     "react-chartjs-2": "^2.9.0",
